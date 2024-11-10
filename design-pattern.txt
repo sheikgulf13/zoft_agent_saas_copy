@@ -1,0 +1,18 @@
+----- Design pattern / Performance improvements suggestions -----
+
+Folder / File naming conventions (non jsx) - (e.g, chat-settings)
+Loaders for every useEffect state updates
+Include useCallbacks hook for big functions / conditional rendering logics
+Abstract the logics inside useEffects outside and memoize it incase "if large computations needed" (useMemo hook)
+Custom hooks are preferred in scenarios with numerous states and useEffects
+Abstract all the non businees logics (data transformations / manipulations) outside the jsx files and it needs to be placed under an "utility directory" for reusability
+All third-party library APIs should be wrapped inside a wrapper function and used consistently throughout the app
+Dynamic imports are preferred for bigger components to reduce bundle size (Should be avoided for smaller components / utility functions)
+Conditional checks are preferred inside useEffects to reduce re-rendering
+In future if a lot of third party libraries are needed, (reliable and trust worthy libraries are preferred
+
+--------------------------------------------------------------------
+
+------ UI / UX suggestions -------
+
+

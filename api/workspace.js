@@ -1,0 +1,83 @@
+import { getCookie } from "cookies-next";
+import { getApiConfig, getApiHeaders } from "../utility/api-config";
+
+const getWorkSpaceListApi = async () => {
+  const url = process.env.url;
+  const session_id = getCookie("session_id");
+  const reqData = JSON.stringify({ session_id });
+
+  let response = await fetch(`${url}/public/workspace/get_workspace`, {
+    ...getApiConfig(),
+    method: "POST",
+    body: reqData,
+    headers: new Headers({
+      ...getApiHeaders(),
+      "Content-Type": "application/json",
+    }),
+    cache: "no-cache",
+  });
+
+  if (response.status === 200) {
+    response = await response.json();
+
+    return response;
+  }
+
+  return null;
+};
+
+const getAgentsForWorkSpaceApi = async (workspaceId) => {
+  const url = process.env.url;
+  const formdata = new FormData();
+  const session_id = getCookie("session_id");
+
+  formdata.append("session_id", session_id);
+  formdata.append("workspace_id", workspaceId);
+
+  let response = await fetch(`${url}/public/workspace/get_agents`, {
+    ...getApiConfig(),
+    method: "POST",
+    body: formdata,
+    headers: new Headers({
+      ...getApiHeaders(),
+    }),
+    cache: "no-cache",
+  });
+
+  const contentType = response.headers.get("content-type");
+
+  if (response.status === 200 && contentType === "application/json") {
+    response = await response.json();
+
+    return response;
+  }
+
+  return null;
+};
+
+const deleteWorkSpaceApi = async (workspaceId) => {
+  const url = process.env.url;
+  const formdata = new FormData();
+  const session_id = getCookie("session_id");
+
+  formdata.append("session_id", session_id);
+  formdata.append("workspace_id", workspaceId);
+
+  let response = await fetch(`${url}/public/workspace/delete`, {
+    ...getApiConfig(),
+    method: "POST",
+    body: formdata,
+    headers: new Headers({
+      ...getApiHeaders(),
+    }),
+    cache: "no-cache",
+  });
+
+  if (response.status === 200) {
+    return true
+  }
+
+  return false;
+};
+
+export { getWorkSpaceListApi, getAgentsForWorkSpaceApi, deleteWorkSpaceApi };

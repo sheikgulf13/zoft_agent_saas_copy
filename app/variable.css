@@ -1,0 +1,13 @@
+:root {
+    font-size: 16px !important;
+    
+    /* Font sizes variables */
+    --font-small: 1rem;
+    --font-medium: 1.125rem;
+    --font-large: 1.25rem;
+
+    /* Padding and Margin variables */
+    --space-small: 0.5rem;
+    --space-medium: 1rem;
+    --space-large: 1.25rem;
+}

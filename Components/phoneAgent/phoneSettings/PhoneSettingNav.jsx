@@ -1,0 +1,77 @@
+import useTheme from "next-theme";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { OutlinedButton } from "../../buttons/OutlinedButton";
+import { useSelector } from "react-redux";
+
+const PhoneSettingNav = () => {
+  const pathname = usePathname();
+  const { theme } = useTheme();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  let workspaceId = searchParams.get("workspaceId");
+  const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
+
+  const links = [
+    {
+      href: `/workspace/agents/phone/phonesetting/configure?workspaceId=${workspaceId}`,
+      label: "Configure",
+    },
+    {
+      href: `/workspace/agents/phone/phonesetting/playground?workspaceId=${workspaceId}`,
+      label: "Playground",
+    },
+    {
+      href: `/workspace/agents/phone/phonesetting/callhistory?workspaceId=${workspaceId}`,
+      label: "Call History",
+    },
+    {
+      href: `/workspace/agents/phone/phonesetting/connect?workspaceId=${workspaceId}`,
+      label: "Connect",
+    },
+  ];
+
+  useEffect(() => {
+    if (!selectedPhoneAgent) {
+      router.push(`/workspace/agents?workspaceId=${workspaceId}`);
+    }
+  }, [selectedPhoneAgent]);
+
+  return (
+    <>
+      <div className={`gap-[1vw] w-full justify-center`}>
+        <div className="">
+          <OutlinedButton
+            onClick={() =>
+              router.push(`/workspace/agents?workspaceId=${workspaceId}`)
+            }
+          >
+            <FaArrowLeftLong />
+            <span className="ml-2">Back to workspace</span>
+          </OutlinedButton>
+        </div>
+        <div className="mt-4 flex justify-center">
+          {links.map((link, index) => (
+            <>
+              <Link
+                href={link.href}
+                className={`${
+                  (pathname.includes(link.href) ||
+                    pathname.includes(link.href.split("?")[0])) &&
+                  "border-b-[.25vw] border-zinc-500"
+                } px-[.5vw] pb-[.8vw]`}
+              >
+                {link.label}
+              </Link>
+            </>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default PhoneSettingNav;
