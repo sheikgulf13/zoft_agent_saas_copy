@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUsername, setEmail, setPassword, setAnimationComplete, setShowLogin, setFadeIn } from '../store/actions/registerUserActions';
 import Login from './Login';
 import { useRouter } from 'next/navigation';
-import { setCookie } from 'cookies-next';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
+import { CookieManager } from "../utility/cookie-manager";
 
 const Register = () => {
   const [check, setCheck] = useState(false);
@@ -90,7 +90,7 @@ const Register = () => {
             console.log('Login successful:', { access_token, refresh_token });
             var session_id = await session_fetch(access_token, refresh_token);
             console.log(session_id);
-            setCookie("session_id", session_id);
+            CookieManager.setCookie("session_id", session_id);
             popup.close();
             navigate.push("/dashboard");
             clearInterval(pollPopup);

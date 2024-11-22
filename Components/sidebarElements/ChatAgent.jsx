@@ -6,7 +6,6 @@ import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AgentList from "../chatAgent/AgentList";
 import SkeletonCard from "../SkeletonCard";
-import { getCookie } from "cookies-next";
 import useTheme from "next-theme";
 import { TfiReload } from "react-icons/tfi";
 import { ContainedButton } from "../buttons/ContainedButton";

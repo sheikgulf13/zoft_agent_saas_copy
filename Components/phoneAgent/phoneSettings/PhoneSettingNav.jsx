@@ -1,12 +1,12 @@
 import useTheme from "next-theme";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { OutlinedButton } from "../../buttons/OutlinedButton";
 import { useSelector } from "react-redux";
 
-const PhoneSettingNav = () => {
+const Content = () => {
   const pathname = usePathname();
   const { theme } = useTheme();
   const router = useRouter();
@@ -73,5 +73,13 @@ const PhoneSettingNav = () => {
     </>
   );
 };
+
+const PhoneSettingNav = () => {
+  return (
+    <Suspense fallback={"Loading..."}>
+      <Content />
+    </Suspense>
+  )
+}
 
 export default PhoneSettingNav;

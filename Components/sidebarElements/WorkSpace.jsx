@@ -14,7 +14,6 @@ import {
   setworkspacename,
   setWorkSpaceId,
 } from "@/store/reducers/workspaceSlice";
-import { getCookie } from "cookies-next";
 import SkeletonCard from "../SkeletonCard";
 import { getApiConfig, getApiHeaders } from "../../utility/api-config";
 import { ContainedButton } from "../buttons/ContainedButton";
@@ -24,6 +23,7 @@ import {} from "../../store/actions/workSpaceListAction";
 import { updateSelectedWorkSpace } from "@/store/reducers/selectedDataSlice";
 import { resetWorkSpace } from "../../store/actions/workspaceActions";
 import { showConfirmationModal } from "../modals/ConfirmationModal";
+import { CookieManager } from "../../utility/cookie-manager"
 
 const WorkSpace = () => {
   const { theme } = useTheme();
@@ -33,7 +33,7 @@ const WorkSpace = () => {
   const { workSpaceList } = useSelector((state) => state.workSpaceList);
   const [modal, setModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const url = process.env.url;
 
   const getWorkspaceList = async () => {

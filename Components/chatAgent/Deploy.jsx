@@ -6,13 +6,13 @@ import useTheme from 'next-theme';
 import GradientButton from '@/Components/buttons/GradientButton';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
-import { getCookie } from 'cookies-next';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import TickIcon from '../Icons/TickIcon'
 import Chatbot from './Chatbot'
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
 import { OutlinedButton } from '../buttons/OutlinedButton';
 import { ContainedButton } from '../buttons/ContainedButton';
+import { CookieManager } from '@/utility/cookie-manager';
 
 const Deploy = () => {
     const { theme, setTheme } = useTheme();
@@ -43,7 +43,7 @@ align="right">
     ];
     const createChatBot = async () => {
         const dict={};
-        const session_id = getCookie("session_id")
+        const session_id = CookieManager.getCookie("session_id")
         const formData = new FormData();
         var urls = ""
         url.forEach((url1, index) => {

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useCookies } from "next-client-cookies";
+import { CookieManager } from "../../../../utility/cookie-manager"
 import { v4 } from "uuid";
 import useTheme from "next-theme";
 import Chatbot from "../../Chatbot";
@@ -15,16 +15,14 @@ const DemoBot = ({ chatId }) => {
   const [chatLog, setChatLog] = useState([]);
   const bottomOfChatRef = useRef(null);
   const [ripples, setRipples] = useState([]);
-  const searchParams = useSearchParams();
   const [sessionUUID, setSessionUUID] = useState(""); //session
-  const Cookie = useCookies();
   const urlFetch = process.env.boturl;
   //Setting session
   useEffect(() => {
     let uuid = Cookie.get("sessionUUID");
     if (!uuid) {
       uuid = v4();
-      Cookie.set("sessionUUID", uuid);
+      CookieManager.setCookie("sessionUUID", uuid);
     }
     setSessionUUID(uuid);
   });

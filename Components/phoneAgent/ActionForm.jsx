@@ -81,6 +81,10 @@ function ActionForm({ show, toggle, initialData }) {
   };
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const editorElement = document.querySelector(".ql-editor");
     if (editorElement) {
       editorElement.style.height = "auto"; // Reset height
@@ -133,6 +137,10 @@ function ActionForm({ show, toggle, initialData }) {
     setErrors({});
     setEditorContent(""); // Reset editor content on submit
   };
+
+  if (typeof window === "undefined") {
+    return <></>;
+  }
 
   return (
     <div className="h-[70vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">

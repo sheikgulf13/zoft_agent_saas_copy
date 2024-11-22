@@ -7,15 +7,13 @@ import { MdEmail } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword, setShowLogin, setFadeIn } from '../store/actions/registerUserActions';
 import { useRouter } from 'next/navigation';
-import { useCookies } from 'next-client-cookies';
-import { setCookie } from 'cookies-next';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
+import { CookieManager } from "../utility/cookie-manager";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useRouter();
   const { email, password, fadeIn } = useSelector((state) => state.user);
-  const cookies=useCookies()
   const url=process.env.url;
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -40,7 +38,7 @@ const Login = () => {
         const responseData = await response.text();
   
         if (response.ok) {
-          cookies.set("session_id", responseData);
+          CookieManager.setCookie("session_id", responseData);
           // cookies.set("refresh_token", responseData.session.refresh_token);
           // const response = await fetch(
           //   `${url}/set_session`,
@@ -110,7 +108,7 @@ const Login = () => {
             sessionFetched = true;
             var session_id = await session_fetch(access_token, refresh_token);
             console.log(session_id);
-            setCookie("session_id", session_id);
+            CookieManager.setCookie("session_id", session_id);
             popup.close();
             navigate.push("/");
             clearInterval(pollPopup);

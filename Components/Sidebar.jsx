@@ -14,9 +14,9 @@ import { motion } from "framer-motion";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { IoMoonOutline, IoSunny } from "react-icons/io5";
-import { getCookie, deleteCookie } from "cookies-next";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { usePathname } from "next/navigation";
+import { CookieManager } from "../utility/cookie-manager";
 
 const variants = {
   open: { width: "unset", transition: { duration: 0.5 } },
@@ -53,7 +53,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
 
   const handleButtonClick = async (index, button) => {
     if (button.text === "logout") {
-      const session_id = getCookie("session_id");
+      const session_id = CookieManager.getCookie("session_id");
       // const refresh_token=getCookie("refresh_token")
       const reqData = JSON.stringify({ session_id: session_id });
       console.log(reqData, JSON.parse(reqData).session_id);
@@ -70,7 +70,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       if (data) {
         localStorage.removeItem(`phoneList_${session_id}`);
         localStorage.removeItem(`agentList_${session_id}`);
-        deleteCookie("session_id");
+        CookieManager.deleteCookie("session_id");
       }
     }
     setActiveButton(button.text);

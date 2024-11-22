@@ -1,7 +1,12 @@
-import Actions from '@/Components/phoneAgent/Actions';
+import Actions from "@/Components/phoneAgent/Actions";
 
-export default function ToolCreationPage({ darkMode, toggleDarkMode, toggleLightMode }: any) {
-  return (
-    <Actions />
-  );
+export default function ToolCreationPage({
+  darkMode,
+  toggleDarkMode,
+  toggleLightMode,
+}: any) {
+  if (typeof window === "undefined") {
+    return <></>;
+  }
+  return <Actions />;
 }

@@ -1,11 +1,11 @@
 "use client";
 import useTheme from "next-theme";
 import { useState, useRef, useEffect } from "react";
-import { useCookies } from "next-client-cookies";
 import { v4 } from "uuid";
 import { BsRobot } from "react-icons/bs";
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
 import { ContainedButton } from "../buttons/ContainedButton";
+import {CookieManager} from "../../utility/cookie-manager"
 
 const Chatbot = ({ width, height, chatAgent }) => {
   // State to store the messages
@@ -13,14 +13,13 @@ const Chatbot = ({ width, height, chatAgent }) => {
     { text: "Hey! how can I help you today?.", sender: "bot" },
   ]);
   const [sessionUUID, setSessionUUID] = useState("");
-  const Cookie = useCookies();
   const urlFetch = process.env.url;
 
   useEffect(() => {
-    let uuid = Cookie.get("sessionUUID");
+    let uuid = CookieManager.getCookie("sessionUUID");
     if (!uuid) {
       uuid = v4();
-      Cookie.set("sessionUUID", uuid);
+      CookieManager.setCookie("sessionUUID", uuid);
     }
     setSessionUUID(uuid);
   }, []);

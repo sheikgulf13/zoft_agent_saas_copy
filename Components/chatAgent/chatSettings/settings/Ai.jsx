@@ -3,7 +3,6 @@
 import useTheme from "next-theme";
 import React, { useEffect, useState } from "react";
 import ChatSettingNav from "../ChatSettingNav";
-import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { getApiConfig, getApiHeaders } from "../../../../utility/api-config";
@@ -14,6 +13,7 @@ import { deleteChatAgentApi } from "@/api/agent";
 import { useDispatch, useSelector } from "react-redux";
 import { showSuccessToast } from "../../../../Components/toast/success-toast";
 import { updateSelectedChatAgent } from "../../../../store/actions/selectedDataActions";
+import { CookieManager } from "../../../../utility/cookie-manager"
 
 const Ai = () => {
   const { theme } = useTheme();
@@ -71,7 +71,7 @@ const Ai = () => {
   };
 
   const updateDetails = async () => {
-    const session_id = getCookie("session_id");
+    const session_id = CookieManager.getCookie("session_id");
     const formData = new FormData();
     formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);

@@ -4,7 +4,6 @@ import DeleteIcon from "../../Icons/DeleteIcon";
 import useTheme from "next-theme";
 import AddFile from "./AddFileUpdate";
 import ChatSettingNav from "./ChatSettingNav";
-import { getCookie } from "cookies-next";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileWordCounts } from "@/store/reducers/fileSliceUpdate";
 import { useRouter } from "next/navigation";
@@ -13,6 +12,7 @@ import { getApiConfig, getApiHeaders } from "../../../utility/api-config";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { OutlinedButton } from "@/Components/buttons/OutlinedButton";
 import { showSuccessToast } from "@/Components/toast/success-toast";
+import { CookieManager } from "@/utility/cookie-manager";
 
 // Utility function to validate URL
 function isValidURL(url) {
@@ -106,7 +106,7 @@ const Source = () => {
       return;
     }
     setErr("");
-    const session_id = getCookie("session_id");
+    const session_id = CookieManager.getCookie("session_id");
     formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
