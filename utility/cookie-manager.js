@@ -1,3 +1,5 @@
+"use client"
+
 const CookieManager = {
   // Set a cookie
   setCookie: (name, value, days = 7) => {
