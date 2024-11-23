@@ -4,6 +4,7 @@ import { CookieManager } from "../utility/cookie-manager"
 
 const getChatAgentList = async () => {
   try {
+    const url = process.env.url;
     const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `agentList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
@@ -29,6 +30,7 @@ const getChatAgentList = async () => {
 
 const getPhoneAgentList = async () => {
   try {
+    const url = process.env.url;
     const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `phoneList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
