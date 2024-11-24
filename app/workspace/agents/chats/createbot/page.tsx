@@ -1,8 +1,8 @@
 "use client"
-import CreateBot from '@/Components/chatAgent/CreateBot';
+import MultiStepForm from '@/Components/chatAgent/MultiStepForm';
 
 export default function CreateBotPage() {
   return (
-    <CreateBot />
+    <MultiStepForm />
   );
 }

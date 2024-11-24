@@ -1,7 +1,10 @@
+"use client"
+
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { upsertAction } from "@/store/reducers/phoneAgentSlice";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import { v4 as uuidv4 } from "uuid";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";

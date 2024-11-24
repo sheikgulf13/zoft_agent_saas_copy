@@ -103,8 +103,8 @@ const Source = () => {
     };
 
     return (
-        <div className={`flex flex-col justify-start items-start px-[2vw] w-full`} style={{height: "calc(100vh - 90px)"}}>
-            <div className={`flex items-start justify-center mt-[90px] py-[4vh] gap-[2vw] pl-[8vw] pr-[3vw] w-full h-full`}>
+        <div className={`flex flex-col justify-start items-start px-[2vw] w-full h-[80%]`}>
+            <div className={`flex items-start justify-center py-[4vh] gap-[2vw] pl-[8vw] pr-[3vw] w-full h-full`}>
                 <div className={`flex flex-col justify-start min-h-full w-[80%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
                     <h1 className='px-[2.5vw] text-lg font-semibold pb-[1vh]'>Data Source</h1>
                     <form className='flex flex-col gap-[1vw] px-[4vw]' onSubmit={handleFormSubmit}>
