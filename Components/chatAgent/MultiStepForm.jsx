@@ -34,6 +34,10 @@ const MultiStepForm = () => {
     return () => clearTimeout(timer);
   }, [dispatch]);
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   const autoResizeTextarea = (textarea) => {
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -91,7 +95,7 @@ const MultiStepForm = () => {
 
   const renderBotCreationForm = () => (
     <form
-      className={`flex flex-col gap-[3vw] pb-[1vw] relative h-full w-full z-10`}
+      className={`flex flex-col gap-[3vw] pb-[1vw] relative h-[100%] w-full z-10`}
     >
       {[
         {
@@ -221,12 +225,13 @@ const MultiStepForm = () => {
       <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg relative">
         {renderStepIndicator()}
         <div className="w-[90%] mx-auto my-[20px] h-[90%] overflow-hidden bg-[#F2F4F7]">
-          <div className="w-full mx-auto h-full flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
+          <div className="w-full mx-auto h-[90%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
             {renderContent()}
           </div>
         </div>
         <div className="w-full absolute bottom-0 bg-white h-[7.5vh] py-[10px]">
           <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] pr-[10%]">
+            {currentStep === 1 && (<OutlinedButton onClick={handleGoBack}>Back</OutlinedButton>)}
             {currentStep > 1 && (
               <OutlinedButton onClick={prev}>Back</OutlinedButton>
             )}
