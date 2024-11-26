@@ -104,8 +104,9 @@ const Source = () => {
 
     return (
         <div className={`flex flex-col justify-start items-start px-[2vw] w-full h-[80%]`}>
-            <div className={`flex items-start justify-center py-[4vh] gap-[2vw] pl-[8vw] pr-[3vw] w-full h-full`}>
-                <div className={`flex flex-col justify-start min-h-full w-[80%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
+            <div className={`flex items-start justify-center py-[4vh] gap-[2vw] pl-[2vw] pr-[1vw] w-full h-full`}>
+                <div className={`flex flex-col justify-start min-h-full w-[75
+                    %] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
                     <h1 className='px-[2.5vw] text-lg font-semibold pb-[1vh]'>Data Source</h1>
                     <form className='flex flex-col gap-[1vw] px-[4vw]' onSubmit={handleFormSubmit}>
                         <div className='flex justify-between items-start'>
@@ -165,7 +166,7 @@ const Source = () => {
                         </div>
                     </form>
                 </div>
-                <div className={`flex flex-col gap-[1vw] justify-center items-center w-[20%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
+                <div className={`flex flex-col gap-[1vw] justify-center items-center w-[25%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
                     <h5 className={`font-semibold text-base`}>Sources</h5>
                     <h6 className={`font-semibold text-base pt-[.7vw]`}>Total characters detected</h6>
                     <p className={`text-sm pb-[.7vw]`}><span className={`font-semibold`}>{totalWordCount}</span> /1,000,000 limit</p>

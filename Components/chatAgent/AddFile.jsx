@@ -63,6 +63,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
+    console.log(files)
     if (files) {
       validateAndDispatchFiles(files);
     }
@@ -73,9 +74,15 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     e.stopPropagation();
     setDragActive(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files) {
-      validateAndDispatchFiles(files);
-    }
+    console.log("Dropped files:", files);
+    console.log('file transferred', e);
+
+  if (files && files.length > 0) {
+    validateAndDispatchFiles(files);
+    console.log("Files validated and dispatched:", files);
+  } else {
+    console.log("No files detected on drop.");
+  }
   };
 
   const handleDragOver = (e) => {
@@ -115,8 +122,11 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         return;
       }
 
-      validFiles.push(file);
-      validFileNames.push(file.name);
+      //validFiles.push(file);
+      //validFileNames.push(file.name);
+
+      validFiles = [...validFiles, file];
+    validFileNames = [...validFileNames, file.name];
 
       if (file.type === "application/pdf") {
         extractTextFromPDF(file).then((wordCount) => {
@@ -146,7 +156,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       }
     });
     setFileNames(validFileNames);
-    dispatch(setFile(validFiles));
+    dispatch(setFile([...validFiles]));
   };
 
   const extractTextFromPDF = (file) => {

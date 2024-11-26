@@ -82,6 +82,7 @@ const Actions = () => {
     const actionWithId = { ...newAction, id: uuidv4() }; // Generate a unique ID
     console.log(actionWithId.id);
     dispatch(upsertAction(actionWithId));
+    setShowForm(false);
   };
 
   const handleEditAction = (action) => {
