@@ -24,7 +24,7 @@ const Deploy = () => {
   const { botName, description, prompt } = useSelector((state) => state.bot);
   const { url, rawText, fileCount } = useSelector((state) => state.data);
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
-  const { file } = useSelector((state) => state.file.file);
+  const { file } = useSelector((state) => state.file);
   const [profileId, setProfileId] = useState("");
   const [chatAgentId, setChatAgentId] = useState("");
   const urlFetch = process.env.url;

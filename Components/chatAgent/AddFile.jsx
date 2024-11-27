@@ -7,7 +7,7 @@ import mammoth from "mammoth";
 import { ContainedButton } from "../buttons/ContainedButton";
 
 const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
-  const { file } = useSelector((state) => state.file.file) || [];
+  const { file } = useSelector((state) => state.file) || [];
   const [fileNames, setFileNames] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState("");
@@ -15,6 +15,8 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   const inputFileRef = useRef(null);
 
   useEffect(() => {
+    console.log('retrieved files', file);
+    
     if (file && file.length > 0) {
       const initialFileNames = file.map((f) => f.name);
       setFileNames(initialFileNames);
@@ -63,7 +65,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    console.log(files)
+    console.log('files:', files)
     if (files) {
       validateAndDispatchFiles(files);
     }
@@ -74,8 +76,6 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     e.stopPropagation();
     setDragActive(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log("Dropped files:", files);
-    console.log('file transferred', e);
 
   if (files && files.length > 0) {
     validateAndDispatchFiles(files);
@@ -97,7 +97,72 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     setDragActive(false);
   };
 
-  const validateAndDispatchFiles = (files) => {
+  const validateAndDispatchFiles = async (files) => {
+    const maxSize = 50 * 1024 * 1024; // 50MB limit
+    const allowedTypes = [
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+      "application/pdf",
+    ];
+  
+    let validFiles = [];
+    let validFileNames = [];
+    let wordCounts = {};
+  
+    const wordCountPromises = files.map((file) => {
+      if (file.size > maxSize) {
+        setError("File size exceeds the 50MB limit!");
+        return null;
+      }
+  
+      if (!allowedTypes.includes(file.type)) {
+        setError("Unsupported file type!");
+        return null;
+      }
+  
+      //validFiles.push(file);
+      validFiles.push({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+      validFileNames.push(file.name);
+  
+      if (file.type === "application/pdf") {
+        return extractTextFromPDF(file).then((wordCount) => {
+          wordCounts[file.name] = wordCount;
+        });
+      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        return extractTextFromDOCX(file).then((wordCount) => {
+          wordCounts[file.name] = wordCount;
+        });
+      } else {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const fileContent = event.target.result;
+            const wordCount = fileContent.split(/\s+/).filter(Boolean).length;
+            wordCounts[file.name] = wordCount;
+            resolve();
+          };
+          reader.readAsText(file);
+        });
+      }
+    });
+  
+    // Wait for all word count extractions to complete
+    await Promise.all(wordCountPromises);
+  
+    setFileNames(validFileNames);
+    setFileWordCounts(wordCounts);
+    console.log('files to be dispatched', validFiles)
+    dispatch(setFile(validFiles)); // Dispatch once everything is validated and updated
+  };
+  
+
+  {/*const validateAndDispatchFiles = (files) => {
     const maxSize = 50 * 1024 * 1024; // 50MB limit
     const allowedTypes = [
       "application/msword",
@@ -155,9 +220,10 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         reader.readAsText(file);
       }
     });
+    console.log('validated files', [...validFiles])
     setFileNames(validFileNames);
     dispatch(setFile([...validFiles]));
-  };
+  };*/}
 
   const extractTextFromPDF = (file) => {
     return new Promise((resolve, reject) => {
@@ -222,7 +288,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     setFileNames(updatedFileNames);
     setFileWordCounts(updatedWordCounts);
 
-    const updatedFiles = file.filter((f) => f.name !== fileName);
+    const updatedFiles = file?.filter((f) => f.name !== fileName);
     dispatch(setFile(updatedFiles));
   };
 
