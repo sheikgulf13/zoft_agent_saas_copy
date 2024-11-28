@@ -33,7 +33,7 @@ const fieldHelpText = {
   "End point": "Enter a url",
 };
 
-function ActionForm({ show, toggle, initialData }) {
+function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   const dispatch = useDispatch();
   const [selectedAction, setSelectedAction] = useState(actions[0]);
   const [formData, setFormData] = useState({});
@@ -146,7 +146,7 @@ function ActionForm({ show, toggle, initialData }) {
   }
 
   return (
-    <div className="h-[70vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
+    <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
       <h2 className="text-xl font-semibold mb-[1vw]">Action Form</h2>
       <form
         onSubmit={handleSubmit}
@@ -162,7 +162,7 @@ function ActionForm({ show, toggle, initialData }) {
           </label>
           <select
             id="action-type"
-            value={selectedAction.id}
+            value={selectedAction?.id}
             onChange={handleActionChange}
             className="mt-1 block w-full py-2 px-3 bg-gray-100 rounded-md shadow-sm focus:outline-none sm:text-sm"
           >
@@ -174,7 +174,7 @@ function ActionForm({ show, toggle, initialData }) {
           </select>
         </div>
 
-        {selectedAction.fields.map((field, index) => (
+        {selectedAction?.fields.map((field, index) => (
           <div key={index} className="mt-4">
             <label
               htmlFor={field}
@@ -222,11 +222,12 @@ function ActionForm({ show, toggle, initialData }) {
           </div>
         ))}
       </form>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-[15px]">
         <OutlinedButton onClick={toggle}>Cancel</OutlinedButton>
         <button
+          onClick={handleCreateAction}
           type="submit"
-          className="bg-[#702963] hover:bg-opacity-[0.85] shadow-sm text-white px-4 py-2 rounded "
+          className="bg-[#702963] hover:bg-opacity-[0.85] shadow-sm text-white px-4 py-2 rounded"
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>

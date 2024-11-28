@@ -20,10 +20,10 @@ const Deploy = () => {
   const navigate = useRouter();
   const [loading, setLoading] = useState(true);
   const [embedCode, setEmbedCode] = useState("");
-  const [chatId, setChaId] = useState(1245);
+  const [chatId, setChaId] = useState();
   const { botName, description, prompt } = useSelector((state) => state.bot);
   const { url, rawText, fileCount } = useSelector((state) => state.data);
-  const { selectedChatAgent } = useSelector((state) => state.selectedData);
+  const { selectedWorkSpace } = useSelector((state) => state.selectedData);
   const { file } = useSelector((state) => state.file);
   const [profileId, setProfileId] = useState("");
   const [chatAgentId, setChatAgentId] = useState("");
@@ -61,8 +61,10 @@ align="right">
     formData.append("botname", botName);
     formData.append("description", description);
     formData.append("prompt", prompt);
+    formData.append("raw_text", rawText);
     formData.append("raw_text_word_count", rawText.split(" ").length);
     formData.append("url_word_count", JSON.stringify(dict));
+    formData.append("workspace_id", selectedWorkSpace);
     const tempFileCount = JSON.stringify(fileCount);
     formData.append("file_word_count", tempFileCount);
     const response = await fetch(`${urlFetch}/public/chat_agent/create_test`, {
@@ -289,7 +291,9 @@ align="right">
               </div>
             </div>
           </div>
-          <Chatbot height={"65vh"} chatAgent={chatId} loading={loading} />
+          {chatId && (
+            <Chatbot height={"65vh"} chatAgent={chatId} loading={loading} />
+          )}
           <div className="w-full absolute bottom-0 bg-white h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">
               <ContainedButton onClick={""}>Finish</ContainedButton>

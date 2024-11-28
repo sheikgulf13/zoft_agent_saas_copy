@@ -3,12 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 const fileSlice = createSlice({
   name: 'file',
   initialState: {
-    file: null,
+    file: [],
   },
   reducers: {
     setFile: (state, action) => {
-      state.file = action.payload;
+      state.file = [...state.file, ...action.payload];
       console.log('File saved in Redux store:', action.payload); // Debug log
+      console.log('file state:', state.file);
     },
   },
 });

@@ -13,7 +13,8 @@ import { deleteChatAgentApi } from "@/api/agent";
 import { useDispatch, useSelector } from "react-redux";
 import { showSuccessToast } from "../../../../Components/toast/success-toast";
 import { updateSelectedChatAgent } from "../../../../store/actions/selectedDataActions";
-import { CookieManager } from "../../../../utility/cookie-manager"
+import { CookieManager } from "../../../../utility/cookie-manager";
+import SimpleAlert from "../../../toast/success-toast";
 
 const Ai = () => {
   const { theme } = useTheme();
@@ -24,6 +25,7 @@ const Ai = () => {
   const [isHovered, setIsHovered] = useState(false);
   const urlFetch = process.env.url;
   const router = useRouter();
+  const [toast, setToast] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { selectedChatAgent, selectedWorkSpace } = useSelector(
     (state) => state.selectedData
@@ -44,7 +46,11 @@ const Ai = () => {
       return;
     }
     await deleteChatAgentApi(selectedChatAgent.id);
-    router.push(`/workspace/agents?workspaceId=${selectedWorkSpace}`);
+    setToast("error");
+    setTimeout(() => {
+      setToast("");
+      router.push(`/workspace/agents?workspaceId=${selectedWorkSpace}`);
+    }, 3000);
   };
 
   const autoResizeTextarea = (textarea) => {
@@ -120,6 +126,18 @@ const Ai = () => {
         onConfirm={handleConfirmDelete}
         cancelClass={"border-[.2vw] border-[#702963] hover:border-opacity-[.8]"}
       />
+
+      <div>
+        {toast === "error" && (
+          <div className="fixed top-[30px] w-[250px] h-[70px] right-[30px] z-[1000]">
+            <SimpleAlert
+              content={"Chatbot deleted successfully"}
+              severity={"error"}
+            />
+          </div>
+        )}
+      </div>
+
       <div
         className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
           theme === "dark" ? "text-[#9f9f9f]" : " text-black"

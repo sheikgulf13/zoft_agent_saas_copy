@@ -165,7 +165,7 @@ const Source = () => {
                         </div>
                     </form>
                 </div>
-                <div className={`flex flex-col gap-[1vw] justify-center items-center w-[20%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
+                <div className={`flex flex-col gap-[1vw] justify-center items-center w-[25%] py-[4vh] px-[1vw] rounded-[.5vw] ${theme === "dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
                     <h5 className={`font-semibold text-base`}>Sources</h5>
                     <h6 className={`font-semibold text-base pt-[.7vw]`}>Total characters detected</h6>
                     <p className={`text-sm pb-[.7vw]`}><span className={`font-semibold`}>{totalWordCount}</span> /1,000,000 limit</p>
