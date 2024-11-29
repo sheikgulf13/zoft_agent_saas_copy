@@ -41,6 +41,11 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   const [editorContent, setEditorContent] = useState(formData.Content || ""); // State for Quill editor
 
   useEffect(() => {
+    console.log(formData)
+    
+  }, [formData])
+
+  useEffect(() => {
     if (initialData) {
       setSelectedAction(
         actions.find((action) => action.name === initialData.type)
@@ -105,8 +110,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
 
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -134,11 +138,16 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     //   ...formData
     // };
 
+    console.log('filled form Data', formData);
+    console.log('form data to be dispatched', actionData);
+    
+
     dispatch(upsertAction(actionData));
     toggle(); // Close the form after submission
     setFormData({});
     setErrors({});
     setEditorContent(""); // Reset editor content on submit
+    return actionData
   };
 
   if (typeof window === "undefined") {

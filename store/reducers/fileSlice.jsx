@@ -7,7 +7,7 @@ const fileSlice = createSlice({
   },
   reducers: {
     setFile: (state, action) => {
-      state.file = [...state.file, ...action.payload];
+      state.file = action.payload;
       console.log('File saved in Redux store:', action.payload); // Debug log
       console.log('file state:', state.file);
     },

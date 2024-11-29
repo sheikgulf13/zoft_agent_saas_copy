@@ -106,7 +106,9 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       "application/pdf",
     ];
 
-    let validFiles = [];
+    console.log('checking files', ...file);
+    
+    let validFiles = [...file];
     let validFileNames = [];
     let wordCounts = {};
 
@@ -298,10 +300,16 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     // const { [fileName]: _, ...remainingWordCounts } = fileWordCounts;
     // setFileWordCounts(remainingWordCounts);
     console.log(fileName);
-    
 
-    const updatedFiles = file?.filter((f) => f.name !== fileName);
-    dispatch(setFile(updatedFiles));
+    const updatedFiles = file?.filter((f) => f.name !== fileName[0]);
+    let validFiles = [...updatedFiles]
+    
+    setTimeout(() => {
+      console.log('deleted updates', updatedFiles, fileName[0]);
+      console.log('updated deleted files', validFiles);
+    }, 1000)
+    
+    dispatch(setFile(validFiles));
   };
 
   const removeFileHandler = (index) => {

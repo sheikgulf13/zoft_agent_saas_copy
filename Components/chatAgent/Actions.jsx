@@ -79,6 +79,8 @@ const Actions = () => {
   };
 
   const handleCreateAction = (newAction) => {
+    console.log('checking action', newAction);
+    
     const actionWithId = { ...newAction, id: uuidv4() }; // Generate a unique ID
     console.log(actionWithId.id);
     dispatch(upsertAction(actionWithId));
@@ -86,7 +88,15 @@ const Actions = () => {
   };
 
   const handleEditAction = (action) => {
-    setSelectedAction(action); // Set the selected action for editing
+    const editAction = createdActions.filter((act) => act.id === action)
+    
+    setSelectedAction(editAction); // Set the selected action for editing
+    setTimeout(() => {
+      console.log(selectedAction);
+      console.log('selected action checking', editAction);
+      console.log(createdActions);
+      
+    }, 1000)
     setShowForm(true); // Show the form for editing
   };
 
@@ -150,7 +160,7 @@ const Actions = () => {
                           <p> Action Type: {action.type}</p>
                           <div className="flex">
                             <button
-                              onClick={() => handleEditAction(action)}
+                              onClick={() => handleEditAction(action.id)}
                               className="ml-4 flex items-center gap-[.5vw] border bg-gray-100 hover:bg-opacity-[.9] text-sm text-black px-[1vw] py-[.3vw] rounded capitalize"
                             >
                               settings <SettingIcon />
@@ -187,7 +197,7 @@ const Actions = () => {
               >
                 {showForm && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex justify-center items-center">
-                    <div className="bg-white w-1/4 h-[80vh] rounded-lg shadow-lg">
+                    <div className="bg-white w-1/4 h-[65vh] rounded-lg shadow-lg">
                       <ActionForm
                         show={showForm}
                         toggle={toggleForm}
