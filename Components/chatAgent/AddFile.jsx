@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFile } from "../../store/reducers/fileSlice";
+import { setUpdatedFile } from "../../store/reducers/fileSlice";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import "pdfjs-dist/build/pdf.worker.mjs";
 import mammoth from "mammoth";
@@ -16,6 +17,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
   useEffect(() => {
     console.log("retrieved files", file);
+
 
     if (file && file.length > 0) {
       const initialFileNames = file.map((f) => f.name);
@@ -292,16 +294,8 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     setFileNames(updatedFileNames);
     setFileWordCounts(updatedWordCounts);
 
-    // const updatedFileNames = fileNames.filter((name) => name !== fileName);
-    // setFileNames(updatedFileNames);
-
-    // const { [fileName]: _, ...remainingWordCounts } = fileWordCounts;
-    // setFileWordCounts(remainingWordCounts);
-    console.log(fileName);
-    
-
     const updatedFiles = file?.filter((f) => f.name !== fileName);
-    dispatch(setFile(updatedFiles));
+    dispatch(setUpdatedFile(updatedFiles));
   };
 
   const removeFileHandler = (index) => {
