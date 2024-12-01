@@ -160,7 +160,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     // Wait for all word count extractions to complete
     await Promise.all(wordCountPromises);
 
-    setFileNames([...fileNames, validFileNames]);
+    setFileNames([...fileNames, ...validFileNames]);
     setFileWordCounts(wordCounts);
     console.log("files to be dispatched", validFiles);
     dispatch(setFile(validFiles)); // Dispatch once everything is validated and updated
