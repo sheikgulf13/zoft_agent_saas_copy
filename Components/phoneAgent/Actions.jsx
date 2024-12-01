@@ -55,7 +55,7 @@ const Actions = () => {
   //const [openAccordion02, setOpenAccordion02] = useState(false)
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedAction, setSelectedAction] = useState();
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
 
@@ -73,13 +73,22 @@ const Actions = () => {
   };
 
   const handleCreateAction = (newAction) => {
-    const actionWithId = { ...newAction, id: uuidv4() }; // Generate a unique ID
+    console.log('checking action', newAction);
+    
+    const actionWithId = { ...newAction, id: newAction.id || uuidv4() }; // Generate a unique ID
     console.log(actionWithId.id);
     dispatch(upsertAction(actionWithId));
+    setShowForm(false);
   };
 
   const handleEditAction = (action) => {
-    setSelectedAction(action); // Set the selected action for editing
+    const editAction = createdActions.find((act) => act.id === action)
+    
+    setSelectedAction(editAction); // Set the selected action for editing
+    setTimeout(() => {
+      console.log('selected action to edit', selectedAction);
+      console.log('selected action checking', editAction);
+    }, 1000)
     setShowForm(true); // Show the form for editing
   };
 
@@ -192,7 +201,7 @@ const Actions = () => {
                           <p> Action Type: {action.type}</p>
                           <div className="flex">
                             <button
-                              onClick={() => handleEditAction(action)}
+                              onClick={() => handleEditAction(action.id)}
                               className="ml-4 flex items-center gap-[.5vw] border bg-gray-100 hover:bg-opacity-[.9] text-sm text-black px-[1vw] py-[.3vw] rounded capitalize"
                             >
                               settings <SettingIcon />

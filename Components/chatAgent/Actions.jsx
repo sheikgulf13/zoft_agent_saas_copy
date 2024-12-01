@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { removeAction, upsertAction, setPrompt, setScript } from "@/store/actions/phoneAgentActions";
+import { removeAction, upsertAction } from "@/store/actions/actionActions";
 import DeleteIcon from "../Icons/DeleteIcon";
 import SettingIcon from "../Icons/SettingIcon";
 import { v4 as uuidv4 } from "uuid";
@@ -50,9 +50,7 @@ const Actions = () => {
   const dispatch = useDispatch();
   const {
     createdActions,
-    prompt,
-    script,
-  } = useSelector((state) => state.phoneAgent);
+  } = useSelector((state) => state.actions);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -60,7 +58,7 @@ const Actions = () => {
   //const [openAccordion02, setOpenAccordion02] = useState(false)
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedAction, setSelectedAction] = useState(null);
+  const [selectedAction, setSelectedAction] = useState();
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
@@ -81,21 +79,19 @@ const Actions = () => {
   const handleCreateAction = (newAction) => {
     console.log('checking action', newAction);
     
-    const actionWithId = { ...newAction, id: uuidv4() }; // Generate a unique ID
+    const actionWithId = { ...newAction, id: newAction.id || uuidv4() }; // Generate a unique ID
     console.log(actionWithId.id);
     dispatch(upsertAction(actionWithId));
     setShowForm(false);
   };
 
   const handleEditAction = (action) => {
-    const editAction = createdActions.filter((act) => act.id === action)
+    const editAction = createdActions.find((act) => act.id === action)
     
     setSelectedAction(editAction); // Set the selected action for editing
     setTimeout(() => {
-      console.log(selectedAction);
+      console.log('selected action to edit', selectedAction);
       console.log('selected action checking', editAction);
-      console.log(createdActions);
-      
     }, 1000)
     setShowForm(true); // Show the form for editing
   };

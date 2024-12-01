@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env:{
-         url:'https://8216-106-219-180-146.ngrok-free.app',
+         url:'https://ccc5-60-243-3-135.ngrok-free.app',
          boturl:'https://kayzen-backend.onrender.com'
     }
 };

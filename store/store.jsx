@@ -3,6 +3,7 @@ import botReducer from "./reducers/botSlice";
 import fileReducer from "./reducers/fileSlice";
 import fileUpdateReducer from "./reducers/fileSliceUpdate";
 import dataSourceSlice from "./reducers/dataSourceSlice";
+import ActionsSlice from "./reducers/ActionsSlice";
 import teamSlice from "./reducers/teamSlice";
 import profileSlice from "./reducers/profileSlice";
 import billingSlice from "./reducers/billingSlice";
@@ -20,6 +21,7 @@ const store = configureStore({
   reducer: {
     bot: botReducer,
     data: dataSourceSlice,
+    actions: ActionsSlice,
     file: fileReducer,
     fileUpdate: fileUpdateReducer,
     team: teamSlice,

@@ -42,7 +42,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
 
   useEffect(() => {
     console.log(formData)
-    
+
   }, [formData])
 
   useEffect(() => {
@@ -110,7 +110,8 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     return newErrors;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -142,12 +143,11 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     console.log('form data to be dispatched', actionData);
     
 
-    dispatch(upsertAction(actionData));
+    handleCreateAction(actionData);
     toggle(); // Close the form after submission
     setFormData({});
     setErrors({});
-    setEditorContent(""); // Reset editor content on submit
-    return actionData
+    setEditorContent("");
   };
 
   if (typeof window === "undefined") {
@@ -234,7 +234,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
       <div className="flex items-center justify-between mt-[15px]">
         <OutlinedButton onClick={toggle}>Cancel</OutlinedButton>
         <button
-          onClick={handleCreateAction}
+          onClick={handleSubmit}
           type="submit"
           className="bg-[#702963] hover:bg-opacity-[0.85] shadow-sm text-white px-4 py-2 rounded"
         >
