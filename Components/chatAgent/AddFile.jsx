@@ -16,37 +16,46 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   const inputFileRef = useRef(null);
 
   useEffect(() => {
-    console.log("Use effect mai jakar", file); // Correct logging
+    console.log("Use effect Inside", file);
+  
     if (file && file.length > 0) {
       const initialFileNames = file.map((f) => f.name);
       setFileNames(initialFileNames);
-
+  
+      // Check if the fileWordCounts are already set before updating
       let initialWordCounts = { ...fileWordCounts };
-
-      // Process all files
+  
       file.forEach((f) => {
         if (f.type === "application/pdf") {
           extractTextFromPDF(f).then((wordCount) => {
-            const updatedWordCounts = { ...initialWordCounts, [f.name]: wordCount };
-            setFileWordCounts(updatedWordCounts);
+            setFileWordCounts(prev => ({
+              ...prev,
+              [f.name]: wordCount,
+            }));
           });
         } else if (f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
           extractTextFromDOCX(f).then((wordCount) => {
-            const updatedWordCounts = { ...initialWordCounts, [f.name]: wordCount };
-            setFileWordCounts(updatedWordCounts);
+            setFileWordCounts(prev => ({
+              ...prev,
+              [f.name]: wordCount,
+            }));
           });
         } else {
           const reader = new FileReader();
           reader.onload = (event) => {
             const wordCount = event.target.result.split(/\s+/).filter(Boolean).length;
-            const updatedWordCounts = { ...initialWordCounts, [f.name]: wordCount };
-            setFileWordCounts(updatedWordCounts);
+            setFileWordCounts(prev => ({
+              ...prev,
+              [f.name]: wordCount,
+            }));
           };
           reader.readAsText(f);
         }
       });
     }
-  }, [file]); // Only re-run the effect when `file` changes
+  }, [file]); // Only runs when `file` changes
+  
+  
 
   const handleFileChange = (e) => {
   
