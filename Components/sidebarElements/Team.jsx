@@ -77,7 +77,7 @@ const Team = () => {
         <h1 className="text-[2.5vw] font-bold ml-[3vw] ">Team</h1>
       </div>
       <div className={`flex flex-col w-[76vw] translate-x-[5%] mb-[1.6vh] h-[35vh] justify-between gap-[2vw] py-[3.2vh] rounded-[0.417vw] shadow-xl ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
-        <h1 className='capitalize text-[1.5vw] font-semibold px-[3.3vw] w-1/2 flex items-center gap-[.7vw]'>
+        <h1 className='capitalize text-2xl font-semibold px-[3.3vw] w-1/2 flex items-center gap-[.7vw]'>
           Team Owner 
           <span>
             <FaPlus className='text-[1.25vw] cursor-pointer' onClick={handleAddMember} />
@@ -88,8 +88,8 @@ const Team = () => {
             <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D" alt="Jane Cooper" className="rounded-full w-[2.5vw] h-[2.5vw] object-cover object-top" />
             <div className='flex items-center justify-between gap-[4vw]'>
               <div className='flex flex-col'>
-                <div className="text-[1.025vw] capitalize">Jane Cooper</div>
-                <div className="text-[0.625vw]">janecooper@gmail.com</div>
+                <div className="text-lg capitalize">Jane Cooper</div>
+                <div className="text-base">janecooper@gmail.com</div>
               </div>
               <DotIcon />
             </div>
@@ -98,8 +98,8 @@ const Team = () => {
             <img src="https://images.unsplash.com/photo-1521119989659-a83eee488004?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBvcnRyYWl0fGVufDB8fDB8fHww" alt="Wade Warren" className="rounded-full w-[2.5vw] h-[2.5vw] object-cover object-center" />
             <div className='flex items-center justify-between gap-[4vw]'>
               <div className='flex flex-col'>
-                <div className="text-[1vw] capitalize">wade warren</div>
-                <div className="text-[0.625vw]">wadewarren@gmail.com</div>
+                <div className="text-lg capitalize">wade warren</div>
+                <div className="text-base">wadewarren@gmail.com</div>
               </div>
               <DotIcon />
             </div>
@@ -112,7 +112,7 @@ const Team = () => {
           placeholder="Search by Members"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="text-[1vw] w-1/2 px-[2.9vw] py-[1.6vh] rounded-[0.625vw] border-[0.052vw] shadow-xl flex justify-between"
+          className="text-lg w-1/2 px-[2.9vw] py-[1.6vh] rounded-[0.625vw] border-[0.052vw] shadow-xl flex justify-between"
         />
         <SearchIcon left={'4.6vw'} />
         <GradientButton

@@ -108,7 +108,9 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       "application/pdf",
     ];
 
-    let validFiles = [];
+    console.log('checking files', ...file);
+    
+    let validFiles = [...file];
     let validFileNames = [];
     let wordCounts = {};
 
@@ -160,7 +162,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     // Wait for all word count extractions to complete
     await Promise.all(wordCountPromises);
 
-    setFileNames([...fileNames, validFileNames]);
+    setFileNames([...fileNames, ...validFileNames]);
     setFileWordCounts(wordCounts);
     console.log("files to be dispatched", validFiles);
     dispatch(setFile(validFiles)); // Dispatch once everything is validated and updated
@@ -294,8 +296,22 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     setFileNames(updatedFileNames);
     setFileWordCounts(updatedWordCounts);
 
-    const updatedFiles = file?.filter((f) => f.name !== fileName);
-    dispatch(setUpdatedFile(updatedFiles));
+    // const updatedFileNames = fileNames.filter((name) => name !== fileName);
+    // setFileNames(updatedFileNames);
+
+    // const { [fileName]: _, ...remainingWordCounts } = fileWordCounts;
+    // setFileWordCounts(remainingWordCounts);
+    console.log(fileName);
+
+    const updatedFiles = file?.filter((f) => f.name !== fileName[0]);
+    let validFiles = [...updatedFiles]
+    
+    setTimeout(() => {
+      console.log('deleted updates', updatedFiles, fileName[0]);
+      console.log('updated deleted files', validFiles);
+    }, 1000)
+    
+    dispatch(setFile(validFiles));
   };
 
   const removeFileHandler = (index) => {

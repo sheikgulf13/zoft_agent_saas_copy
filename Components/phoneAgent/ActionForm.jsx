@@ -41,6 +41,11 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   const [editorContent, setEditorContent] = useState(formData.Content || ""); // State for Quill editor
 
   useEffect(() => {
+    console.log(formData)
+
+  }, [formData])
+
+  useEffect(() => {
     if (initialData) {
       setSelectedAction(
         actions.find((action) => action.name === initialData.type)
@@ -106,7 +111,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -134,11 +139,15 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     //   ...formData
     // };
 
-    dispatch(upsertAction(actionData));
+    console.log('filled form Data', formData);
+    console.log('form data to be dispatched', actionData);
+    
+
+    handleCreateAction(actionData);
     toggle(); // Close the form after submission
     setFormData({});
     setErrors({});
-    setEditorContent(""); // Reset editor content on submit
+    setEditorContent("");
   };
 
   if (typeof window === "undefined") {
@@ -225,7 +234,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
       <div className="flex items-center justify-between mt-[15px]">
         <OutlinedButton onClick={toggle}>Cancel</OutlinedButton>
         <button
-          onClick={handleCreateAction}
+          onClick={handleSubmit}
           type="submit"
           className="bg-[#702963] hover:bg-opacity-[0.85] shadow-sm text-white px-4 py-2 rounded"
         >
