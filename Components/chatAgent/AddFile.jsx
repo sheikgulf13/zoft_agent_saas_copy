@@ -16,74 +16,70 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   const inputFileRef = useRef(null);
 
   useEffect(() => {
-    console.log("retrieved files", file);
-
-
+    console.log("Use effect Inside", file);
+  
     if (file && file.length > 0) {
       const initialFileNames = file.map((f) => f.name);
       setFileNames(initialFileNames);
-
+  
+      // Check if the fileWordCounts are already set before updating
       let initialWordCounts = { ...fileWordCounts };
-
+  
       file.forEach((f) => {
         if (f.type === "application/pdf") {
           extractTextFromPDF(f).then((wordCount) => {
-            const updatedWordCounts = {
-              ...initialWordCounts,
+            setFileWordCounts(prev => ({
+              ...prev,
               [f.name]: wordCount,
-            };
-            initialWordCounts = updatedWordCounts;
-            setFileWordCounts(updatedWordCounts);
+            }));
           });
-        } else if (
-          f.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        ) {
+        } else if (f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
           extractTextFromDOCX(f).then((wordCount) => {
-            const updatedWordCounts = {
-              ...initialWordCounts,
+            setFileWordCounts(prev => ({
+              ...prev,
               [f.name]: wordCount,
-            };
-            initialWordCounts = updatedWordCounts;
-            setFileWordCounts(updatedWordCounts);
+            }));
           });
         } else {
           const reader = new FileReader();
           reader.onload = (event) => {
-            const fileContent = event.target.result;
-            const wordCount = fileContent.split(/\s+/).filter(Boolean).length;
-            const updatedWordCounts = {
-              ...initialWordCounts,
+            const wordCount = event.target.result.split(/\s+/).filter(Boolean).length;
+            setFileWordCounts(prev => ({
+              ...prev,
               [f.name]: wordCount,
-            };
-            initialWordCounts = updatedWordCounts;
-            setFileWordCounts(updatedWordCounts);
+            }));
           };
           reader.readAsText(f);
         }
       });
     }
-  }, []);
+  }, [file]); // Only runs when `file` changes
+  
+  
 
   const handleFileChange = (e) => {
+  
+    console.log("Handle File Changes mai jakar", e.target.files); // Correct logging
     const files = Array.from(e.target.files);
-    console.log("files:", files);
+  
     if (files) {
-      validateAndDispatchFiles(files);
-    }
-  };
+     
+        validateAndDispatchFiles(files);
+ } else {
+        console.log("No new unique files to add");
+      }
+    };
+  
+
+  
 
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     const files = Array.from(e.dataTransfer.files);
-
-    if (files && files.length > 0) {
+    if (files.length > 0) {
       validateAndDispatchFiles(files);
-      console.log("Files validated and dispatched:", files);
-    } else {
-      console.log("No files detected on drop.");
     }
   };
 
@@ -100,6 +96,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   };
 
   const validateAndDispatchFiles = async (files) => {
+    console.log("Validate And Dispatch Function in mai jakar", files); // Correct logging
     const maxSize = 50 * 1024 * 1024; // 50MB limit
     const allowedTypes = [
       "application/msword",
@@ -108,11 +105,9 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       "application/pdf",
     ];
 
-    console.log('checking files', ...file);
-    
-    let validFiles = [...file];
-    let validFileNames = [];
+    let validFiles = [];
     let wordCounts = {};
+    console.log("BEFORE WORD COUNT IS", wordCounts); // Correct logging
 
     const wordCountPromises = files.map((file) => {
       if (file.size > maxSize) {
@@ -125,23 +120,13 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         return null;
       }
 
-      //validFiles.push(file);
-      validFiles.push({
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        lastModified: file.lastModified,
-      });
-      validFileNames.push(file.name);
+      validFiles.push(file);
 
       if (file.type === "application/pdf") {
         return extractTextFromPDF(file).then((wordCount) => {
           wordCounts[file.name] = wordCount;
         });
-      } else if (
-        file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
+      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
         return extractTextFromDOCX(file).then((wordCount) => {
           wordCounts[file.name] = wordCount;
         });
@@ -149,8 +134,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = (event) => {
-            const fileContent = event.target.result;
-            const wordCount = fileContent.split(/\s+/).filter(Boolean).length;
+            const wordCount = event.target.result.split(/\s+/).filter(Boolean).length;
             wordCounts[file.name] = wordCount;
             resolve();
           };
@@ -159,140 +143,30 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       }
     });
 
-    // Wait for all word count extractions to complete
-    await Promise.all(wordCountPromises);
+    await Promise.all(wordCountPromises); 
+    
+    // Ensure word counts are updated before dispatching
 
-    setFileNames([...fileNames, ...validFileNames]);
-    setFileWordCounts(wordCounts);
-    console.log("files to be dispatched", validFiles);
-    dispatch(setFile(validFiles)); // Dispatch once everything is validated and updated
-  };
+    
 
-  {
-    /*const validateAndDispatchFiles = (files) => {
-    const maxSize = 50 * 1024 * 1024; // 50MB limit
-    const allowedTypes = [
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
-      "application/pdf",
-    ];
 
-    // Ensure `files` is an array, even if it's null or undefined
-    let validFiles = Array.isArray(file) ? [...file] : [];
-    let validFileNames = [...fileNames];
-    let wordCounts = { ...fileWordCounts };
+    console.log("ALL HE VALID FILE ARE",validFiles)
+    const newArray = [...fileNames, ...validFiles.map((file) => file.name)]; 
 
-    files.forEach((file) => {
-      if (file.size > maxSize) {
-        setError("File size exceeds the 50MB limit!");
-        return;
-      }
+    // setFileNames(validFiles.map((file) => file.name));
+    setFileNames(newArray);
+    console.log("AFTER WORD COUNT IS", wordCounts); // Correct logging
+    const newWord={...fileWordCounts, ...wordCounts};
 
-      if (!allowedTypes.includes(file.type)) {
-        setError("Unsupported file type!");
-        return;
-      }
-
-      //validFiles.push(file);
-      //validFileNames.push(file.name);
-
-      validFiles = [...validFiles, file];
-    validFileNames = [...validFileNames, file.name];
-
-      if (file.type === "application/pdf") {
-        extractTextFromPDF(file).then((wordCount) => {
-          const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
-          wordCounts = updatedWordCounts;
-          setFileWordCounts(updatedWordCounts);
-        });
-      } else if (
-        file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
-        extractTextFromDOCX(file).then((wordCount) => {
-          const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
-          wordCounts = updatedWordCounts;
-          setFileWordCounts(updatedWordCounts);
-        });
-      } else {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const fileContent = event.target.result;
-          const wordCount = fileContent.split(/\s+/).filter(Boolean).length;
-          const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
-          wordCounts = updatedWordCounts;
-          setFileWordCounts(updatedWordCounts);
-        };
-        reader.readAsText(file);
-      }
-    });
-    console.log('validated files', [...validFiles])
-    setFileNames(validFileNames);
-    dispatch(setFile([...validFiles]));
-  };*/
-  }
-
-  const extractTextFromPDF = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const fileContent = new Uint8Array(event.target.result);
-        pdfjsLib.getDocument(fileContent).promise.then((pdf) => {
-          let textContent = "";
-          let numPages = pdf.numPages;
-
-          const extractPageText = (pageNum) => {
-            pdf.getPage(pageNum).then((page) => {
-              page.getTextContent().then((text) => {
-                text.items.forEach((item) => {
-                  textContent += item.str + " ";
-                });
-
-                if (pageNum < numPages) {
-                  extractPageText(pageNum + 1);
-                } else {
-                  const wordCount = textContent
-                    .split(/\s+/)
-                    .filter(Boolean).length;
-                  resolve(wordCount);
-                }
-              });
-            });
-          };
-
-          extractPageText(1);
-        });
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
-  const extractTextFromDOCX = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const arrayBuffer = event.target.result;
-        try {
-          const result = await mammoth.extractRawText({ arrayBuffer });
-          const textContent = result.value;
-          const wordCount = textContent.split(/\s+/).filter(Boolean).length;
-          resolve(wordCount);
-        } catch (error) {
-          console.error("Error extracting text from DOCX:", error);
-          reject(error);
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
+    setFileWordCounts(newWord);
+    dispatch(setFile(validFiles));
   };
 
   const handleDelete = (fileName) => {
     const updatedFileNames = fileNames.filter((name) => name !== fileName);
     const updatedWordCounts = { ...fileWordCounts };
     delete updatedWordCounts[fileName];
+
     setFileNames(updatedFileNames);
     setFileWordCounts(updatedWordCounts);
 
@@ -317,7 +191,6 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   const removeFileHandler = (index) => {
     const updatedFiles = fileNames.filter((_, i) => i !== index);
     setFileNames(updatedFiles);
-    console.log(index);
   };
 
   return (
@@ -362,7 +235,9 @@ const DropZone = ({
       onDrop={onDrop}
     >
       <p className="Hmd font-bold">Drag & Drop any Document</p>
-      <p className="text-sm text-gray-500 mb-4">(Support doc, txt file, pdf)</p>
+      <p className="text-sm text-gray-500 mb-4">
+        (Support doc, txt file, pdf)
+      </p>
 
       {/* Hidden input element */}
       <input
@@ -384,6 +259,7 @@ const DropZone = ({
 );
 
 const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
+
   <div className="text-sm">
     {fileNames.map((name, index) => (
       <div
@@ -404,5 +280,44 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
     ))}
   </div>
 );
+
+const extractTextFromPDF = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.onload = async (e) => {
+      const typedarray = new Uint8Array(e.target.result);
+      const pdf = await pdfjsLib.getDocument(typedarray).promise;
+      let textContent = "";
+
+      for (let i = 0; i < pdf.numPages; i++) {
+        const page = await pdf.getPage(i + 1);
+        const text = await page.getTextContent();
+        text.items.forEach((item) => {
+          textContent += item.str + " ";
+        });
+      }
+      resolve(textContent.split(/\s+/).filter(Boolean).length);
+    };
+    fileReader.onerror = reject;
+    fileReader.readAsArrayBuffer(file);
+  });
+};
+
+const extractTextFromDOCX = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const arrayBuffer = reader.result;
+      try {
+        const { value } = await mammoth.extractRawText({ arrayBuffer });
+        resolve(value.split(/\s+/).filter(Boolean).length);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+};
 
 export default AddFile;

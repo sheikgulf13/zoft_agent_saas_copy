@@ -183,6 +183,7 @@ const Source = () => {
   };
 
   const removeUrl = (index) => {
+    console.log("Delete button clicked for index: ", index); // Test log
     const updatedUrl = pastedUrl.filter((_, i) => i !== index);
     setPastedUrl(updatedUrl);
   };

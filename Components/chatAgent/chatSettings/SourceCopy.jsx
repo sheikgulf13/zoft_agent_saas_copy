@@ -169,7 +169,7 @@ const Source = () => {
                     <h5 className={`font-semibold text-base`}>Sources</h5>
                     <h6 className={`font-semibold text-base pt-[.7vw]`}>Total characters detected</h6>
                     <p className={`text-sm pb-[.7vw]`}><span className={`font-semibold`}>{totalWordCount}</span> /1,000,000 limit</p>
-                    <ContainedButton>Update</ContainedButton>
+                   {/* // <ContainedButton>Update</ContainedButton> */}
                 </div>
             </div>
         </div>
