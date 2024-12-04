@@ -17,25 +17,28 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
   useEffect(() => {
     console.log("Use effect Inside", file);
-  
+
     if (file && file.length > 0) {
       const initialFileNames = file.map((f) => f.name);
       setFileNames(initialFileNames);
-  
+
       // Check if the fileWordCounts are already set before updating
       let initialWordCounts = { ...fileWordCounts };
-  
+
       file.forEach((f) => {
         if (f.type === "application/pdf") {
           extractTextFromPDF(f).then((wordCount) => {
-            setFileWordCounts(prev => ({
+            setFileWordCounts((prev) => ({
               ...prev,
               [f.name]: wordCount,
             }));
           });
-        } else if (f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        } else if (
+          f.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ) {
           extractTextFromDOCX(f).then((wordCount) => {
-            setFileWordCounts(prev => ({
+            setFileWordCounts((prev) => ({
               ...prev,
               [f.name]: wordCount,
             }));
@@ -43,8 +46,10 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         } else {
           const reader = new FileReader();
           reader.onload = (event) => {
-            const wordCount = event.target.result.split(/\s+/).filter(Boolean).length;
-            setFileWordCounts(prev => ({
+            const wordCount = event.target.result
+              .split(/\s+/)
+              .filter(Boolean).length;
+            setFileWordCounts((prev) => ({
               ...prev,
               [f.name]: wordCount,
             }));
@@ -54,24 +59,17 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       });
     }
   }, [file]); // Only runs when `file` changes
-  
-  
 
   const handleFileChange = (e) => {
-  
     console.log("Handle File Changes mai jakar", e.target.files); // Correct logging
     const files = Array.from(e.target.files);
-  
-    if (files) {
-     
-        validateAndDispatchFiles(files);
- } else {
-        console.log("No new unique files to add");
-      }
-    };
-  
 
-  
+    if (files) {
+      validateAndDispatchFiles(files);
+    } else {
+      console.log("No new unique files to add");
+    }
+  };
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -126,7 +124,10 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         return extractTextFromPDF(file).then((wordCount) => {
           wordCounts[file.name] = wordCount;
         });
-      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      } else if (
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
         return extractTextFromDOCX(file).then((wordCount) => {
           wordCounts[file.name] = wordCount;
         });
@@ -134,7 +135,9 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = (event) => {
-            const wordCount = event.target.result.split(/\s+/).filter(Boolean).length;
+            const wordCount = event.target.result
+              .split(/\s+/)
+              .filter(Boolean).length;
             wordCounts[file.name] = wordCount;
             resolve();
           };
@@ -143,20 +146,17 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       }
     });
 
-    await Promise.all(wordCountPromises); 
-    
+    await Promise.all(wordCountPromises);
+
     // Ensure word counts are updated before dispatching
 
-    
-
-
-    console.log("ALL HE VALID FILE ARE",validFiles)
-    const newArray = [...fileNames, ...validFiles.map((file) => file.name)]; 
+    console.log("ALL HE VALID FILE ARE", validFiles);
+    const newArray = [...fileNames, ...validFiles.map((file) => file.name)];
 
     // setFileNames(validFiles.map((file) => file.name));
     setFileNames(newArray);
     console.log("AFTER WORD COUNT IS", wordCounts); // Correct logging
-    const newWord={...fileWordCounts, ...wordCounts};
+    const newWord = { ...fileWordCounts, ...wordCounts };
 
     setFileWordCounts(newWord);
     dispatch(setFile(validFiles));
@@ -178,13 +178,13 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     console.log(fileName);
 
     const updatedFiles = file?.filter((f) => f.name !== fileName[0]);
-    let validFiles = [...updatedFiles]
-    
+    let validFiles = [...updatedFiles];
+
     setTimeout(() => {
-      console.log('deleted updates', updatedFiles, fileName[0]);
-      console.log('updated deleted files', validFiles);
-    }, 1000)
-    
+      console.log("deleted updates", updatedFiles, fileName[0]);
+      console.log("updated deleted files", validFiles);
+    }, 1000);
+
     dispatch(setFile(validFiles));
   };
 
@@ -235,9 +235,7 @@ const DropZone = ({
       onDrop={onDrop}
     >
       <p className="Hmd font-bold">Drag & Drop any Document</p>
-      <p className="text-sm text-gray-500 mb-4">
-        (Support doc, txt file, pdf)
-      </p>
+      <p className="text-sm text-gray-500 mb-4">(Support doc, txt file, pdf)</p>
 
       {/* Hidden input element */}
       <input
@@ -259,20 +257,29 @@ const DropZone = ({
 );
 
 const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
-
   <div className="text-sm">
     {fileNames.map((name, index) => (
       <div
         key={index}
         className="flex justify-between border p-[.5vw] mb-[2vh]"
       >
-        <span>{name}</span>
+        {name.length < 40 ? (
+          <span>{name}</span>
+        ) : (
+          <div className="group relative">
+            <span className="absolute bg-gray-400 text-white top-[-35px] left-0 w-full rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {name}
+            </span>
+            <span className="cursor-pointer">{name.slice(0, 40)}.....</span>
+          </div>
+        )}
         <div>
           <span>{fileWordCounts[name]} words</span>
           <button
             onClick={() => handleDelete(name)}
             className="ml-[1vw] bg-red-500 text-white p-[.2vw] rounded"
           >
+
             Delete
           </button>
         </div>
