@@ -177,7 +177,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     // setFileWordCounts(remainingWordCounts);
     console.log(fileName);
 
-    const updatedFiles = file?.filter((f) => f.name !== fileName[0]);
+    const updatedFiles = file?.filter((f) => f.name !== fileName);
     let validFiles = [...updatedFiles];
 
     setTimeout(() => {
@@ -185,7 +185,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
       console.log("updated deleted files", validFiles);
     }, 1000);
 
-    dispatch(setFile(validFiles));
+    dispatch(setUpdatedFile(validFiles));
   };
 
   const removeFileHandler = (index) => {
@@ -267,7 +267,8 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
           <span>{name}</span>
         ) : (
           <div className="group relative">
-            <span className="absolute bg-gray-400 text-white top-[-35px] left-0 w-full rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="absolute bg-gray-400 text-white top-[-35px] left-0 w-full
+             rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {name}
             </span>
             <span className="cursor-pointer">{name.slice(0, 40)}.....</span>
