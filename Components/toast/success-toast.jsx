@@ -26,6 +26,7 @@ const showSuccessToast = (content) => {
   alertContainer.style.top = "0";
   alertContainer.style.right = `0`;
   alertContainer.style.margin = "50px";
+  alertContainer.style.zIndex = 20;
   document.body.appendChild(alertContainer);
 
   // Create a root and render SimpleAlert inside the container
@@ -50,6 +51,7 @@ const showErrorToast = (content) => {
   alertContainer.style.top = "0";
   alertContainer.style.right = `0`;
   alertContainer.style.margin = "50px";
+  alertContainer.style.zIndex = 20;
   document.body.appendChild(alertContainer);
 
   // Create a root and render SimpleAlert inside the container

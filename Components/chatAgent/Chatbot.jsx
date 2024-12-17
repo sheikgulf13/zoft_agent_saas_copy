@@ -46,7 +46,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
     const data = {
       "user_input": textInput,
       "conversation_id": sessionUUID,
-      "chat_agent_id":  chatAgent?.id,
+      "chat_agent_id":  chatAgent?.chat_agent_id || chatAgent?.id ,
       "conversation_history": messages
     }
     await fetch(`${urlFetch}/tester/chat`, {

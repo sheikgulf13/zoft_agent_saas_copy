@@ -9,6 +9,7 @@ import { setEmail, setPassword, setShowLogin, setFadeIn } from '../store/actions
 import { useRouter } from 'next/navigation';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
 import { CookieManager } from "../utility/cookie-manager";
+import { showErrorToast } from './toast/success-toast';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -34,31 +35,17 @@ const Login = () => {
             }),
           }
         );
-  
-        const responseData = await response.text();
-  
-        if (response.ok) {
+
+        if(response.status === 200) {
+          const responseData = await response.text();
           CookieManager.setCookie("session_id", responseData);
-          // cookies.set("refresh_token", responseData.session.refresh_token);
-          // const response = await fetch(
-          //   `${url}/set_session`,
-          //   {
-          //     mode: 'cors',
-          //     method: 'POST',
-          //     body: data,
-          //     headers: new Headers({
-          //       'Content-Type': 'application/json',
-          //       'ngrok-skip-browser-warning': 'true',
-          //     }),
-          //     credentials:'include',
-          //   }
-          // );
           setTimeout(() => {
             navigate.push('/dashboard');
           }, 1);
-        } else {
-          // Handle server-side errors here
-          console.error(responseData.message);
+        } else if(response.status === 401) {
+          showErrorToast("Incorrect credentials.")
+        } else if(response.status === 403) {
+          showErrorToast("Please verify your email. A verification message has already been sent to you.")
         }
       } catch (error) {
         // Handle network or other errors here

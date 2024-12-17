@@ -26,7 +26,7 @@ const Deploy = () => {
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
   const { file } = useSelector((state) => state.file);
   const [profileId, setProfileId] = useState("");
-  const [chatAgentId, setChatAgentId] = useState("");
+  const [chatAgent, setChatAgent] = useState("");
   const urlFetch = process.env.url;
   const [progress, setprogress] = useState(false);
   const [currentSentence, setCurrentSentence] = useState(0);
@@ -75,8 +75,8 @@ align="right">
       }),
       body: formData,
     });
-    const data = await response.text();
-    setChaId(data);
+    const data = await response.json();
+    setChatAgent(data);
     if (response.ok) {
       setToast("success");
       setTimeout(() => {
@@ -89,9 +89,6 @@ align="right">
         setToast("");
       }, 3000);
     }
-    const list = data.split("_");
-    setProfileId(list[0]);
-    setChatAgentId(list[1]);
     localStorage.removeItem(`agentList_${session_id}`);
     setLoading(false);
   };
@@ -291,8 +288,8 @@ align="right">
               </div>
             </div>
           </div>
-          {chatId && (
-            <Chatbot height={"65vh"} chatAgent={chatId} loading={loading} />
+          {chatAgent && (
+            <Chatbot height={"65vh"} chatAgent={chatAgent} loading={loading} />
           )}
           <div className="w-full absolute bottom-0 bg-white h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">

@@ -95,21 +95,6 @@ const WorkSpace = () => {
           }`}
         >
           <h1 className="text-xl font-bold">Workspace</h1>
-          <ContainedButton>
-            <div className={`flex items-center`}>
-              <div
-                className={`${theme === "dark" ? "text-white" : "text-white"}`}
-              >
-                <TfiReload
-                  style={{ width: "16px", height: "16px" }}
-                  strokeWidth="1px"
-                />
-              </div>
-              <span className="font-bold text-white text-base ml-2">
-                Reload
-              </span>
-            </div>
-          </ContainedButton>
         </div>
 
         <div className={`overflow-hidden m-[2%]`}>
