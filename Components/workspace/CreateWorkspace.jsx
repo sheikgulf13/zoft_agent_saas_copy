@@ -100,6 +100,7 @@ const Content = () => {
   const saveHandler = async () => {
     if (workspace.find((item) => item.id === workspace_id)) {
       if (
+        filteredWorkspace?.workspace_name !== workspacename ||
         filteredWorkspace?.twilio_SSID !== twiliosid ||
         filteredWorkspace?.twilio_auth_token !== twilioauthtoken ||
         filteredWorkspace?.elevenlabs_api_key !== elevenlabskey ||

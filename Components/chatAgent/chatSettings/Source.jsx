@@ -232,7 +232,7 @@ const Source = () => {
             className="flex flex-col gap-[1vw] px-[4vw]"
             onSubmit={handleFormSubmit}
           >
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between">
               <div className={`flex flex-col w-[15%] text-base`}>
                 {links.map((link, index) => (
                   <React.Fragment key={index}>
@@ -291,15 +291,17 @@ const Source = () => {
                   </div>
                 </div>
               ) : (
-                <>
-                  <span className="absolute left-[65vw] top-[26vh]">
+                <div className="w-[80%]">
+                  <div className="mb-4 text-base">
+                    <p>
                     Words count: {rawWordCounts}
-                  </span>
+                    </p>
+                  </div>
                   <textarea
                     onChange={rawTextHandler}
                     value={rawText}
                     id="rawText"
-                    className={`text-base border-[0.052vw] w-[35vw] border-zinc-300 px-[1.3vw] pb-[1.8vh] pt-[1.8vh] rounded-[.5vw] overflow-hidden ${
+                    className={`w-full text-base border-[0.052vw] p-2 border-zinc-300 rounded-[.5vw] overflow-hidden ${
                       theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
@@ -307,7 +309,7 @@ const Source = () => {
                     placeholder="Enter raw text"
                     style={{ height: "auto", minHeight: "15vh" }}
                   ></textarea>
-                </>
+                </div>
               )}
             </div>
           </form>

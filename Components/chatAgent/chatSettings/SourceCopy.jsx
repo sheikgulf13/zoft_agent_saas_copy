@@ -198,8 +198,8 @@ const Source = () => {
                   </div>
                 </div>
               ) : (
-                <>
-                  <span className="absolute left-[44vw] top-[16vh]">
+                <div className="w-[80%]">
+                  <span className="text-base font-semibold">
                     Words count: {rawText.split(" ").length - 1}
                   </span>
                   <textarea
@@ -214,7 +214,7 @@ const Source = () => {
                     placeholder="Enter raw text"
                     style={{ height: "auto", minHeight: "15vh" }}
                   ></textarea>
-                </>
+                </div>
               )}
             </div>
           </form>

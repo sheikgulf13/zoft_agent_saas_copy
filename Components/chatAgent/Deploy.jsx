@@ -24,6 +24,9 @@ const Deploy = () => {
   const { botName, description, prompt } = useSelector((state) => state.bot);
   const { url, rawText, fileCount } = useSelector((state) => state.data);
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+    const {
+      createdActions,
+    } = useSelector((state) => state.actions);
   const { file } = useSelector((state) => state.file);
   const [profileId, setProfileId] = useState("");
   const [chatAgent, setChatAgent] = useState("");
@@ -65,6 +68,7 @@ align="right">
     formData.append("raw_text_word_count", rawText.split(" ").length);
     formData.append("url_word_count", JSON.stringify(dict));
     formData.append("workspace_id", selectedWorkSpace);
+    formData.append("actions", JSON.stringify(createdActions));
     const tempFileCount = JSON.stringify(fileCount);
     formData.append("file_word_count", tempFileCount);
     const response = await fetch(`${urlFetch}/public/chat_agent/create_test`, {
@@ -293,7 +297,7 @@ align="right">
           )}
           <div className="w-full absolute bottom-0 bg-white h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">
-              <ContainedButton onClick={""}>Finish</ContainedButton>
+              <ContainedButton onClick={() => {navigate.push(`/workspace/agents?workspaceId=${selectedWorkSpace}`)}}>Finish</ContainedButton>
             </div>
           </div>
         </div>

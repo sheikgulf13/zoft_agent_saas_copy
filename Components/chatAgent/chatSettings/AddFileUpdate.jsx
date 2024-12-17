@@ -84,6 +84,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
       validateAndDispatchFiles(files);
+      inputFileRef.current.value = null;
     }
   };
 
@@ -320,20 +321,23 @@ const DropZone = ({
 
 const FileList = ({ fileNames, fileWordCounts = {}, handleDelete }) => (
   <div className="text-sm">
-    {fileNames.map((name, index) => (
-      <div
+    {fileNames.map((name, index) => {
+      return (
+        <div
         key={index}
         className="flex justify-between border p-[.5vw] mb-[2vh]"
       >
         <span>{name}</span>
         <div>
           <span className="mr-4">{fileWordCounts[name] || 0} words</span>
-          <ContainedButton backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"}>
+          <ContainedButton backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"} onClick={() => handleDelete(name)}>
             Delete
           </ContainedButton>
         </div>
       </div>
-    ))}
+      )
+
+    })}
   </div>
 );
 
