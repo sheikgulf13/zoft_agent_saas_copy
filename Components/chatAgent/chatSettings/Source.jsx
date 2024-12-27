@@ -97,9 +97,9 @@ const Source = () => {
     });
     existingFiles = existingFiles.substring(0, existingFiles.length - 1);
     urls = urls.substring(0, urls.length - 1);
-    file?.forEach((file, index) => {
-      formData.append("new_files", file);
-    });
+    // file?.forEach((file, index) => {
+    //   formData.append("new_files", file);
+    // });
     const changes = DetectChanges(urls, existingFiles);
     if (changes == 0) {
       setErr("No Changes Is Done");
