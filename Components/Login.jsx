@@ -7,15 +7,14 @@ import { MdEmail } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword, setShowLogin, setFadeIn } from '../store/actions/registerUserActions';
 import { useRouter } from 'next/navigation';
-import { useCookies } from 'next-client-cookies';
-import { setCookie } from 'cookies-next';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
+import { CookieManager } from "../utility/cookie-manager";
+import { showErrorToast } from './toast/success-toast';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useRouter();
   const { email, password, fadeIn } = useSelector((state) => state.user);
-  const cookies=useCookies()
   const url=process.env.url;
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -36,31 +35,17 @@ const Login = () => {
             }),
           }
         );
-  
-        const responseData = await response.text();
-  
-        if (response.ok) {
-          cookies.set("session_id", responseData);
-          // cookies.set("refresh_token", responseData.session.refresh_token);
-          // const response = await fetch(
-          //   `${url}/set_session`,
-          //   {
-          //     mode: 'cors',
-          //     method: 'POST',
-          //     body: data,
-          //     headers: new Headers({
-          //       'Content-Type': 'application/json',
-          //       'ngrok-skip-browser-warning': 'true',
-          //     }),
-          //     credentials:'include',
-          //   }
-          // );
+
+        if(response.status === 200) {
+          const responseData = await response.text();
+          CookieManager.setCookie("session_id", responseData);
           setTimeout(() => {
             navigate.push('/dashboard');
           }, 1);
-        } else {
-          // Handle server-side errors here
-          console.error(responseData.message);
+        } else if(response.status === 401) {
+          showErrorToast("Incorrect credentials.")
+        } else if(response.status === 403) {
+          showErrorToast("Please verify your email. A verification message has already been sent to you.")
         }
       } catch (error) {
         // Handle network or other errors here
@@ -110,7 +95,7 @@ const Login = () => {
             sessionFetched = true;
             var session_id = await session_fetch(access_token, refresh_token);
             console.log(session_id);
-            setCookie("session_id", session_id);
+            CookieManager.setCookie("session_id", session_id);
             popup.close();
             navigate.push("/");
             clearInterval(pollPopup);

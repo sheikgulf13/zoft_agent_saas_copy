@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import AgentCard from "./AgentCard";
-import { getCookie } from "cookies-next";
 import useTheme from "next-theme";
 import CreateButton from "../buttons/CreateButton";
 import SkeletonCard from "../SkeletonCard";

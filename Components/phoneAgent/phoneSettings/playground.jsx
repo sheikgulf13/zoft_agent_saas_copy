@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import PhoneSettingNav from "./PhoneSettingNav";
 import useTheme from "next-theme";
 import { useSearchParams } from "next/navigation";
-import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import GradientButton from "@/Components/buttons/GradientButton";
 import { useDispatch, useSelector } from "react-redux";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
+import { CookieManager } from "../../../utility/cookie-manager"
 
-const playground = () => {
+const Content = () => {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const phoneId = searchParams.get("phoneId");
   const [phoneAgent, setPhoneAgent] = useState({});
   const urlFetch = process.env.url;
@@ -170,5 +168,13 @@ const playground = () => {
     </div>
   );
 };
+
+const playground = () => {
+  return (
+    <Suspense fallback={"Loading..."}>
+      <Content />
+    </Suspense>
+  )
+}
 
 export default playground;

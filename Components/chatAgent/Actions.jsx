@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
-import ActionForm from "./ActionForm";
-import { removeAction, upsertAction, setPrompt, setScript } from "@/store/actions/phoneAgentActions";
+import { removeAction, upsertAction } from "@/store/actions/actionActions";
 import DeleteIcon from "../Icons/DeleteIcon";
 import SettingIcon from "../Icons/SettingIcon";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +16,7 @@ import Link from "next/link";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import ActionForm from "../phoneAgent/ActionForm";
 
 const promptFields = [
   {
@@ -41,13 +41,16 @@ const promptFields = [
   },
 ];
 
+const actions = [
+    { id: 1, name: 'Send email', fields: ['Name', 'Subject', 'Instructions', 'Content'] },
+    { id: 3, name: 'Webhook', fields: ['Name', 'Webhook', 'Instructions'] },
+  ];
+
 const Actions = () => {
   const dispatch = useDispatch();
   const {
     createdActions,
-    prompt,
-    script,
-  } = useSelector((state) => state.phoneAgent);
+  } = useSelector((state) => state.actions);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -58,6 +61,7 @@ const Actions = () => {
   const [selectedAction, setSelectedAction] = useState();
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
+  const [progress, setprogress] = useState(false);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -93,67 +97,18 @@ const Actions = () => {
   };
 
   const nextHandler = () => {
-    navigate.push("/workspace/agents/phone/voicesetting");
+    navigate.push("/workspace/agents/chats/deploy");
     setprogress(true);
   };
 
   return (
-    <div
-      className={`w-full Hmd h-screen relative flex justify-between ${
-        theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#F2F4F7] text-black"
-      }`}
-    >
-      <div className="h-full w-full flex flex-col justify-start items-start  px-[2vw] py-[2vw]">
-        <div
-          className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
-            theme === "dark" ? "bg-[#1A1C21] text-white" : "bg-white text-black"
-          }`}
-        >
-          <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-                <TickIcon />
-              </div>
-              <h2 className="capitalize font-medium Hmd">phonebot creation</h2>
-            </div>
-
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                2
-              </div>
-              <h2 className="capitalize font-medium Hmd">actions</h2>
-            </div>
-
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                3
-              </div>
-              <h2 className="capitalize font-medium Hmd">voice setting</h2>
-            </div>
-
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                4
-              </div>
-              <h2 className="capitalize font-medium Hmd">deployment</h2>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex w-full h-[100vh] pb-[2vw] overflow-hidden ">
+      <div className="h-full w-full flex flex-col items-center justify-start  px-[2vw] py-[2vw]">
+       
           <div
-            className={`flex flex-col w-full items-center justify-start gap-[1vw] mx-[5vw] p-[2vw] pt-[1vw] mt-[3%] overflow-y-scroll scrollbar ${
-              theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
-            }`}
+            className={`flex flex-col w-full items-center justify-start gap-[1vw] mx-[5vw] p-[2vw] pt-[1vw] mt-[3%]`}
           >
             <div
-              className={`flex flex-col min-w-[80%] max-w-[80%] shadow-xl rounded-lg p-[2vw] ${
+              className={`flex flex-col min-w-[90%] max-w-[90%] shadow-xl rounded-lg p-[2vw] ${
                 theme == "dark" ? "bg-black" : "bg-white"
               }`}
             >
@@ -166,10 +121,10 @@ const Actions = () => {
                 >
                  */}
               <div
-                className={`flex flex-col  justify-center rounded-lg p-[1.5vw] ${
+                className={`flex flex-col  justify-center rounded-t-lg p-[1.5vw] ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-white text-black"
                 }`}
               >
                 {/* items-center */}
@@ -230,112 +185,29 @@ const Actions = () => {
               {/* <div className={`w-full h-[.1vw] bg-zinc-300 my-[3vw]`} /> */}
 
               <div
-                className={`w-full flex flex-col gap-[1.5vw] items-start justify-center rounded-lg p-[1.5vw] ${
+                className={`w-full flex flex-col gap-[1.5vw] items-start justify-center rounded-b-lg p-[1.5vw] ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-white text-black"
                 }`}
               >
                 {showForm && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex justify-center items-center">
-                    <div className="bg-white w-1/4 rounded-lg shadow-lg">
+                    <div className="bg-white w-1/4 h-[65vh] rounded-lg shadow-lg">
                       <ActionForm
                         show={showForm}
                         toggle={toggleForm}
                         handleCreateAction={handleCreateAction}
                         initialData={selectedAction}
+                        actions={actions}
                       />
                     </div>
                   </div>
                 )}
               </div>
-
-              <div className={`w-full h-[.1vw] bg-zinc-300 my-[2%]`} />
-
-              <div
-                className={`flex flex-col gap-[1.5vw] items-start justify-center rounded-lg p-[1.5vw] ${
-                  theme === "dark"
-                    ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
-                }`}
-              >
-                <div className="w-full">
-                  <div className="flex justify-between items-center cursor-pointer">
-                    <h5 className={`font-bold text-[1.1vw]`}>
-                      Prompt or Instruction
-                    </h5>
-                    <span title="Please do not remove the content inside the curly braces, as it serves as a marker">
-                      <IoMdInformationCircleOutline size={24} />
-                    </span>
-                  </div>
-                  <p className={`text-[#9f9f9f] text-[.9vw] font-semibold`}>
-                    Give the instructions for your agent
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-[.3vw] w-[100%]">
-                  <textarea
-                    type="text"
-                    value={prompt}
-                    onChange={(event) => dispatch(setPrompt(event.target.value))}
-                    ref={promptRef}
-                    //onChange={(e) => dispatch(setopenaikey(e.target.value))}
-                    //value={openaikey}
-                    className={`${
-                      theme === "dark"
-                        ? "bg-[#1A1C22] text-white"
-                        : "bg-white text-black"
-                    } h-[150px] p-[1vw] outline-none rounded-lg`}
-                  />
-                  <div className="flex justify-center mt-4 gap-2">
-                    {promptFields.map((field) => (
-                      <OutlinedButton
-                        onClick={() => {
-                          let newPrompt = prompt + ` {${field.value}} `;
-                          dispatch(setPrompt(newPrompt));
-                          promptRef.current.focus();
-                        }}
-                      >
-                        {field.label}
-                      </OutlinedButton>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className={`w-full h-[.1vw] bg-zinc-300 my-[1.5vw]`} />
-
-              <div
-                className={`flex flex-col gap-[1.5vw] items-start justify-center rounded-lg p-[1.5vw] ${
-                  theme === "dark"
-                    ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
-                }`}
-              >
-                <div>
-                  <h5 className={`font-bold text-[1.1vw]`}>Script</h5>
-                  <p className={`text-[#9f9f9f] text-[.9vw] font-semibold`}>
-                    Add script for your agent
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-[.3vw] w-[100%]">
-                  <textarea
-                    type="text"
-                    value={script}
-                    onChange={(e) => dispatch(setScript(e.target.value))}
-                    //value={openaikey}
-                    className={`${
-                      theme === "dark"
-                        ? "bg-[#1A1C22] text-white"
-                        : "bg-white text-black"
-                    } h-[150px] p-[1vw] outline-none rounded-lg`}
-                  />
-                </div>
-              </div>
             </div>
           </div>
-        </div>
+      
 
         {modal && (
           <Modal open={modal}>
@@ -369,22 +241,6 @@ const Actions = () => {
           </Modal>
         )}
       </div>
-
-      <div
-        className={`w-full absolute bottom-0 h-[6.5vh] ${
-          theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
-        }`}
-      >
-        <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
-          <OutlinedButton
-            onClick={() => navigate.push("/workspace/agents/phone/createagent")}
-          >
-            Back
-          </OutlinedButton>
-          <ContainedButton onClick={nextHandler}>Continue</ContainedButton>
-        </div>
-      </div>
-    </div>
   );
 };
 

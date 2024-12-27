@@ -1,7 +1,10 @@
-import Actions from '@/Components/phoneAgent/Actions';
+import React from 'react'
+import Actions from '../../../../../Components/phoneAgent/Actions';
 
-export default function ToolCreationPage({ darkMode, toggleDarkMode, toggleLightMode }: any) {
+const page = () => {
   return (
     <Actions />
-  );
+  )
 }
+
+export default page

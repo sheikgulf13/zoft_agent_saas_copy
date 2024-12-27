@@ -45,7 +45,7 @@ const Security = () => {
     <div className={`Hmd h-[50vh] w-[60vw] relative rounded-[0.625vw] shadow-xl  ${theme==="dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
       <div className="flex items-center justify-center gap-[13vw] h-1/3 pr-[10vw]">
         <div className="flex flex-col gap-[2vw]">
-          <h1 className="H25 capitalize">change password</h1>
+          <h1 className="text-lg capitalize ml-[2vw]">change password</h1>
           <GradientButton
             text="change password"
             className="contentButton bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white ml-[2vw] px-[1.667vw]"
@@ -74,8 +74,8 @@ const Security = () => {
         </div>
       </div>
       <div className="flex flex-col items-start justify-center h-2/3 gap-[2vw] px-[3.5vw]">
-        <h1 className="H25 capitalize -ml-[2vw]">authenticator app</h1>
-        <h6 className="Hmd w-1/2">
+        <h1 className="text-lg capitalize ">authenticator app</h1>
+        <h6 className="w-1/2">
           Double the protection, twice the security: Two-factor authentication keeps your accounts safe with an <br /> extra layer of verification.
         </h6>
         <GradientButton2

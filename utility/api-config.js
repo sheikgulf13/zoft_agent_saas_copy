@@ -1,4 +1,4 @@
-import { getCookie } from "cookies-next";
+import { CookieManager } from "../utility/cookie-manager"
 
 const getApiConfig = () => {
     return  {
@@ -14,7 +14,7 @@ const getApiHeaders = () => {
 }
 
 const getSessionId = () => {
-    const session_id = getCookie("session_id");
+    const session_id = CookieManager.getCookie("session_id");
 
     if(session_id) {
         return session_id;

@@ -21,6 +21,7 @@ import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { elevenlabsVoice } from "../../utility/eleven-labs-voice";
 import { Chip } from "@mui/material";
+import { fileURLToPath } from "url";
 
 const InputField = ({
   label,
@@ -107,13 +108,16 @@ const PhoneAgent = () => {
   }, [language]);
 
   const handleVoiceChange = (e) => {
+    console.log('voice selected')
     dispatch(setVoice(e.target.value));
+    console.log('voice set on redux');
 
     const filteredVoiceUrl = elevenlabsVoice.find(
-      (item) => item.name === e.target.value
+      (item) => item.voice_id === e.target.value
     );
 
     if (filteredVoiceUrl) {
+      console.log(filteredVoiceUrl)
       setVoiceUrl(filteredVoiceUrl.preview_url);
     } else {
       setVoiceUrl("");
@@ -267,11 +271,12 @@ const PhoneAgent = () => {
                       ? "bg-[#1F222A]"
                       : openAccordion01 && "bg-[#F2F4F7]"
                   } transition-all duration-1000 flex justify-between items-center py-[1%] px-[2vw]`}
+                  onClick={accordion1Handler}
                 >
                   <h1 className="text-[1.1vw] capitalize">Agent Settings</h1>
                   <div
                     className="p-[.3vw] flex items-center gap-[1vw]"
-                    onClick={accordion1Handler}
+                    
                   >
                     {(!openAccordion01 && err && phoneAgentName === "") ||
                     (!openAccordion01 && err && phoneAgentPurpose === "") ? (
@@ -496,13 +501,14 @@ const PhoneAgent = () => {
                       ? "bg-[#1F222A]"
                       : openAccordion02 && "bg-[#F2F4F7]"
                   } transition-all duration-1000 flex items-center justify-between py-[1%] px-[2vw]`}
+                  onClick={accordion2Handler}
                 >
                   <h1 className="text-[1.1vw] capitalize">
                     Agent Business Settings
                   </h1>
                   <div
                     className="p-[.3vw] flex items-center gap-[1vw]"
-                    onClick={accordion2Handler}
+                    
                   >
                     <TiArrowSortedDown
                       className={`${

@@ -116,7 +116,7 @@ function ChatListAgent(props) {
           <Box className="flex items-center">
             <Box>
               <Typography variant="h6" className="text-gray-800">
-                {selectedChatAgent.bot_name}
+                {selectedChatAgent?.bot_name}
               </Typography>
             </Box>
           </Box>

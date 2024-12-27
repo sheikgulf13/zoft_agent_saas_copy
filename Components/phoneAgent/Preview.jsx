@@ -4,18 +4,18 @@ import GradientButton from "../buttons/GradientButton";
 import { clearState, setCountryCode } from "../../store/actions/phoneAgentActions";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
-import { getCookie } from "cookies-next";
 import TickIcon from "../Icons/TickIcon";
 import { useRouter } from "next/navigation";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
+import { CookieManager } from "../../utility/cookie-manager"
 
 const Preview = () => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const url = process.env.url;
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const {
     gender,
     stability,

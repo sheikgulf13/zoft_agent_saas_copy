@@ -1,37 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import TickIcon from "../Icons/TickIcon";
+import { OutlinedButton } from "../buttons/OutlinedButton";
+import { ContainedButton } from "../buttons/ContainedButton";
+import Source from "./chatSettings/SourceCopy";
+import { useRouter } from "next/navigation";
+import Actions from "./Actions";
+import CreateBot from "./CreateBot";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import GradientButton from "../buttons/GradientButton";
+import useTheme from "next-theme";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setBotName,
   setDescription,
   setPrompt,
   setLoading,
 } from "../../store/actions/botActions";
-import useTheme from "next-theme";
-import { useRouter } from "next/navigation";
-import TickIcon from "../Icons/TickIcon";
-import { OutlinedButton } from "../buttons/OutlinedButton";
-import { ContainedButton } from "../buttons/ContainedButton";
+import { render } from "react-dom";
 
-const CreateBot = () => {
+const MultiStepForm = () => {
   const dispatch = useDispatch();
-  const navigate = useRouter();
-  const { theme, setTheme } = useTheme();
+  const [currentStep, setCurrentStep] = useState(1);
+  const router = useRouter();
+  const { theme } = useTheme();
   const { botName, description, prompt, loading } = useSelector(
     (state) => state.bot
   );
   const [err, setErr] = useState("");
-  const [progress, setprogress] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(setLoading(false));
     }, 0);
-
     return () => clearTimeout(timer);
   }, [dispatch]);
+
+  const handleGoBack = () => {
+    router.back();
+  };
 
   const autoResizeTextarea = (textarea) => {
     textarea.style.height = "auto";
@@ -40,31 +45,58 @@ const CreateBot = () => {
 
   const handleChange = (setter) => (e) => {
     dispatch(setter(e.target.value));
-    //   .trim()))
-    //   .split(/ +/)
-    //   .join(" ")));
-    if (e.target.tagName === "TEXTAREA") {
-      autoResizeTextarea(e.target);
-    }
+    if (e.target.tagName === "TEXTAREA") autoResizeTextarea(e.target);
   };
 
-  const prevHandler = () => {
-    navigate.push("/workspace/agents");
-  };
-
-  const nextHandler = () => {
-    if (botName === "" || description === "" || prompt === "") {
+  const nextStep = () => {
+    if (
+      currentStep === 1 &&
+      (botName === "" || description === "" || prompt === "")
+    ) {
       setErr("Enter the data");
-    } else navigate.push("/workspace/agents/chats/datasource");
-    if (botName === "") {
-      setprogress(false);
-    } else {
-      setprogress(true);
+    } else if (currentStep < 3) {
+      setCurrentStep((prev) => prev + 1);
+    } else if (currentStep === 3) {
+      router.push("/workspace/agents/chats/deploy");
     }
   };
 
-  const renderForm = () => (
-    <form className="flex flex-col gap-[3vw] pb-[1vw] relative ">
+  const prev = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const renderStepIndicator = () => (
+    <div className="w-full border-b-[.1vw] gap-[8px] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center">
+      {["Bot Creation", "Data Sources", "Actions"].map((stepLabel, index) => (
+        <React.Fragment key={index}>
+          <div
+            className={`circle ${
+              index < currentStep
+                ? "bg-green-600"
+                : "border-blue-400 border-[2px] opacity-[.4]"
+            } w-[2vw] h-[2vw] rounded-full flex justify-center items-center`}
+          >
+            {index < currentStep ? <TickIcon /> : index + 1}
+          </div>
+          <h2
+            className={`capitalize font-medium ${
+              index < currentStep ? "" : "opacity-[.4]"
+            }`}
+          >
+            {stepLabel}
+          </h2>
+          {index < 2 && <div className="h-[1px] w-[3vw] bg-zinc-300"></div>}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  const renderBotCreationForm = () => (
+    <form
+      className={`flex flex-col gap-[3vw] pb-[1vw] relative h-[100%] w-full z-10`}
+    >
       {[
         {
           label: "Bot Name*",
@@ -119,10 +151,10 @@ const CreateBot = () => {
               <label htmlFor={label} className="capitalize  font-semibold">
                 {label}
                 {/* {err && value === '' && label !== 'Prompt' && (
-                                <span className="text-red-900 capitalize Hsm absoulte top-[-4vh] font-medium ">
-                                    *Enter the data
-                                </span>
-                            )} */}
+                                    <span className="text-red-900 capitalize Hsm absoulte top-[-4vh] font-medium ">
+                                        *Enter the data
+                                    </span>
+                                )} */}
               </label>
               <span className="text-gray-500 Hsm">
                 <i>{descriptionText}</i>
@@ -167,80 +199,50 @@ const CreateBot = () => {
     </form>
   );
 
-  const renderSkeletonForm = () => (
-    <SkeletonTheme baseColor="#f5f5f5" highlightColor="#e0e0e0">
-      {[{ height: 50 }, { height: 100 }, { height: 50 }].map(
-        (skeletonProps, index) => (
-          <div key={index} className="flex flex-col gap-[.4vw]">
-            <label className="capitalize H1 font-light">
-              <Skeleton width={100} />
-            </label>
-            <Skeleton {...skeletonProps} />
-          </div>
-        )
-      )}
-      <Skeleton width={50} height={40} />
-    </SkeletonTheme>
-  );
+  const renderDataSourceForm = () => <Source />;
+
+  const renderActionsForm = () => <Actions />;
+
+  {
+    /*const renderDeployment = () => (
+        <Deploy currentStep={currentStep} />
+      );*/
+  }
+
+  const renderContent = () => {
+    if (currentStep === 1) return renderBotCreationForm();
+    if (currentStep === 2) return renderDataSourceForm();
+    if (currentStep === 3) return renderActionsForm();
+    //if (currentStep === 4) return renderDeployment();
+  };
 
   return (
     <div
-      className={`w-full h-screen relative flex flex-col justify-center items-center ${
-        theme === "dark" ? "bg-[#1D2027] text-white" : "bg-[#F2F4F7] text-black"
+      className={`w-full h-screen flex justify-center items-center relative ${
+        theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#F2F4F7] text-black"
       }`}
     >
-      {/*<div
-        className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
-          theme === "dark" ? "bg-[#1A1C21] text-white" : "bg-white text-black"
-        }`}
-      >
-        <div className="w-[50%] h-full flex items-center gap-[1vw]">
-          <div className="h-full flex items-center justify-start gap-[.5vw]">
-            <div className="circle Hmd border border-blue-400 text-blue-400  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-              {progress ? <TickIcon /> : 1}
-            </div>
-            <h2 className="capitalize font-medium Hmd">bot creation</h2>
-          </div>
-          <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-          <div className="circle Hmd border border-blue-400 text-blue-400  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-            {2}
-          </div>
-          <h2 className="capitalize font-medium Hmd">data sources</h2>
-
-          <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-          <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-            <div className="circle border Hmd border-blue-400 text-blue-400  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-              3
-            </div>
-            <h2 className="capitalize font-medium Hmd">deployment</h2>
+      <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg relative">
+        {renderStepIndicator()}
+        <div className="w-[90%] mx-auto my-[20px] h-[90%] overflow-hidden bg-[#F2F4F7]">
+          <div className="w-full mx-auto h-[90%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
+            {renderContent()}
           </div>
         </div>
-      </div>*/}
-
-      <div
-        className={`w-[90%] overflow-y-auto mx-auto h-[80vh] mt-[2vh] rounded-[.9vh] shadow-xl py-[3.5vh] px-[2.7vh] relative  ${
-          theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
-        }`}
-      >
-        <h1 className="text-2xl font-semibold text-left pb-[3vh]">
-          {loading ? <Skeleton width={200} /> : "Create a Bot"}
-        </h1>
-        {loading ? renderSkeletonForm() : renderForm()}
+        <div className="w-full absolute bottom-0 bg-white h-[7.5vh] py-[10px]">
+          <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] pr-[10%]">
+            {currentStep === 1 && (<OutlinedButton onClick={handleGoBack}>Back</OutlinedButton>)}
+            {currentStep > 1 && (
+              <OutlinedButton onClick={prev}>Back</OutlinedButton>
+            )}
+            <ContainedButton onClick={nextStep}>
+              {currentStep === 3 ? "Create" : "Continue"}
+            </ContainedButton>
+          </div>
+        </div>
       </div>
-
-      {/*<div
-        className={`w-full absolute bottom-0 h-[6.5vh] ${
-          theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
-        }`}
-      >
-        <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] pr-[10%] ">
-          <OutlinedButton onClick={prevHandler}>Back</OutlinedButton>
-          <ContainedButton onClick={nextHandler}>Continue</ContainedButton>
-        </div>
-      </div>*/}
     </div>
   );
 };
 
-export default CreateBot;
+export default MultiStepForm;

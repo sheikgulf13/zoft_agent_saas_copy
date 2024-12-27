@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUsername, setEmail, setPassword, setAnimationComplete, setShowLogin, setFadeIn } from '../store/actions/registerUserActions';
 import Login from './Login';
 import { useRouter } from 'next/navigation';
-import { setCookie } from 'cookies-next';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
+import { CookieManager } from "../utility/cookie-manager";
+import { showErrorToast, showSuccessToast } from './toast/success-toast';
 
 const Register = () => {
   const [check, setCheck] = useState(false);
@@ -29,6 +30,10 @@ const Register = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
+    if(password?.length === 6) {
+      return showErrorToast("Password should be atleast 6 characters long.")
+    }
+
     if (check && username && email && password) {
       const reqData=JSON.stringify({username,email,password})
       const response = await fetch(`${url}/auth/signup/email`,
@@ -42,10 +47,18 @@ const Register = () => {
           }),
         }
       );
-      const data = await response.json();
-      setTimeout(() => {
-        navigate.push('/dashboard');
-      }, 1000);
+
+      if(response.status === 201) {
+        showSuccessToast("We have sent you a verification email. Please follow the steps in the email to log in.");
+        dispatch(setShowLogin(true));
+      } else if(response.status === 403) {
+        showErrorToast("Please check your email for the verification mail.")
+      } else if(response.status === 409) {
+        showErrorToast("User already exist. Please login");
+      } else {
+        showErrorToast("Something went wrong");
+      }
+
     } else {
       alert("Please fill all fields and agree to the terms");
     }
@@ -90,7 +103,7 @@ const Register = () => {
             console.log('Login successful:', { access_token, refresh_token });
             var session_id = await session_fetch(access_token, refresh_token);
             console.log(session_id);
-            setCookie("session_id", session_id);
+            CookieManager.setCookie("session_id", session_id);
             popup.close();
             navigate.push("/dashboard");
             clearInterval(pollPopup);

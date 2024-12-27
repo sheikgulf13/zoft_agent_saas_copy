@@ -17,7 +17,7 @@ const Embeds = () => {
 
   const text = `<iframe 
   style="position: absolute; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
-  src="https://embedded-chatbot-pi.vercel.app/?id=${selectedChatAgent.id}" 
+  src="https://embedded-chatbot-pi.vercel.app/?id=${selectedChatAgent?.id}" 
   align="right">
 </iframe>`
 

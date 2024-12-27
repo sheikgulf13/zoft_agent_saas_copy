@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 
-const ChatSettingNav = () => {
+const Content = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -38,6 +38,14 @@ const ChatSettingNav = () => {
           ))}
         </div>
     </>
+  )
+}
+
+const ChatSettingNav = () => {
+  return (
+    <Suspense fallback={"Loading..."}>
+      <Content />
+    </Suspense>
   )
 }
 

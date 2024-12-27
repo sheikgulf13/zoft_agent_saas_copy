@@ -1,9 +1,9 @@
-import { getCookie } from "cookies-next";
+import { CookieManager } from "@/utility/cookie-manager";
 import { getApiConfig, getApiHeaders } from "../utility/api-config";
 
 const getWorkSpaceListApi = async () => {
   const url = process.env.url;
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const reqData = JSON.stringify({ session_id });
 
   let response = await fetch(`${url}/public/workspace/get_workspace`, {
@@ -29,7 +29,7 @@ const getWorkSpaceListApi = async () => {
 const getAgentsForWorkSpaceApi = async (workspaceId) => {
   const url = process.env.url;
   const formdata = new FormData();
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
 
   formdata.append("session_id", session_id);
   formdata.append("workspace_id", workspaceId);
@@ -58,7 +58,7 @@ const getAgentsForWorkSpaceApi = async (workspaceId) => {
 const deleteWorkSpaceApi = async (workspaceId) => {
   const url = process.env.url;
   const formdata = new FormData();
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
 
   formdata.append("session_id", session_id);
   formdata.append("workspace_id", workspaceId);

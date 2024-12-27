@@ -4,7 +4,6 @@ import DeleteIcon from "../../Icons/DeleteIcon";
 import useTheme from "next-theme";
 import AddFile from "./AddFileUpdate";
 import ChatSettingNav from "./ChatSettingNav";
-import { getCookie } from "cookies-next";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileWordCounts } from "@/store/reducers/fileSliceUpdate";
 import { useRouter } from "next/navigation";
@@ -13,6 +12,7 @@ import { getApiConfig, getApiHeaders } from "../../../utility/api-config";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { OutlinedButton } from "@/Components/buttons/OutlinedButton";
 import { showSuccessToast } from "@/Components/toast/success-toast";
+import { CookieManager } from "@/utility/cookie-manager";
 
 // Utility function to validate URL
 function isValidURL(url) {
@@ -98,7 +98,7 @@ const Source = () => {
     existingFiles = existingFiles.substring(0, existingFiles.length - 1);
     urls = urls.substring(0, urls.length - 1);
     file?.forEach((file, index) => {
-      formData.append("new_files", file);
+      formData.append("files", file);
     });
     const changes = DetectChanges(urls, existingFiles);
     if (changes == 0) {
@@ -106,11 +106,10 @@ const Source = () => {
       return;
     }
     setErr("");
-    const session_id = getCookie("session_id");
+    const session_id = CookieManager.getCookie("session_id");
     formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
-    formData.append("files", file);
     formData.append("raw_text", rawText);
     formData.append("existing_files", existingFiles);
     formData.append("url_word_count", JSON.stringify(dict));
@@ -183,6 +182,7 @@ const Source = () => {
   };
 
   const removeUrl = (index) => {
+    console.log("Delete button clicked for index: ", index); // Test log
     const updatedUrl = pastedUrl.filter((_, i) => i !== index);
     setPastedUrl(updatedUrl);
   };
@@ -231,7 +231,7 @@ const Source = () => {
             className="flex flex-col gap-[1vw] px-[4vw]"
             onSubmit={handleFormSubmit}
           >
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between">
               <div className={`flex flex-col w-[15%] text-base`}>
                 {links.map((link, index) => (
                   <React.Fragment key={index}>
@@ -290,15 +290,17 @@ const Source = () => {
                   </div>
                 </div>
               ) : (
-                <>
-                  <span className="absolute left-[65vw] top-[26vh]">
+                <div className="w-[80%]">
+                  <div className="mb-4 text-base">
+                    <p>
                     Words count: {rawWordCounts}
-                  </span>
+                    </p>
+                  </div>
                   <textarea
                     onChange={rawTextHandler}
                     value={rawText}
                     id="rawText"
-                    className={`text-base border-[0.052vw] w-[35vw] border-zinc-300 px-[1.3vw] pb-[1.8vh] pt-[1.8vh] rounded-[.5vw] overflow-hidden ${
+                    className={`w-full text-base border-[0.052vw] p-2 border-zinc-300 rounded-[.5vw] overflow-hidden ${
                       theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
@@ -306,7 +308,7 @@ const Source = () => {
                     placeholder="Enter raw text"
                     style={{ height: "auto", minHeight: "15vh" }}
                   ></textarea>
-                </>
+                </div>
               )}
             </div>
           </form>

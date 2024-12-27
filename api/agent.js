@@ -1,11 +1,11 @@
 import { showErrorToast, showSuccessToast } from "@/Components/toast/success-toast";
 import { getApiConfig, getApiHeaders } from "../utility/api-config";
-
-import { getCookie } from "cookies-next";
+import { CookieManager } from "../utility/cookie-manager"
 
 const getChatAgentList = async () => {
   try {
-    const session_id = getCookie("session_id");
+    const url = process.env.url;
+    const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `agentList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
     if (!cachedData) {
@@ -30,7 +30,8 @@ const getChatAgentList = async () => {
 
 const getPhoneAgentList = async () => {
   try {
-    const session_id = getCookie("session_id");
+    const url = process.env.url;
+    const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `phoneList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
 
@@ -56,7 +57,7 @@ const getPhoneAgentList = async () => {
 
 const deleteChatAgentApi = async (agentId) => {
   const url = process.env.url;
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
   formData.append("session_id", session_id);
@@ -76,7 +77,7 @@ const deleteChatAgentApi = async (agentId) => {
 
 const deletePhoneAgentApi = async (agentId) => {
   const url = process.env.url;
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
   formData.append("session_id", session_id);
@@ -124,7 +125,7 @@ const updatePhoneAgentApi = async ({
   }
 
   const url = process.env.url;
-  const session_id = getCookie("session_id");
+  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
   formData.append("session_id", session_id);
