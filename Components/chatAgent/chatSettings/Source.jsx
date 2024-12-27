@@ -98,7 +98,7 @@ const Source = () => {
     existingFiles = existingFiles.substring(0, existingFiles.length - 1);
     urls = urls.substring(0, urls.length - 1);
     file?.forEach((file, index) => {
-      formData.append("new_files", file);
+      formData.append("files", file);
     });
     const changes = DetectChanges(urls, existingFiles);
     if (changes == 0) {
@@ -110,7 +110,6 @@ const Source = () => {
     formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
-    formData.append("files", file);
     formData.append("raw_text", rawText);
     formData.append("existing_files", existingFiles);
     formData.append("url_word_count", JSON.stringify(dict));
