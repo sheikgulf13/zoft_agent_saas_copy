@@ -225,7 +225,7 @@ const PhoneAgent = () => {
               <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
                 2
               </div>
-              <h2 className="capitalize font-medium text-[.9vw]">actions</h2>
+              <h2 className="capitalize font-medium text-[.9vw]">Actions</h2>
             </div>
 
             <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
@@ -234,18 +234,7 @@ const PhoneAgent = () => {
               <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
                 3
               </div>
-              <h2 className="capitalize font-medium text-[.9vw]">
-                voice setting
-              </h2>
-            </div>
-
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                4
-              </div>
-              <h2 className="capitalize font-medium text-[.9vw]">deployment</h2>
+              <h2 className="capitalize font-medium text-[.9vw]">Preview</h2>
             </div>
           </div>
         </div>

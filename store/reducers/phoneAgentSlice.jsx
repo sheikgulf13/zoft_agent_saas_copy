@@ -1,6 +1,7 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  phoneAgentId: "",
   phoneAgentType: "",
   phoneAgentName: "",
   phoneAgentPurpose: "",
@@ -24,6 +25,9 @@ const phoneAgentslice = createSlice({
   name: "phoneAgent",
   initialState,
   reducers: {
+    setPhoneAgentId: (state, action) => {
+      state.phoneAgentId = action.payload;
+    },
     setPhoneAgentType: (state, action) => {
       state.phoneAgentType = action.payload;
     },
@@ -106,31 +110,12 @@ const phoneAgentslice = createSlice({
       // Update the state with the new array (ensure you are not mutating)
       state.createdActions = updatedActions;
     },
-    clearState: (state, action) => {
-      state = {
-        phoneAgentType: "",
-        phoneAgentName: "",
-        phoneAgentPurpose: "",
-        language: "",
-        voice: "Friendly and expressive male",
-        phoneNumber: "",
-        companyName: "",
-        companyBusiness: "",
-        companyServices: "",
-        prompt: "",
-        script: "",
-        meetingSchedular: "",
-        senderMail: "",
-        priceInquiry: "",
-        countryCode: "+91",
-        previewNumber: "",
-        createdActions: [],
-      };
-    },
+    clearState: () => initialState,
   },
 });
 
 export const {
+  setPhoneAgentId,
   setPhoneAgentType,
   setphoneAgentName,
   setphoneAgentPurpose,
