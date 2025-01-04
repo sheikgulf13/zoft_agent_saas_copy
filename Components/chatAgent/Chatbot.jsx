@@ -13,7 +13,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
     { text: "Hey! how can I help you today?.", sender: "bot" },
   ]);
   const [sessionUUID, setSessionUUID] = useState("");
-  const urlFetch = process.env.url;
+  const urlFetch = process.env.chat_url;
 
   useEffect(() => {
     let uuid = CookieManager.getCookie("sessionUUID");
