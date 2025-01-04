@@ -20,7 +20,9 @@ const getSessionId = () => {
         return session_id;
     }
 
-    window.location = "/register";
+    if(typeof window !== "undefined") {
+        window.location = "/register";
+    }
 }
 
 export { getApiConfig, getApiHeaders, getSessionId };
