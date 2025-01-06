@@ -35,7 +35,7 @@ const Deploy = () => {
   const [currentSentence, setCurrentSentence] = useState(0);
   const [toast, setToast] = useState("");
   const frame = `<iframe 
-style="position: absolute; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
+style="width: 40vw; height: 110vh; border: none;" 
 src="https://chat-embed.zoft.ai/?id=${chatId}" 
 align="right">
 </iframe>`;

@@ -16,7 +16,7 @@ const Embeds = () => {
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
   const text = `<iframe 
-  style="position: absolute; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
+  style="width: 40vw; height: 110vh; border: none;" 
   src="https://chat-embed.zoft.ai/?id=${selectedChatAgent?.id}" 
   align="right">
 </iframe>`
