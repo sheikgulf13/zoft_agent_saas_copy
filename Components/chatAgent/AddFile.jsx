@@ -27,10 +27,10 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
       file.forEach((f) => {
         if (f.type === "application/pdf") {
-          extractTextFromPDF(f).then((wordCount) => {
+          extractTextFromPDF(f).then((text) => {
             setFileWordCounts((prev) => ({
               ...prev,
-              [f.name]: wordCount,
+              [f.name]: text,
             }));
           });
         } else if (
@@ -275,7 +275,7 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
           </div>
         )}
         <div>
-          <span>{fileWordCounts[name]} words</span>
+          <span>{name.split(/\s+/).filter(Boolean).length} words</span>
           <button
             onClick={() => handleDelete(name)}
             className="ml-[1vw] bg-red-500 text-white p-[.2vw] rounded"
@@ -296,15 +296,18 @@ const extractTextFromPDF = (file) => {
       const typedarray = new Uint8Array(e.target.result);
       const pdf = await pdfjsLib.getDocument(typedarray).promise;
       let textContent = "";
+      let characterCount = 0;
 
       for (let i = 0; i < pdf.numPages; i++) {
         const page = await pdf.getPage(i + 1);
         const text = await page.getTextContent();
         text.items.forEach((item) => {
           textContent += item.str + " ";
+          characterCount += item.str.length;
         });
       }
-      resolve(textContent.split(/\s+/).filter(Boolean).length);
+      const wordCount = textContent.split(/\s+/).filter(Boolean).length;
+      resolve({ wordCount, characterCount });
     };
     fileReader.onerror = reject;
     fileReader.readAsArrayBuffer(file);

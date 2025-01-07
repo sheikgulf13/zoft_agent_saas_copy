@@ -52,11 +52,11 @@ const actions = [
     name: "Send email",
     fields: [name, subject, instructions, content],
   },
-  {
-    id: 2,
-    name: "Call Forwarding",
-    fields: [name, forwardTo, instructions],
-  },
+  // {
+  //   id: 2,
+  //   name: "Call Forwarding",
+  //   fields: [name, forwardTo, instructions],
+  // },
   { id: 3, name: "Web hooks", fields: [name, endPoint, instructions] },
 ];
 

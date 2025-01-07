@@ -2,7 +2,7 @@
 const nextConfig = {
     env:{
 
-         url:'https://api.zoft.ai',
+         url:'api.zoft.ai',
 
          boturl:'https://kayzen-backend.onrender.com'
     }

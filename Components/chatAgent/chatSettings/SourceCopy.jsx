@@ -29,10 +29,15 @@ const Source = () => {
   const [err, setErr] = useState("");
   const [fileWordCounts, setFileWordCounts] = useState({});
   const [rawWordCounts, setRawWordCounts] = useState(0);
+  const [rawCharCount, setRawCharCount] = useState(0);
   const [RawText, setRawText] = useState("");
+  // const [jsonData, setJsonData] = useState({euid:"",url:""});
   // Initialize local state with values from Redux store
   useEffect(() => {
-    setRawWordCounts(rawText.length);
+    const words = rawText ? rawText.trim().split(/\s+/) : 0;
+    setRawWordCounts(words.length > 0 ? words.length : 0);
+
+    setRawCharCount(rawText.replace(/\s+/g, "").length);
     setPastedUrl(url || []); // Default to an empty array if url is undefined
     setRawText(rawText || ""); // Default to an empty string if rawText is undefined
   }, [url, rawText]);
@@ -55,6 +60,27 @@ const Source = () => {
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
+  const fetchWordData = async (url) => {
+    try {
+      const response = await fetch("https://api.zoft.ai/url/extract/word", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          euid: 845121,
+          url: url,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const rawTextHandler = (e) => {
     const text = e.target.value;
@@ -69,7 +95,7 @@ const Source = () => {
     e.preventDefault();
   };
 
-  const keypressHandler = (e) => {
+  const keypressHandler = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (!inputUrl || inputUrl.trim() === "") {
@@ -77,9 +103,18 @@ const Source = () => {
       } else if (!isValidURL(inputUrl)) {
         setErr("Error: Invalid URL format");
       } else if (pastedUrl.length < 3) {
-        const updatedUrls = [...pastedUrl, inputUrl];
-        setPastedUrl(updatedUrls);
-        dispatch(seturl(updatedUrls)); // Update Redux store with new URL list
+        try {
+          const updatedUrl = await fetchWordData(inputUrl);
+          updatedUrl.url = inputUrl;
+          const updatedUrls = [...pastedUrl, updatedUrl];
+          console.log(updatedUrl);
+
+          setPastedUrl(updatedUrls);
+          dispatch(seturl(updatedUrls)); // Update Redux store with new URL list
+        } catch (error) {
+          alert(error);
+        }
+
         setInputUrl("");
         setErr("");
       } else {
@@ -95,8 +130,10 @@ const Source = () => {
   };
 
   const totalWordCount =
-    Object.values(fileWordCounts).reduce((acc, count) => acc + count, 0) +
+    Object.values(fileWordCounts).reduce((acc, count) => acc + count, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
     rawWordCounts;
+
+  const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0);
   const links = [{ label: "Files" }, { label: "URLs" }, { label: "Raw Text" }];
 
   const [selectedSection, setSelectedSection] = useState(0);
@@ -166,30 +203,31 @@ const Source = () => {
                   />
                   <div className="flex flex-col gap-[.5vw] text-base mt-[2vh] w-[100%]">
                     {pastedUrl.length > 0 &&
-                      pastedUrl.map((url, index) => (
+                      pastedUrl.map((urlObj, index) => (
                         <div
                           key={index}
                           className="h-[4vh] w-full border-[1px] border-zinc-300 px-[1vw] py-[.5vh] text-sm rounded-[.4vw] flex justify-between items-center"
                         >
                           <span className="text-black">
-                            {url.length < 45 ? (
-                              <span> {url} </span>
+                            {urlObj?.url?.length < 45 ? (
+                              <span> {urlObj} </span>
                             ) : (
-                                <div className="relative">
+                              <div className="relative">
                                 <div className="group">
                                   {/* Tooltip */}
                                   <span className="absolute bg-gray-500 text-white top-[-45px] w-full left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    {url}
+                                    {urlObj?.url}
                                   </span>
-                              
+
                                   {/* Truncated URL */}
                                   <span className="cursor-pointer group-hover:underline">
-                                    {url.slice(0, 45)}.....
+                                    {urlObj?.url?.slice(0, 40)}.....
                                   </span>
                                 </div>
                               </div>
                             )}
                           </span>
+                          <span>{urlObj?.word_count} words</span>
                           <button onClick={() => removeUrl(index)} className="">
                             <DeleteIcon />
                           </button>
@@ -226,12 +264,16 @@ const Source = () => {
         >
           <h5 className={`font-semibold text-base`}>Sources</h5>
           <h6 className={`font-semibold text-base pt-[.7vw]`}>
-            Total characters detected
+            Total words detected
           </h6>
           <p className={`text-sm pb-[.7vw]`}>
-            <span className={`font-semibold`}>{totalWordCount}</span> /1,000,000
+            <span className={`font-semibold`}>{totalWordCount}</span> /10,000
             limit
           </p>
+          <h6 className={`font-semibold text-base pt-[.7vw]`}>
+            Approx character
+          </h6>
+          <p className={`text-sm pb-[.7vw]`}>{charCount}</p>
           {/* // <ContainedButton>Update</ContainedButton> */}
         </div>
       </div>
