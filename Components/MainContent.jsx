@@ -35,10 +35,10 @@ const MainContent = () => {
 
     console.log(code);
 
-    if (code?.length) {
+    if (code?.length && searchParams) {
       authenticateCalendly();
     }
-  }, []);
+  }, [searchParams]);
 
   return (
     <div
