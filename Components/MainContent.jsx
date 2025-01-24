@@ -36,7 +36,7 @@ const MainContent = () => {
     console.log(code);
 
     if (code?.length && searchParams) {
-      authenticateCalendly();
+      authenticateCalendly(code);
     }
   }, [searchParams]);
 
