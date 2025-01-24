@@ -6,13 +6,11 @@ import useTheme from "next-theme";
 import {
   getApiConfig,
   getApiHeaders,
-  getSessionId,
 } from "@/utility/api-config";
 import { useSearchParams } from "next/navigation";
 
 const MainContent = () => {
   const { theme, setTheme } = useTheme();
-  const sessionId = getSessionId();
   const searchParams = useSearchParams();
 
   const authenticateCalendly = (code) => {
@@ -42,7 +40,6 @@ const MainContent = () => {
     }
   }, []);
 
-  console.log("Session id", sessionId);
   return (
     <div
       className={`p- flex-1 ${
