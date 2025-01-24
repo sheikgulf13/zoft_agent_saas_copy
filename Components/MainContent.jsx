@@ -18,16 +18,15 @@ const MainContent = () => {
   const authenticateCalendly = (code) => {
     const url = process.env.url;
 
-    const payload = {
-      integration_type: "calendly",
-      code,
-    };
+    const form = new Form();
+    form.append("app_integration","calendly");
+    form.append("authorization_code",code);
 
     fetch(`${url}/public/integration`, {
       ...getApiConfig(),
       method: "post",
       headers: new Headers({ ...getApiHeaders() }),
-      body: JSON.stringify(payload),
+      body: JSON.stringify(form),
     }).then(() => {
       window.close();
     });
