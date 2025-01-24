@@ -16,7 +16,7 @@ const MainContent = () => {
   const authenticateCalendly = (code) => {
     const url = process.env.url;
 
-    const form = new Form();
+    const form = new FormData();
     form.append("app_integration","calendly");
     form.append("authorization_code",code);
 
