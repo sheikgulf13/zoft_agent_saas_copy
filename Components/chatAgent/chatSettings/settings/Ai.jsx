@@ -77,9 +77,7 @@ const Ai = () => {
   };
 
   const updateDetails = async () => {
-    const session_id = CookieManager.getCookie("session_id");
     const formData = new FormData();
-    formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("botname", botName);
     formData.append("description", des);

@@ -106,8 +106,6 @@ const Source = () => {
       return;
     }
     setErr("");
-    const session_id = CookieManager.getCookie("session_id");
-    formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
     formData.append("raw_text", rawText);
@@ -125,7 +123,6 @@ const Source = () => {
     });
     const chatId = await response.text();
     const formDataUpdate = new FormData();
-    formDataUpdate.append("session_id", session_id);
     formDataUpdate.append("chat_agent_id", chatId);
     const res = await fetch(`${urlFetch}/public/chat_agent/get_agent/by_id`, {
       ...getApiConfig(),

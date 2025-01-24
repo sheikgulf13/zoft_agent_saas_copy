@@ -8,8 +8,11 @@ const getApiConfig = () => {
 };
 
 const getApiHeaders = () => {
+    const session_id = CookieManager.getCookie("session_id");
+
     return {
-        "ngrok-skip-browser-warning": "true"
+        "ngrok-skip-browser-warning": "true",
+        "Authorization": `Bearer ${session_id}`
     }
 }
 

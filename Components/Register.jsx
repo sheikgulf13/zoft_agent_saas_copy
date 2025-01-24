@@ -12,6 +12,12 @@ import { useRouter } from 'next/navigation';
 import { getApiConfig, getApiHeaders } from '@/utility/api-config';
 import { CookieManager } from "../utility/cookie-manager";
 import { showErrorToast, showSuccessToast } from './toast/success-toast';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Register = () => {
   const [check, setCheck] = useState(false);
@@ -35,28 +41,12 @@ const Register = () => {
     }
 
     if (check && username && email && password) {
-      const reqData=JSON.stringify({username,email,password})
-      const response = await fetch(`${url}/auth/signup/email`,
-        {
-          ...getApiConfig(),
-          method:'POST',
-          body:reqData,
-          headers: new Headers({
-            ...getApiHeaders(),
-            'Content-Type': 'application/json',
-          }),
-        }
-      );
-
-      if(response.status === 201) {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        console.error('Sign up error:', error.message);
+      } else {
         showSuccessToast("We have sent you a verification email. Please follow the steps in the email to log in.");
         dispatch(setShowLogin(true));
-      } else if(response.status === 403) {
-        showErrorToast("Please check your email for the verification mail.")
-      } else if(response.status === 409) {
-        showErrorToast("User already exist. Please login");
-      } else {
-        showErrorToast("Something went wrong");
       }
 
     } else {

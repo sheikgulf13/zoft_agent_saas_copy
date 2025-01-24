@@ -71,7 +71,6 @@ const Actions = () => {
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
-  const session_id = CookieManager.getCookie("session_id");
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -109,7 +108,6 @@ const Actions = () => {
   const createPhoneAgent = async () => {
     const formdata = new FormData();
     formdata.append("work_space_id", selectedWorkSpace);
-    formdata.append("session_id", session_id);
     formdata.append("phone_agent_type", phoneAgentType);
     formdata.append("phone_agent_name", phoneAgentName);
     formdata.append("conversation_purpose", phoneAgentPurpose);
@@ -148,7 +146,6 @@ const Actions = () => {
       dispatch(setPhoneAgentId(response.phone_agent_id));
       navigate.push("/workspace/agents/phone/preview");
     }
-    localStorage.removeItem(`phoneList_${session_id}`);
   };
 
   return (

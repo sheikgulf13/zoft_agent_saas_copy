@@ -12,7 +12,6 @@ import { CookieManager } from "../../../utility/cookie-manager"
 const Content = () => {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
-  const session_id = CookieManager.getCookie("session_id");
   const phoneId = searchParams.get("phoneId");
   const [phoneAgent, setPhoneAgent] = useState({});
   const urlFetch = process.env.url;
@@ -34,7 +33,6 @@ const Content = () => {
     */
     }
     const formData = new FormData();
-    formData.append("session_id", session_id);
     formData.append("phone_agent_id", phoneId);
     const response = await fetch(
       `${urlFetch}/public/phone_agent/get_agent/by_id`,
