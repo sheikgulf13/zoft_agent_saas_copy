@@ -24,7 +24,7 @@ const MainContent = () => {
       ...getApiConfig(),
       method: "post",
       headers: new Headers({ ...getApiHeaders() }),
-      body: JSON.stringify(form),
+      body: form,
     }).then(() => {
       window.close();
     });
