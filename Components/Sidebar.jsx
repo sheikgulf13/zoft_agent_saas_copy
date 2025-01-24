@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation";
 import { CookieManager } from "../utility/cookie-manager";
 
 const variants = {
-  open: { width: "unset", transition: { duration: 0.5 } },
+  open: { minWidth: "240px", width: "15%", transition: { duration: 0.5 } },
   closed: { width: "5%", transition: { duration: 0.5 } }
 };
 

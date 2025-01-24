@@ -12,7 +12,7 @@ const Page = () => {
   return (
     <div>
       <div className="w-full h-screen relative flex justify-center items-center">
-        <div className="w-[75%] h-[75%]">
+        <div className="w-[75%] h-[75%] text-black">
           <h3 className="text-xl font-bold mb-8">Integrations</h3>
           <div className="flex">
             <div
