@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-# version - 1.0.4
+# version - 1.0.5
 
 First, run the development server:
 
