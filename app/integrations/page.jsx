@@ -5,7 +5,7 @@ import React from "react";
 const Page = () => {
   const authenticateCalendly = () => {
     const url =
-      "https://auth.calendly.com/oauth/authorize?client_id=BRlpX1MI-TROt-KbNuIJvtejB2SoRgZcnpAr5LtXGb4&response_type=code&redirect_uri=https://app.zoft.ai/dashboard";
+      "https://auth.calendly.com/oauth/authorize?client_id=b-q2YaJTFOgGRf56tlWs0j1bY1PYRELbKWheaT48rG4&response_type=code&redirect_uri=https://app.zoft.ai/dashboard";
 
     window.open(url);
   };
