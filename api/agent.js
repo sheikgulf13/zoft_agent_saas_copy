@@ -3,6 +3,8 @@ import { getApiConfig, getApiHeaders } from "../utility/api-config";
 import { CookieManager } from "../utility/cookie-manager"
 
 const getChatAgentList = async () => {
+  const session_id = CookieManager.getCookie("session_id");
+
   try {
     const url = process.env.url;
     const cacheKey = `agentList_${session_id}`;
@@ -26,6 +28,7 @@ const getChatAgentList = async () => {
 };
 
 const getPhoneAgentList = async () => {
+  const session_id = CookieManager.getCookie("session_id");
   try {
     const url = process.env.url;
     const cacheKey = `phoneList_${session_id}`;
