@@ -2,8 +2,8 @@
 const nextConfig = {
     env:{
 
-         url:'https://4b63-106-219-183-231.ngrok-free.app',
-         chat_url:' https://b31a-106-219-183-231.ngrok-free.app ',
+         url:'https://59a3-106-219-183-231.ngrok-free.app',
+         chat_url:'https://chat.zoft.ai',
          boturl:'https://kayzen-backend.onrender.com'
     }
 };
