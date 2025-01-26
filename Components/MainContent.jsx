@@ -3,11 +3,9 @@
 import React, { useEffect } from "react";
 import Header from "./Header";
 import useTheme from "next-theme";
-import {
-  getApiConfig,
-  getApiHeaders,
-} from "@/utility/api-config";
+import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { useSearchParams } from "next/navigation";
+import { DashboardContainer } from "./dashboard/DashboardContainer";
 
 const MainContent = () => {
   const { theme, setTheme } = useTheme();
@@ -17,8 +15,8 @@ const MainContent = () => {
     const url = process.env.url;
 
     const form = new FormData();
-    form.append("app_integration","calendly");
-    form.append("authorization_code",code);
+    form.append("app_integration", "calendly");
+    form.append("authorization_code", code);
 
     fetch(`${url}/public/integration`, {
       ...getApiConfig(),
@@ -42,11 +40,12 @@ const MainContent = () => {
 
   return (
     <div
-      className={`p- flex-1 ${
+      className={`h-screen items-center justify-center flex flex-col p- flex-1 ${
         theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#F2F4F7]"
       }`}
     >
-      <Header />
+      {/* <Header /> */}
+      <DashboardContainer />
     </div>
   );
 };

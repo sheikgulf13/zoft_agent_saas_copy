@@ -14,7 +14,7 @@ const Header = () => {
     getPhoneAgentList();
   }, [url]);
   return (
-    <div className="flex items-center justify-between p-[1vw] px-[3vw] h-[9.6vh]">
+    <div className="w-full flex items-center justify-between p-[1vw] px-[3vw] h-[9.6vh]">
       <h1></h1>
       <div className="relative flex w-1/3 h-[1.92vh] items-center">
         <div className="absolute flex justify-center items-center left-[1.5vw] bottom-[2.2vh">
