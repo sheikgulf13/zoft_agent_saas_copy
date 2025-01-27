@@ -2,7 +2,7 @@
 const nextConfig = {
     env:{
 
-         url:'https://e94e-49-206-9-122.ngrok-free.app',
+         url:'https://api.zoft.ai',
          chat_url:'https://chat.zoft.ai',
          boturl:'https://kayzen-backend.onrender.com'
     }
