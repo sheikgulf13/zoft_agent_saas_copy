@@ -13,7 +13,7 @@ const connect = () => {
   const [phoneAgent, setPhoneAgent] = useState(null);
   const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const [webhook, setWebhook]= useState('webhook endpoint here');
+  const [webhook, setWebhook]= useState('https://phone.zoft.ai/start-call');
 
   const [embedcode, setEmbedcode]= useState('Embed code here');
 
@@ -68,7 +68,7 @@ const connect = () => {
           </div>
           
           <div className={`flex justify-between items-center rounded-md px-[1vw] py-[.5vw] ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F3F4F7] text-black'}`}>
-            <input type="text" value={webhook} disabled className="bg-transparent" />
+            <input type="text" value={webhook} disabled className="bg-transparent w-full" />
             <button onClick={handleCopy_webhook}>
               {copied ? (
                 <FaClipboardCheck />

@@ -17,7 +17,7 @@ const Content = () => {
   const urlFetch = process.env.url;
   const router = useRouter();
   const dispatch = useDispatch();
-  const url = process.env.url;
+  const phone_url = process.env.phone_url;
   const { countryCode } = useSelector((state) => state.phoneAgent);
   const [cus_Number, setCus_Number] = useState("");
   const [cus_Name, setCus_Name] = useState("");
@@ -53,7 +53,7 @@ const Content = () => {
   };
 
   const makeCall = async () => {
-    const reqURL = `${url}/start-call`;
+    const reqURL = `${phone_url}/start-call`;
     const formData = new FormData();
     formData.append("phone_agent_id", phoneId);
     formData.append("customer_name", cus_Name);
