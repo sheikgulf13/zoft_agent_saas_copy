@@ -6,6 +6,7 @@ import {
   setphoneAgentName,
   setphoneAgentPurpose,
   setLanguage,
+  setGender,
   setVoice,
   setCountryCode,
   setPhoneNumber,
@@ -19,7 +20,10 @@ import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
-import { elevenlabsVoice } from "../../utility/eleven-labs-voice";
+import {
+  elevenlabsVoice,
+  language_mapping_accent,
+} from "../../utility/eleven-labs-voice";
 import { Chip } from "@mui/material";
 import { fileURLToPath } from "url";
 
@@ -72,6 +76,7 @@ const PhoneAgent = () => {
     phoneAgentName,
     phoneAgentPurpose,
     language,
+    gender,
     voice,
     countryCode,
     phoneNumber,
@@ -101,23 +106,31 @@ const PhoneAgent = () => {
   const uniqueLanguages = [...new Set(languages)];
 
   useEffect(() => {
-    const filteredVoiceNames = elevenlabsVoice.filter(
-      (item) => item.language_accent === language
-    );
+    if (!language_mapping_accent) return;
+    // console.log(language_mapping_accent[language]);
+
+    const filteredVoiceNames = elevenlabsVoice.filter((item) => {
+      return (
+        (!gender || item.labels.gender === gender) &&
+        (!language ||
+          language_mapping_accent[language].includes(item.labels.accent))
+      );
+    });
+
     setVoiceNames(filteredVoiceNames);
-  }, [language]);
+  }, [gender, language, language_mapping_accent]);
 
   const handleVoiceChange = (e) => {
-    console.log('voice selected')
+    console.log("voice selected");
     dispatch(setVoice(e.target.value));
-    console.log('voice set on redux');
+    console.log("voice set on redux");
 
     const filteredVoiceUrl = elevenlabsVoice.find(
       (item) => item.voice_id === e.target.value
     );
 
     if (filteredVoiceUrl) {
-      console.log(filteredVoiceUrl)
+      console.log(filteredVoiceUrl);
       setVoiceUrl(filteredVoiceUrl.preview_url);
     } else {
       setVoiceUrl("");
@@ -184,7 +197,7 @@ const PhoneAgent = () => {
     if (
       phoneAgentName === "" ||
       phoneAgentPurpose === "" ||
-      language === "" ||
+      (gender === "" && language === "") ||
       voice === "" ||
       phoneNumber === ""
     ) {
@@ -240,9 +253,12 @@ const PhoneAgent = () => {
         </div>
 
         <h1 className="text-[1.3vw] font-semibold py-[2%] px-[3vw]">
-          Phone Agent <Chip label={phoneAgentType === "outbound" ? "Outbound" : "Inbound"} color="primary"/>
+          Phone Agent{" "}
+          <Chip
+            label={phoneAgentType === "outbound" ? "Outbound" : "Inbound"}
+            color="primary"
+          />
         </h1>
-        
 
         <div className="flex w-full h-full pb-[1vw] justify-center items-start overflow-hidden">
           <div className="flex flex-col w-full items-center justify-start gap-[1.2vw]">
@@ -263,10 +279,7 @@ const PhoneAgent = () => {
                   onClick={accordion1Handler}
                 >
                   <h1 className="text-[1.1vw] capitalize">Agent Settings</h1>
-                  <div
-                    className="p-[.3vw] flex items-center gap-[1vw]"
-                    
-                  >
+                  <div className="p-[.3vw] flex items-center gap-[1vw]">
                     {(!openAccordion01 && err && phoneAgentName === "") ||
                     (!openAccordion01 && err && phoneAgentPurpose === "") ? (
                       <span className="text-red-900 capitalize Hsm font-medium transition-all duration-700">
@@ -359,33 +372,65 @@ const PhoneAgent = () => {
 
                       {/* Right Column */}
                       <div className="space-y-6">
-                        {/* Language Field */}
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="language"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Language <span className="text-red-500">*</span>
-                            {err && language === "" && (
+                        <div className="flex gap-5">
+                          {/* Gender Feild */}
+                          <div className="space-y-2">
+                            <label
+                              htmlFor="gender"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Gender<span className="text-red-500">*</span>
+                              {/* {err && language === "" && (
                               <span className="text-red-900 capitalize Hsm font-medium ml-[1%] ">
                                 Enter the data
                               </span>
-                            )}
-                          </label>
-                          <select
-                            id="language"
-                            value={language}
-                            onChange={(e) => dispatch(setLanguage(e.target.value))}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="">Select Language</option>
-                            {uniqueLanguages?.map((language, index) => (
-                              <option value={language}>{language}</option>
-                            ))}
-                          </select>
-                          <p className="text-xs text-gray-500">
-                            Select the language your agent will use
-                          </p>
+                            )} */}
+                            </label>
+                            <select
+                              id="gender"
+                              value={gender}
+                              onChange={(e) =>
+                                dispatch(setGender(e.target.value))
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Gender</option>
+                              <option value="female" selected>Female</option>
+                              <option value="male">Male</option>
+                            </select>
+                            <p className="text-xs text-gray-500">
+                              Select the Gender your agent will use
+                            </p>
+                          </div>
+                          {/* Language Field */}
+                          <div className="space-y-2">
+                            <label
+                              htmlFor="language"
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              Language <span className="text-red-500">*</span>
+                              {err && language === "" && (
+                                <span className="text-red-900 capitalize Hsm font-medium ml-[1%] ">
+                                  Enter the data
+                                </span>
+                              )}
+                            </label>
+                            <select
+                              id="language"
+                              value={language}
+                              onChange={(e) =>
+                                dispatch(setLanguage(e.target.value))
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Select Language</option>
+                              <option value="English">English</option>
+                              <option value="Tamil">Tamil</option>
+                            </select>
+                            <p className="text-xs text-gray-500">
+                              Select the language your agent will use
+                            </p>
+                          </div>
                         </div>
 
                         {/* Voice Field */}
@@ -407,7 +452,7 @@ const PhoneAgent = () => {
                               value={voice}
                               onChange={(e) => handleVoiceChange(e)}
                               className="w-[50%] rounded-tl-md rounded-bl-md  px-3 py-1 appearance-none focus:outline-none "
-                              >
+                            >
                               <option value="">Choose a voice</option>
                               {voiceNames?.map((voice, index) => (
                                 <option value={voice?.voice_id}>
@@ -447,7 +492,9 @@ const PhoneAgent = () => {
                               id="countryCode"
                               className="border-0 bg-transparent focus:ring-0 focus:outline-none py-2 px-3"
                               value={countryCode}
-                              onChange={(e) => dispatch(setCountryCode(e.target.value))}
+                              onChange={(e) =>
+                                dispatch(setCountryCode(e.target.value))
+                              }
                             >
                               <option value="+91">+91</option>
                               <option value="+92">+92</option>
@@ -458,7 +505,9 @@ const PhoneAgent = () => {
                             <input
                               id="phone"
                               type="number"
-                              onChange={(e) => dispatch(setPhoneNumber(e.target.value))}
+                              onChange={(e) =>
+                                dispatch(setPhoneNumber(e.target.value))
+                              }
                               placeholder={countryCode}
                               value={phoneNumber}
                               className="w-full number-input border-0 focus:ring-0 focus:outline-none px-3 py-2"
@@ -495,10 +544,7 @@ const PhoneAgent = () => {
                   <h1 className="text-[1.1vw] capitalize">
                     Agent Business Settings
                   </h1>
-                  <div
-                    className="p-[.3vw] flex items-center gap-[1vw]"
-                    
-                  >
+                  <div className="p-[.3vw] flex items-center gap-[1vw]">
                     <TiArrowSortedDown
                       className={`${
                         theme === "dark" ? "text-white" : "text-black"
@@ -534,7 +580,9 @@ const PhoneAgent = () => {
                             id="companyName"
                             type="text"
                             value={companyName}
-                            onChange={(e) => dispatch(setCompanyName(e.target.value))}
+                            onChange={(e) =>
+                              dispatch(setCompanyName(e.target.value))
+                            }
                             placeholder="Enter your company name"
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />

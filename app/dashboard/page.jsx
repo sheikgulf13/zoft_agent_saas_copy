@@ -1,10 +1,18 @@
 import MainContent from '@/Components/MainContent';
-import React from 'react';
+import React, { Suspense } from 'react';
 
-const Page = () => {
+const Content = () => {
     return (
         <MainContent />
     );
 }
 
-export default Page;
+const page = () => {
+  return (
+    <Suspense fallback={"Loading..."}>
+      <Content />
+    </Suspense>
+  )
+}
+
+export default page;

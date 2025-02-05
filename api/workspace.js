@@ -3,13 +3,10 @@ import { getApiConfig, getApiHeaders } from "../utility/api-config";
 
 const getWorkSpaceListApi = async () => {
   const url = process.env.url;
-  const session_id = CookieManager.getCookie("session_id");
-  const reqData = JSON.stringify({ session_id });
 
   let response = await fetch(`${url}/public/workspace/get_workspace`, {
     ...getApiConfig(),
-    method: "POST",
-    body: reqData,
+    method: "GET",
     headers: new Headers({
       ...getApiHeaders(),
       "Content-Type": "application/json",
@@ -29,9 +26,7 @@ const getWorkSpaceListApi = async () => {
 const getAgentsForWorkSpaceApi = async (workspaceId) => {
   const url = process.env.url;
   const formdata = new FormData();
-  const session_id = CookieManager.getCookie("session_id");
 
-  formdata.append("session_id", session_id);
   formdata.append("workspace_id", workspaceId);
 
   let response = await fetch(`${url}/public/workspace/get_agents`, {
@@ -58,9 +53,7 @@ const getAgentsForWorkSpaceApi = async (workspaceId) => {
 const deleteWorkSpaceApi = async (workspaceId) => {
   const url = process.env.url;
   const formdata = new FormData();
-  const session_id = CookieManager.getCookie("session_id");
 
-  formdata.append("session_id", session_id);
   formdata.append("workspace_id", workspaceId);
 
   let response = await fetch(`${url}/public/workspace/delete`, {

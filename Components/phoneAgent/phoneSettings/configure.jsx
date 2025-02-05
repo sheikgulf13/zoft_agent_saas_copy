@@ -16,7 +16,9 @@ const Configure = () => {
   const navigate = useRouter();
   const { selectedPhoneAgent, selectedWorkSpace } = useSelector((state) => state.selectedData);
 
-  console.log(selectedPhoneAgent);
+  console.log(selectedPhoneAgent)
+  const [phoneAgentID, setPhoneAgentID] = useState(selectedPhoneAgent?.id);
+
 
   // State variables for AI Assistant Configuration
   const [name, setName] = useState(selectedPhoneAgent?.phone_agent_name);
@@ -106,7 +108,8 @@ const Configure = () => {
   );
 
   console.log(uniqueLanguages);
-
+  // console.log(" PRINTING ")
+  // console.log(phoneAgentID);
   return (
     <div className="flex flex-col h-screen w-full">
       {/* Header */}

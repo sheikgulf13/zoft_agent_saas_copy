@@ -35,8 +35,8 @@ const Deploy = () => {
   const [currentSentence, setCurrentSentence] = useState(0);
   const [toast, setToast] = useState("");
   const frame = `<iframe 
-style="position: absolute; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
-src="https://embedded-chatbot-pi.vercel.app/?id=${chatId}" 
+style="position: fixed; bottom:0; right:0; width: 40vw; height: 110vh; border: none;" 
+src="https://chat-embed.zoft.ai/?id=${chatId}" 
 align="right">
 </iframe>`;
 
@@ -48,7 +48,6 @@ align="right">
   ];
   const createChatBot = async () => {
     const dict = {};
-    const session_id = CookieManager.getCookie("session_id");
     const formData = new FormData();
     var urls = "";
     url.forEach((url1, index) => {
@@ -59,7 +58,6 @@ align="right">
       formData.append(`files`, file);
     });
 
-    formData.append("session_id", session_id);
     formData.append("URLs", urls);
     formData.append("botname", botName);
     formData.append("description", description);
@@ -93,7 +91,6 @@ align="right">
         setToast("");
       }, 3000);
     }
-    localStorage.removeItem(`agentList_${session_id}`);
     setLoading(false);
   };
   useEffect(() => {

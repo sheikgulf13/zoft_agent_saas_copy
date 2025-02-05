@@ -6,6 +6,7 @@ const initialState = {
   phoneAgentName: "",
   phoneAgentPurpose: "",
   language: "",
+  gender:"",
   voice: "Friendly and expressive male",
   phoneNumber: "",
   companyName: "",
@@ -39,6 +40,9 @@ const phoneAgentslice = createSlice({
     },
     setLanguage: (state, actions) => {
       state.language = actions.payload;
+    },
+    setGender: (state, actions) => {
+      state.gender = actions.payload;
     },
     setVoice: (state, actions) => {
       state.voice = actions.payload;
@@ -120,6 +124,7 @@ export const {
   setphoneAgentName,
   setphoneAgentPurpose,
   setLanguage,
+  setGender,
   setVoice,
   setPhoneNumber,
   setCompanyName,
