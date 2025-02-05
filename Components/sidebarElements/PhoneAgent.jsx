@@ -26,6 +26,7 @@ import {
 } from "../../utility/eleven-labs-voice";
 import { Chip } from "@mui/material";
 import { fileURLToPath } from "url";
+import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 
 const InputField = ({
   label,
@@ -100,7 +101,13 @@ const PhoneAgent = () => {
   const [voiceNames, setVoiceNames] = useState([]);
   const [voiceUrl, setVoiceUrl] = useState("");
   const audioRef = useRef();
+  const [phoneData, setPhoneData] = useState([]);
+  const urlFetch = process.env.url;
+  const formData = new FormData();
 
+  const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+
+  formData.append("workspace_id", selectedWorkSpace);
   const languages = elevenlabsVoice?.map((item) => item.language_accent);
 
   const uniqueLanguages = [...new Set(languages)];
@@ -119,6 +126,28 @@ const PhoneAgent = () => {
 
     setVoiceNames(filteredVoiceNames);
   }, [gender, language, language_mapping_accent]);
+
+  useEffect(() => {
+    const handleNumberRoute = async () => {
+      try {
+        const response = await fetch(`${urlFetch}/twilio/get/numbers`, {
+          ...getApiConfig(),
+          method: "POST",
+          headers: new Headers({
+            ...getApiHeaders(),
+          }),
+          body: formData,
+        });
+        const data = await response.json();
+        console.log(data);
+
+        setPhoneData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleNumberRoute();
+  }, []);
 
   const handleVoiceChange = (e) => {
     console.log("voice selected");
@@ -395,7 +424,9 @@ const PhoneAgent = () => {
                               className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="">Select Gender</option>
-                              <option value="female" selected>Female</option>
+                              <option value="female" selected>
+                                Female
+                              </option>
                               <option value="male">Male</option>
                             </select>
                             <p className="text-xs text-gray-500">
@@ -486,37 +517,40 @@ const PhoneAgent = () => {
                           </label>
 
                           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                            {/* Country Code Select */}
-                            <select
-                              name="country code"
-                              id="countryCode"
-                              className="border-0 bg-transparent focus:ring-0 focus:outline-none py-2 px-3"
-                              value={countryCode}
-                              onChange={(e) =>
-                                dispatch(setCountryCode(e.target.value))
-                              }
-                            >
-                              <option value="+91">+91</option>
-                              <option value="+92">+92</option>
-                              <option value="+93">+93</option>
-                            </select>
+                            {phoneData.length > 0 ? (
+                              <select
+                                name="country code"
+                                id="countryCode"
+                                className="border-0 bg-white focus:ring-0 focus:outline-none py-2 px-3 w-full"
+                                value={countryCode}
+                                onChange={(e) =>
+                                  dispatch(setPhoneNumber(e.target.value))
+                                }
+                              >
+                                {phoneData.map((data) => (
+                                  <option value={data}>{data}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input
+                                id="phone"
+                                type="number"
+                                onChange={(e) =>
+                                  dispatch(setPhoneNumber(e.target.value))
+                                }
+                                placeholder={"Enter your Twilio phone number"}
+                                value={phoneNumber}
+                                className="w-full number-input border-0 focus:ring-0 focus:outline-none px-3 py-2"
+                              />
+                            )}
 
-                            {/* Phone Number Input */}
-                            <input
-                              id="phone"
-                              type="number"
-                              onChange={(e) =>
-                                dispatch(setPhoneNumber(e.target.value))
-                              }
-                              placeholder={countryCode}
-                              value={phoneNumber}
-                              className="w-full number-input border-0 focus:ring-0 focus:outline-none px-3 py-2"
-                            />
                           </div>
-
-                          <p className="text-xs text-gray-500">
+                          {phoneData.length > 0 ? (<p className="text-xs text-gray-500">
                             Select your Twilio phone number
-                          </p>
+                          </p>) : (<p className="text-xs text-gray-500">
+                            Enter your Twilio phone number
+                          </p>) }
+                          
                         </div>
                       </div>
                     </form>
