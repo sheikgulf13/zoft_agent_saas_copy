@@ -227,8 +227,8 @@ const PhoneAgent = () => {
       phoneAgentName === "" ||
       phoneAgentPurpose === "" ||
       (gender === "" && language === "") ||
-      voice === "" ||
-      phoneNumber === ""
+      voice === "" 
+      // phoneNumber === ""
     ) {
       setErr("Enter the data");
       setprogress(false);
