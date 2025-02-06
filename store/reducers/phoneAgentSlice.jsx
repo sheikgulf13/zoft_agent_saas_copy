@@ -1,10 +1,12 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  phoneAgentId: "",
   phoneAgentType: "",
   phoneAgentName: "",
   phoneAgentPurpose: "",
   language: "",
+  gender:"",
   voice: "Friendly and expressive male",
   phoneNumber: "",
   companyName: "",
@@ -24,6 +26,9 @@ const phoneAgentslice = createSlice({
   name: "phoneAgent",
   initialState,
   reducers: {
+    setPhoneAgentId: (state, action) => {
+      state.phoneAgentId = action.payload;
+    },
     setPhoneAgentType: (state, action) => {
       state.phoneAgentType = action.payload;
     },
@@ -35,6 +40,9 @@ const phoneAgentslice = createSlice({
     },
     setLanguage: (state, actions) => {
       state.language = actions.payload;
+    },
+    setGender: (state, actions) => {
+      state.gender = actions.payload;
     },
     setVoice: (state, actions) => {
       state.voice = actions.payload;
@@ -106,35 +114,17 @@ const phoneAgentslice = createSlice({
       // Update the state with the new array (ensure you are not mutating)
       state.createdActions = updatedActions;
     },
-    clearState: (state, action) => {
-      state = {
-        phoneAgentType: "",
-        phoneAgentName: "",
-        phoneAgentPurpose: "",
-        language: "",
-        voice: "Friendly and expressive male",
-        phoneNumber: "",
-        companyName: "",
-        companyBusiness: "",
-        companyServices: "",
-        prompt: "",
-        script: "",
-        meetingSchedular: "",
-        senderMail: "",
-        priceInquiry: "",
-        countryCode: "+91",
-        previewNumber: "",
-        createdActions: [],
-      };
-    },
+    clearState: () => initialState,
   },
 });
 
 export const {
+  setPhoneAgentId,
   setPhoneAgentType,
   setphoneAgentName,
   setphoneAgentPurpose,
   setLanguage,
+  setGender,
   setVoice,
   setPhoneNumber,
   setCompanyName,

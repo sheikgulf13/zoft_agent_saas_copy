@@ -33,7 +33,6 @@ const WorkSpace = () => {
   const { workSpaceList } = useSelector((state) => state.workSpaceList);
   const [modal, setModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const session_id = CookieManager.getCookie("session_id");
   const url = process.env.url;
 
   const getWorkspaceList = async () => {
@@ -50,7 +49,7 @@ const WorkSpace = () => {
 
   useEffect(() => {
     getWorkspaceList();
-  }, [session_id, url]);
+  }, [url]);
 
   const replaceHandler = () => {
     router.push("/workspace/createworkspace");

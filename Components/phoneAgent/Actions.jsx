@@ -8,7 +8,7 @@ import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
 import ActionForm from "./ActionForm";
-import { removeAction, upsertAction, setPrompt, setScript } from "@/store/actions/phoneAgentActions";
+import { removeAction, upsertAction, setPrompt, setScript, setPhoneAgentId } from "@/store/actions/phoneAgentActions";
 import DeleteIcon from "../Icons/DeleteIcon";
 import SettingIcon from "../Icons/SettingIcon";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +17,8 @@ import Link from "next/link";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { CookieManager } from "@/utility/cookie-manager";
+import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 
 const promptFields = [
   {
@@ -44,9 +46,19 @@ const promptFields = [
 const Actions = () => {
   const dispatch = useDispatch();
   const {
+    phoneAgentType,
+    phoneAgentName,
+    phoneAgentPurpose,
+    language,
+    voice,
+    countryCode,
+    phoneNumber,
+    companyName,
+    companyBusiness,
+    companyServices,
     createdActions,
     prompt,
-    script,
+    script
   } = useSelector((state) => state.phoneAgent);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
@@ -58,6 +70,7 @@ const Actions = () => {
   const [selectedAction, setSelectedAction] = useState();
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
+  const { selectedWorkSpace } = useSelector((state) => state.selectedData);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -92,9 +105,47 @@ const Actions = () => {
     setShowForm(true); // Show the form for editing
   };
 
-  const nextHandler = () => {
-    navigate.push("/workspace/agents/phone/voicesetting");
-    setprogress(true);
+  const createPhoneAgent = async () => {
+    const formdata = new FormData();
+    formdata.append("work_space_id", selectedWorkSpace);
+    formdata.append("phone_agent_type", phoneAgentType);
+    formdata.append("phone_agent_name", phoneAgentName);
+    formdata.append("conversation_purpose", phoneAgentPurpose);
+    formdata.append("language", language);
+    formdata.append("voice_id", voice)
+    formdata.append("country_code", countryCode);
+    formdata.append("phone_number", phoneNumber);
+    formdata.append("company_name", companyName);
+    formdata.append("company_business", companyBusiness);
+    formdata.append("company_products_services", companyServices);
+    formdata.append("created_actions", JSON.stringify(createdActions));
+    formdata.append("prompt", prompt);
+    formdata.append("script", script)
+    // formdata.append("use_tools", "false");
+    // formdata.append("voice_gender", gender);
+    // formdata.append("voice_adv_setting", advancedSetting ? "true" : "false");
+    // formdata.append("voice_adv_stability", stability);
+    // formdata.append("voice_adv_similarity", similarity);
+    // formdata.append("voice_adv_style", exaggeration);
+    // formdata.append("voice_adv_speaker", speakerBoost ? "true" : "false");
+    // console.log(formdata,gender,stability,similarity)
+    const url = process.env.url;
+    let response = await fetch(`${url}/public/phone_agent/create_test`, {
+      ...getApiConfig(),
+      method: "POST",
+      headers: new Headers({
+        ...getApiHeaders(),
+      }),
+      body: formdata,
+    });
+
+    console.log(response);
+
+    if(response.status === 200) {
+      response = await response.json();
+      dispatch(setPhoneAgentId(response.phone_agent_id));
+      navigate.push("/workspace/agents/phone/preview");
+    }
   };
 
   return (
@@ -132,16 +183,7 @@ const Actions = () => {
               <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
                 3
               </div>
-              <h2 className="capitalize font-medium Hmd">voice setting</h2>
-            </div>
-
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                4
-              </div>
-              <h2 className="capitalize font-medium Hmd">deployment</h2>
+              <h2 className="capitalize font-medium Hmd">Preview</h2>
             </div>
           </div>
         </div>
@@ -381,7 +423,7 @@ const Actions = () => {
           >
             Back
           </OutlinedButton>
-          <ContainedButton onClick={nextHandler}>Continue</ContainedButton>
+          <ContainedButton onClick={createPhoneAgent}>Create</ContainedButton>
         </div>
       </div>
     </div>

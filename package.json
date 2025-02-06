@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.3.0",
+    "@supabase/supabase-js": "^2.47.13",
     "cookies-next": "^4.2.1",
     "datatables.net": "^2.0.8",
     "datatables.net-dt": "^2.0.8",

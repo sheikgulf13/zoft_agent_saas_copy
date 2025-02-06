@@ -1,8 +1,10 @@
 export {
+  setPhoneAgentId,
   setPhoneAgentType,
   setphoneAgentName,
   setphoneAgentPurpose,
   setLanguage,
+  setGender,
   setVoice,
   setPhoneNumber,
   setCompanyName,

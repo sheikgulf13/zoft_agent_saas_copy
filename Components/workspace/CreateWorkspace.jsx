@@ -35,7 +35,6 @@ const Content = () => {
   const { theme } = useTheme();
   const searchParams = useSearchParams();
   const workspace_id = searchParams.get("workspaceId");
-  const session_id = CookieManager.getCookie("session_id");
   const [modal, setModal] = useState(false);
   const [workspace, setWorkspace] = useState({});
   const [filteredWorkspace, setFilteredWorkspace] = useState({});
@@ -43,7 +42,6 @@ const Content = () => {
   const [isLoading, setLoader] = useState(true);
 
   const formdata = new FormData();
-  formdata.append("session_id", session_id);
   formdata.append("workspace_id", workspace_id);
   formdata.append("workspace_name", workspacename);
   formdata.append("twilio_SSID", twiliosid);
@@ -55,11 +53,9 @@ const Content = () => {
   useEffect(() => {
     const getWorkspaceList = async () => {
       try {
-        const reqData = JSON.stringify({ session_id });
         const response = await fetch(`${url}/public/workspace/get_workspace`, {
           ...getApiConfig(),
-          method: "POST",
-          body: reqData,
+          method: "GET",
           headers: new Headers({
             ...getApiHeaders(),
             "Content-Type": "application/json",

@@ -12,17 +12,23 @@ import { CookieManager } from "../../../utility/cookie-manager"
 const Content = () => {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
-  const session_id = CookieManager.getCookie("session_id");
   const phoneId = searchParams.get("phoneId");
   const [phoneAgent, setPhoneAgent] = useState({});
   const urlFetch = process.env.url;
   const router = useRouter();
   const dispatch = useDispatch();
-  const url = process.env.url;
+  const phone_url = process.env.phone_url;
   const { countryCode } = useSelector((state) => state.phoneAgent);
   const [cus_Number, setCus_Number] = useState("");
   const [cus_Name, setCus_Name] = useState("");
   const [cus_Pur, setCus_Pur] = useState("");
+
+  const { selectedPhoneAgent, selectedWorkSpace } = useSelector((state) => state.selectedData);
+
+  console.log(selectedPhoneAgent)
+  const [phoneAgentID, setPhoneAgentID] = useState(selectedPhoneAgent?.id);
+  console.log('TEsting')
+  console.log(phoneAgentID)
 
   const getAgent = async () => {
     {
@@ -34,7 +40,6 @@ const Content = () => {
     */
     }
     const formData = new FormData();
-    formData.append("session_id", session_id);
     formData.append("phone_agent_id", phoneId);
     const response = await fetch(
       `${urlFetch}/public/phone_agent/get_agent/by_id`,
@@ -55,9 +60,9 @@ const Content = () => {
   };
 
   const makeCall = async () => {
-    const reqURL = `${url}/start-call`;
+    const reqURL = `${phone_url}/start-call`;
     const formData = new FormData();
-    formData.append("phone_agent_id", phoneId);
+    formData.append("phone_agent_id", phoneAgentID);
     formData.append("customer_name", cus_Name);
     formData.append("customer_phonenumber", countryCode + cus_Number);
     formData.append("custmer_businessdetails", cus_Pur);

@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GradientButton from "../buttons/GradientButton";
-import { clearState, setCountryCode } from "../../store/actions/phoneAgentActions";
+import { setCountryCode } from "../../store/actions/phoneAgentActions";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
 import TickIcon from "../Icons/TickIcon";
@@ -9,36 +9,15 @@ import { useRouter } from "next/navigation";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
-import { CookieManager } from "../../utility/cookie-manager"
 
 const Preview = () => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const url = process.env.url;
-  const session_id = CookieManager.getCookie("session_id");
+
   const {
-    gender,
-    stability,
-    similarity,
-    exaggeration,
-    speakerBoost,
-    advancedSetting,
-  } = useSelector((state) => state.voice);
-  const { workSpaceId } = useSelector((state) => state.workspace);
-  const {
-    phoneAgentType,
-    phoneAgentName,
-    phoneAgentPurpose,
-    language,
-    voice,
+    phoneAgentId,
     countryCode,
-    phoneNumber,
-    companyName,
-    companyBusiness,
-    companyServices,
-    createdActions,
-    prompt,
-    script
   } = useSelector((state) => state.phoneAgent);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
@@ -118,46 +97,13 @@ const Preview = () => {
     }
   };
   const createPhoneAgent = async () => {
-    const formdata = new FormData();
-    formdata.append("work_space_id", workSpaceId);
-    formdata.append("session_id", session_id);
-    formdata.append("phone_agent_type", phoneAgentType);
-    formdata.append("phone_agent_name", phoneAgentName);
-    formdata.append("conversation_purpose", phoneAgentPurpose);
-    formdata.append("language", language);
-    formdata.append("voice_id", voice)
-    formdata.append("country_code", countryCode);
-    formdata.append("phone_number", phoneNumber);
-    formdata.append("company_name", companyName);
-    formdata.append("company_business", companyBusiness);
-    formdata.append("company_products_services", companyServices);
-    formdata.append("created_actions", JSON.stringify(createdActions));
-    formdata.append("prompt", prompt);
-    formdata.append("script", script)
-    // formdata.append("use_tools", "false");
-    // formdata.append("voice_gender", gender);
-    // formdata.append("voice_adv_setting", advancedSetting ? "true" : "false");
-    // formdata.append("voice_adv_stability", stability);
-    // formdata.append("voice_adv_similarity", similarity);
-    // formdata.append("voice_adv_style", exaggeration);
-    // formdata.append("voice_adv_speaker", speakerBoost ? "true" : "false");
-    // console.log(formdata,gender,stability,similarity)
-    const response = await fetch(`${url}/public/phone_agent/create_test`, {
-      ...getApiConfig(),
-      method: "POST",
-      headers: new Headers({
-        ...getApiHeaders(),
-      }),
-      body: formdata,
-    });
     navigate.push("/workspace/agents");
-    localStorage.removeItem(`phoneList_${session_id}`);
-    dispatch(clearState());
   };
 
   const makeCall = async () => {
     const reqURL = `${url}/start-call`;
     const formData = new FormData();
+    formData.append("phone_agent_id", phoneAgentId);
     formData.append("customer_name", cus_Name);
     formData.append("customer_phonenumber", countryCode + cus_Number);
     formData.append("custmer_businessdetails", cus_Pur);

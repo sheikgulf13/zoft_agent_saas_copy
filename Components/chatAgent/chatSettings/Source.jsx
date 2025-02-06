@@ -97,20 +97,17 @@ const Source = () => {
     });
     existingFiles = existingFiles.substring(0, existingFiles.length - 1);
     urls = urls.substring(0, urls.length - 1);
-    // file?.forEach((file, index) => {
-    //   formData.append("new_files", file);
-    // });
+    file?.forEach((file, index) => {
+      formData.append("files", file);
+    });
     const changes = DetectChanges(urls, existingFiles);
     if (changes == 0) {
       setErr("No Changes Is Done");
       return;
     }
     setErr("");
-    const session_id = CookieManager.getCookie("session_id");
-    formData.append("session_id", session_id);
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
-    formData.append("files", file);
     formData.append("raw_text", rawText);
     formData.append("existing_files", existingFiles);
     formData.append("url_word_count", JSON.stringify(dict));
@@ -126,7 +123,6 @@ const Source = () => {
     });
     const chatId = await response.text();
     const formDataUpdate = new FormData();
-    formDataUpdate.append("session_id", session_id);
     formDataUpdate.append("chat_agent_id", chatId);
     const res = await fetch(`${urlFetch}/public/chat_agent/get_agent/by_id`, {
       ...getApiConfig(),

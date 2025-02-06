@@ -3,17 +3,16 @@ import { getApiConfig, getApiHeaders } from "../utility/api-config";
 import { CookieManager } from "../utility/cookie-manager"
 
 const getChatAgentList = async () => {
+  const session_id = CookieManager.getCookie("session_id");
+
   try {
     const url = process.env.url;
-    const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `agentList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
     if (!cachedData) {
-      const reqData = JSON.stringify({ session_id });
       const response = await fetch(`${url}/public/chat_agent/get_agents`, {
         ...getApiConfig(),
         method: "POST",
-        body: reqData,
         headers: new Headers({
           ...getApiHeaders(),
           "Content-Type": "application/json",
@@ -29,18 +28,16 @@ const getChatAgentList = async () => {
 };
 
 const getPhoneAgentList = async () => {
+  const session_id = CookieManager.getCookie("session_id");
   try {
     const url = process.env.url;
-    const session_id = CookieManager.getCookie("session_id");
     const cacheKey = `phoneList_${session_id}`;
     const cachedData = localStorage.getItem(cacheKey);
 
     if (!cachedData) {
-      const reqData = JSON.stringify({ session_id });
       const response = await fetch(`${url}/public/phone_agent/get_agents`, {
         ...getApiConfig(),
         method: "POST",
-        body: reqData,
         headers: new Headers({
           ...getApiHeaders(),
           "Content-Type": "application/json",
@@ -57,10 +54,8 @@ const getPhoneAgentList = async () => {
 
 const deleteChatAgentApi = async (agentId) => {
   const url = process.env.url;
-  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
-  formData.append("session_id", session_id);
   formData.append("chat_agent_id", agentId);
 
   const result = await fetch(`${url}/public/chat_agent/delete`, {
@@ -77,10 +72,8 @@ const deleteChatAgentApi = async (agentId) => {
 
 const deletePhoneAgentApi = async (agentId) => {
   const url = process.env.url;
-  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
-  formData.append("session_id", session_id);
   formData.append("phone_agent_id", agentId);
 
   const result = await fetch(`${url}/public/phone_agent/delete`, {
@@ -125,10 +118,8 @@ const updatePhoneAgentApi = async ({
   }
 
   const url = process.env.url;
-  const session_id = CookieManager.getCookie("session_id");
   const formData = new FormData();
 
-  formData.append("session_id", session_id);
   formData.append("phone_agent_id", id);
   formData.append("phone_agent_name", name);
   formData.append("conversation_purpose", purpose);

@@ -16,8 +16,8 @@ const Embeds = () => {
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
   const text = `<iframe 
-  style="position: absolute; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
-  src="https://embedded-chatbot-pi.vercel.app/?id=${selectedChatAgent?.id}" 
+  style="position: fixed; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
+  src="https://chat-embed.zoft.ai/?id=${selectedChatAgent?.id}" 
   align="right">
 </iframe>`
 

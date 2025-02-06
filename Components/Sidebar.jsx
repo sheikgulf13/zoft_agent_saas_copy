@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation";
 import { CookieManager } from "../utility/cookie-manager";
 
 const variants = {
-  open: { width: "unset", transition: { duration: 0.5 } },
+  open: { minWidth: "240px", width: "15%", transition: { duration: 0.5 } },
   closed: { width: "5%", transition: { duration: 0.5 } }
 };
 
@@ -53,14 +53,10 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
 
   const handleButtonClick = async (index, button) => {
     if (button.text === "logout") {
-      const session_id = CookieManager.getCookie("session_id");
       // const refresh_token=getCookie("refresh_token")
-      const reqData = JSON.stringify({ session_id: session_id });
-      console.log(reqData, JSON.parse(reqData).session_id);
       const response = await fetch(`${url}/auth/signout`, {
         ...getApiConfig(),
         method: "POST",
-        body: reqData,
         headers: new Headers({
           ...getApiHeaders(),
           "Content-Type": "application/json",
@@ -68,8 +64,6 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       });
       const data = await response.text();
       if (data) {
-        localStorage.removeItem(`phoneList_${session_id}`);
-        localStorage.removeItem(`agentList_${session_id}`);
         CookieManager.deleteCookie("session_id");
       }
     }
@@ -89,6 +83,13 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       text: "workspace",
       path: "/workspace",
       className: "Message second",
+      color: "primary",
+    },
+    {
+      Icon: MessageIcon,
+      text: "Integrations",
+      path: "/integrations",
+      className: "Integrations",
       color: "primary",
     },
     //{ Icon: MessageIcon, text: 'chat agent', path: '/chats', className: 'Message second', color: 'primary' },
