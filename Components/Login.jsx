@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import GradientButton from "./buttons/GradientButton";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -24,12 +24,15 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useRouter();
   const { email, password, fadeIn } = useSelector((state) => state.user);
   const url = process.env.url;
   const loginHandler = async (e) => {
     e.preventDefault();
-
+    email ? setEmailError("") : setEmailError("Please fill the feild");
+    password ? setPasswordError("") : setPasswordError("Please fill the feild");
     if (email && password) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -179,9 +182,17 @@ const Login = () => {
           <form className="w-full h-full flex flex-col justify-start gap-[2vw]">
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-start">
-                <label className="capitalize Hmd font-medium" htmlFor="email">
-                  email
-                </label>
+                <div className="flex">
+                  <label className="capitalize Hmd font-medium" htmlFor="email">
+                    email
+                  </label>
+                  {emailError && (
+                    <span className="text-red-500 font-medium">
+                      *({emailError})
+                    </span>
+                  )}
+                </div>
+
                 <div className="flex items-center relative">
                   <MdEmail className="H5 absolute left-3" />
                   <input
@@ -197,12 +208,19 @@ const Login = () => {
 
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-start">
-                <label
-                  className="capitalize Hmd font-medium"
-                  htmlFor="password"
-                >
-                  password
-                </label>
+                <div className="flex">
+                  <label
+                    className="capitalize Hmd font-medium"
+                    htmlFor="password"
+                  >
+                    password
+                  </label>
+                  {passwordError && (
+                    <span className="text-red-500 font-medium">
+                      *({passwordError})
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center relative">
                   <FaLock className="H5 absolute left-3" />
                   <input
