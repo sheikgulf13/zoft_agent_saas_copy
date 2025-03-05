@@ -183,6 +183,11 @@ const Register = () => {
       dispatch(setFadeIn(false));
     }, 300);
   };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && document.activeElement !== document.getElementById("submit-btn")) {
+      e.preventDefault();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -218,7 +223,7 @@ const Register = () => {
                         src="/images/logo.svg"
                         alt="Kayzen"
                       />
-                      <h1 className="H4 uppercase font-semibold">Kayzen</h1>
+                      <h1 className="H4 uppercase font-semibold">Zoft</h1>
                     </div>
 
                     <div className="ml-[12.5vw flex flex-col items-center w-1/2 h-[16vh] gap-[2vw]">
@@ -244,7 +249,7 @@ const Register = () => {
                     </div>
 
                     <div className="w-full h-[40vh]">
-                      <form className="w-full h-full flex flex-col justify-start gap-[1.5vw]">
+                      <form onKeyDown={handleKeyDown} className="w-full h-full flex flex-col justify-start gap-[1.5vw]">
                         <FormInput
                           label="Username"
                           icon={<FaUser className="H5 absolute left-3" />}
@@ -256,6 +261,9 @@ const Register = () => {
                           placeholder="Enter Username"
                           id="username"
                           userNameError={userNameError}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                          }}
                         />
                         <FormInput
                           label="Email"
@@ -266,6 +274,9 @@ const Register = () => {
                           placeholder="Enter Email"
                           id="email"
                           emailError={emailError}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                          }}
                         />
                         <FormInput
                           label="Password"
@@ -278,6 +289,9 @@ const Register = () => {
                           placeholder="Enter Password"
                           id="password"
                           passwordError={passwordError}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                          }}
                         />
 
                         <div className="w-full flex flex-col items-center justify-center ">
@@ -294,11 +308,25 @@ const Register = () => {
                               )}
                               <h6 className="capitalize font-medium">
                                 I agree to the{" "}
-                                <button className="text-[#630063]" onClick={() => window.open ("https://blogs.zoft.ai/termsandconditions")}>
+                                <button
+                                  className="text-[#630063]"
+                                  onClick={() =>
+                                    window.open(
+                                      "https://blogs.zoft.ai/termsandconditions"
+                                    )
+                                  }
+                                >
                                   terms of service
                                 </button>{" "}
                                 and{" "}
-                                <button className="text-[#630063]" onClick={() => window.open("https://blogs.zoft.ai/privacy-policy")}>
+                                <button
+                                  className="text-[#630063]"
+                                  onClick={() =>
+                                    window.open(
+                                      "https://blogs.zoft.ai/privacy-policy"
+                                    )
+                                  }
+                                >
                                   privacy policy
                                 </button>
                               </h6>
@@ -308,6 +336,7 @@ const Register = () => {
 
                         <div className="w-full flex items-center justify-center">
                           <GradientButton
+                            id="submit-btn"
                             text="Continue"
                             className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
                             onClick={registerHandler}
@@ -359,13 +388,22 @@ const FormInput = ({
           {label}
         </label>
         {userNameError && (
-          <span className="text-red-500 font-medium text-sm">{" "}*{userNameError}</span>
+          <span className="text-red-500 font-medium text-sm">
+            {" "}
+            *{userNameError}
+          </span>
         )}
         {emailError && (
-          <span className="text-red-500 font-medium text-sm">{" "}*{emailError}</span>
+          <span className="text-red-500 font-medium text-sm">
+            {" "}
+            *{emailError}
+          </span>
         )}
         {passwordError && (
-          <span className="text-red-500 font-medium text-sm">{" "}*{passwordError}</span>
+          <span className="text-red-500 font-medium text-sm">
+            {" "}
+            *{passwordError}
+          </span>
         )}
       </div>
       <div className="flex items-center relative">
