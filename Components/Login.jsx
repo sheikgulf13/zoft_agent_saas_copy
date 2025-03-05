@@ -31,8 +31,8 @@ const Login = () => {
   const url = process.env.url;
   const loginHandler = async (e) => {
     e.preventDefault();
-    email ? setEmailError("") : setEmailError("Please fill the feild");
-    password ? setPasswordError("") : setPasswordError("Please fill the feild");
+    email ? setEmailError("") : setEmailError("Enter a Username");
+    password ? setPasswordError("") : setPasswordError("Enter a password");
     if (email && password) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -140,7 +140,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(setFadeIn(true));
     setTimeout(() => {
-      dispatch(setShowLogin(false));
+      // dispatch(setShowLogin(false));
       dispatch(setFadeIn(false));
     }, 300); // Duration should match the animation time
   };
@@ -184,12 +184,10 @@ const Login = () => {
               <div className="flex flex-col items-start">
                 <div className="flex">
                   <label className="capitalize Hmd font-medium" htmlFor="email">
-                    email
+                    email&nbsp;
                   </label>
                   {emailError && (
-                    <span className="text-red-500 font-medium">
-                      *({emailError})
-                    </span>
+                    <span className="text-red-500 font-medium text-sm">{" "}*{emailError}</span>
                   )}
                 </div>
 
@@ -213,12 +211,10 @@ const Login = () => {
                     className="capitalize Hmd font-medium"
                     htmlFor="password"
                   >
-                    password
+                    password&nbsp;
                   </label>
                   {passwordError && (
-                    <span className="text-red-500 font-medium">
-                      *({passwordError})
-                    </span>
+                    <span className="text-red-500 font-medium text-sm">{" "}*{passwordError}</span>
                   )}
                 </div>
                 <div className="flex items-center relative">
@@ -239,15 +235,20 @@ const Login = () => {
                 text="log in"
                 className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
                 onClick={loginHandler}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    loginHandler();
+                  }
+                }}
               />
             </div>
+          </form>
             <h6 className="ml-[8vw] capitalize font-semibold">
               don't have an account?{" "}
               <button className="text-[#630063]" onClick={registerHandler}>
                 sign up
               </button>
             </h6>
-          </form>
         </div>
       </div>
     </motion.div>

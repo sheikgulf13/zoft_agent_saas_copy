@@ -40,6 +40,7 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useRouter();
   const url = process.env.url;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const { username, email, password, animationComplete, showLogin, fadeIn } =
     useSelector((state) => state.user);
 
@@ -55,13 +56,26 @@ const Register = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
-    username ? setUserNameError("") : setUserNameError("Please fill the feild");
-    email ? setEmailError("") : setEmailError("Please fill the feild");
-    password ? setPasswordError("") : setPasswordError("Please fill the feild");
+    username ? setUserNameError("") : setUserNameError("Enter a Username");
+    if (!email) {
+      setEmailError("Enter a email");
+    } else if (!emailRegex.test(email)) {
+      setEmailError("Enter a valid email address");
+    } else {
+      setEmailError("");
+    }
 
-    check ? setAgreeError("") : setAgreeError("Please fill the feild");
-    if (password?.length === 6) {
-      setPasswordError("Password should be atleast 6 characters long.");
+    check
+      ? setAgreeError("")
+      : setAgreeError(
+          "Please agree to the Terms and Privacy Policy to continue."
+        );
+    if (!password) {
+      setPasswordError("Enter a password");
+    } else if (password.length < 6) {
+      setPasswordError("Password should be at least 6 characters long.");
+    } else {
+      setPasswordError("");
     }
 
     if (check && username && email && password) {
@@ -267,26 +281,28 @@ const Register = () => {
                         />
 
                         <div className="w-full flex flex-col items-center justify-center ">
-                          {agreeError && (
-                            <span className="text-red-500 font-medium">
-                              *({agreeError})
-                            </span>
-                          )}
                           <div className="w-full flex items-center justify-center gap-[1vw]">
                             <CheckBox
                               checked={check}
                               onChange={() => setCheck(!check)}
                             />
-                            <h6 className="capitalize font-medium">
-                              I agree to the{" "}
-                              <button className="text-[#630063]">
-                                terms of service
-                              </button>{" "}
-                              and{" "}
-                              <button className="text-[#630063]">
-                                privacy policy
-                              </button>
-                            </h6>
+                            <div className="flex flex-col">
+                              {agreeError && (
+                                <span className="text-red-500 font-medium text-xs">
+                                  *{agreeError}
+                                </span>
+                              )}
+                              <h6 className="capitalize font-medium">
+                                I agree to the{" "}
+                                <button className="text-[#630063]" onClick={() => window.open ("https://blogs.zoft.ai/termsandconditions")}>
+                                  terms of service
+                                </button>{" "}
+                                and{" "}
+                                <button className="text-[#630063]" onClick={() => window.open("https://blogs.zoft.ai/privacy-policy")}>
+                                  privacy policy
+                                </button>
+                              </h6>
+                            </div>
                           </div>
                         </div>
 
@@ -295,6 +311,11 @@ const Register = () => {
                             text="Continue"
                             className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
                             onClick={registerHandler}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                registerHandler();
+                              }
+                            }}
                           />
                         </div>
                         <h6 className="ml-[15vw] capitalize font-semibold">
@@ -330,7 +351,6 @@ const FormInput = ({
   userNameError,
   emailError,
   passwordError,
-  agreeError,
 }) => (
   <div className="flex items-center justify-center w-full">
     <div className="flex flex-col items-start">
@@ -339,16 +359,13 @@ const FormInput = ({
           {label}
         </label>
         {userNameError && (
-          <span className="text-red-500 font-medium">*({userNameError})</span>
+          <span className="text-red-500 font-medium text-sm">{" "}*{userNameError}</span>
         )}
         {emailError && (
-          <span className="text-red-500 font-medium">*({emailError})</span>
+          <span className="text-red-500 font-medium text-sm">{" "}*{emailError}</span>
         )}
         {passwordError && (
-          <span className="text-red-500 font-medium">*({passwordError})</span>
-        )}
-        {agreeError && (
-          <span className="text-red-500 font-medium">*({agreeError})</span>
+          <span className="text-red-500 font-medium text-sm">{" "}*{passwordError}</span>
         )}
       </div>
       <div className="flex items-center relative">
