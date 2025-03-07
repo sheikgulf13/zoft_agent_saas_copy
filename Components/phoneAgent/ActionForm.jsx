@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -8,43 +8,43 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import { v4 as uuidv4 } from "uuid";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
-import {cloneDeep} from "lodash";
+import { cloneDeep } from "lodash";
 
-const name= {
+const name = {
   label: "Name",
   value: "action_name",
-  placeholder: "Enter the name"
+  placeholder: "Enter the name",
 };
 
 const subject = {
   label: "Subject",
   value: "subject",
-  placeholder: "Enter the subject"
-}
+  placeholder: "Enter the subject",
+};
 
 const instructions = {
   label: "Instructions",
   value: "instructions",
-  placeholder: "Tell your agent when this action should be triggered."
-}
+  placeholder: "Tell your agent when this action should be triggered.",
+};
 
 const content = {
   label: "Content",
   value: "content",
-  placeholder: "Provide the main content or body of the email."
-}
+  placeholder: "Provide the main content or body of the email.",
+};
 
 const forwardTo = {
   label: "Forward to",
   value: "forward_to",
-  placeholder: "Tell your agent where to forward your call."
-}
+  placeholder: "Tell your agent where to forward your call.",
+};
 
 const endPoint = {
   label: "End point",
   value: "end_point",
-  placeholder: "Enter a url"
-}
+  placeholder: "Enter a url",
+};
 
 const actions = [
   {
@@ -75,12 +75,13 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   const [selectedAction, setSelectedAction] = useState(actions[0]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
-  const [editorContent, setEditorContent] = useState(formData?.data?.content || ""); // State for Quill editor
+  const [editorContent, setEditorContent] = useState(
+    formData?.data?.content || ""
+  ); // State for Quill editor
 
   useEffect(() => {
-    console.log(formData)
-
-  }, [formData])
+    console.log(formData);
+  }, [formData]);
 
   useEffect(() => {
     if (initialData) {
@@ -99,6 +100,7 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   const handleActionChange = (e) => {
     const actionId = parseInt(e.target.value);
     const action = actions.find((action) => action.id === actionId);
+
     setSelectedAction(action);
     setFormData({});
     setErrors({});
@@ -106,37 +108,40 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   };
 
   const handleChange = (e, _id, val) => {
-    
     let id = _id;
     let value = val;
 
-    if(!_id) {
+    if (!_id) {
       id = e.target.id;
       value = e.target.value;
       e.target.style.height = "auto"; // Reset height
       e.target.style.height = `${e.target.scrollHeight}px`; // Set new height
     }
+    console.log(formData);
 
     const newData = cloneDeep(formData);
-    const data = {}
+    const data = {};
+    console.log(newData);
 
-    if(id === "action_name") {
+    if (id === "action_name") {
       newData["action_name"] = value;
+    } else if (id === "instructions") {
+      newData["instructions"] = value;
     } else {
-      data[id] = value
+      data[id] = value;
     }
 
-    if(Object.keys(data).length) {
-      newData["data"] = {...newData?.data, ...data};
+    if (Object.keys(data).length) {
+      newData["data"] = { ...newData?.data, ...data };
     }
 
     setFormData(newData);
-    setErrors([])
+    setErrors([]);
   };
 
   const handleEditorChange = (content) => {
     setEditorContent(content);
-    handleChange(null, "content", content)
+    handleChange(null, "content", content);
   };
 
   useEffect(() => {
@@ -156,12 +161,12 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     selectedAction.fields.forEach((field) => {
       let isExist = Boolean(formData[field.value]);
       if (formData?.data) {
-        if(formData?.data[field.value]){
+        if (formData?.data[field.value]) {
           isExist = true;
         }
       }
 
-      if(!isExist) {
+      if (!isExist) {
         newErrors[field.value] = "This field is required.";
       }
     });
@@ -197,9 +202,8 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
     //   ...formData
     // };
 
-    console.log('filled form Data', formData);
-    console.log('form data to be dispatched', actionData);
-    
+    console.log("filled form Data", formData);
+    console.log("form data to be dispatched", actionData);
 
     handleCreateAction(actionData);
     toggle(); // Close the form after submission
@@ -213,102 +217,102 @@ function ActionForm({ show, toggle, initialData, handleCreateAction }) {
   }
 
   const GetField = (field) => {
-    console.log(field)
-    switch(field.label) {
+    console.log(field);
+    switch (field.label) {
       case "Instructions": {
         return (
           <textarea
-          name={field.label}
-          id={field.value}
-          placeholder={field.placeholder}
-          value={formData?.data?.instructions || ""}
-          className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-gray-100 px-[.5vw] py-[.5vw] ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-        />
-        )
+            name={field.label}
+            id={field.value}
+            placeholder={field.placeholder}
+            value={formData?.instructions || ""}
+            className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-gray-100 px-[.5vw] py-[.5vw] ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+        );
       }
 
       case "Content": {
         return (
           <ReactQuill
-          name={field.label}
-          value={editorContent}
-          onChange={handleEditorChange}
-          placeholder="Start typing..."
-          className={`mt-2 bg-gray-100 min-h-[200px] border-0 overflow-hidden shadow-sm ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-        />
-        )
+            name={field.label}
+            value={editorContent}
+            onChange={handleEditorChange}
+            placeholder="Start typing..."
+            className={`mt-2 bg-gray-100 min-h-[200px] border-0 overflow-hidden shadow-sm ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+          />
+        );
       }
 
       case "Subject": {
         return (
           <input
-          type="text"
-          name={field.label}
-          id={field.value}
-          placeholder={field.placeholder}
-          value={formData?.data?.subject || ""}
-          className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-        />
-        )
+            type="text"
+            name={field.label}
+            id={field.value}
+            placeholder={field.placeholder}
+            value={formData?.data?.subject || ""}
+            className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+        );
       }
 
       case "Forward to": {
         return (
           <input
-          type="text"
-          name={field.label}
-          id={field.value}
-          placeholder={field.placeholder}
-          value={formData?.data?.forward_to || ""}
-          className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-        />
-        )
+            type="text"
+            name={field.label}
+            id={field.value}
+            placeholder={field.placeholder}
+            value={formData?.data?.forward_to || ""}
+            className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+        );
       }
 
       case "End point": {
         return (
           <input
-          type="text"
-          name={field.label}
-          id={field.value}
-          placeholder={field.placeholder}
-          value={formData?.data?.end_point || ""}
-          className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-        />
-        )
+            type="text"
+            name={field.label}
+            id={field.value}
+            placeholder={field.placeholder}
+            value={formData?.data?.end_point || ""}
+            className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+        );
       }
 
       case "Name": {
         return (
           <input
-          type="text"
-          name={field.label}
-          id={field.value}
-          placeholder={field.placeholder}
-          value={formData?.action_name || ""}
-          className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
-            errors[field.value] ? "border-red-500" : ""
-          }`}
-          onChange={handleChange}
-        />
-        )
+            type="text"
+            name={field.label}
+            id={field.value}
+            placeholder={field.placeholder}
+            value={formData?.action_name || ""}
+            className={`w-full rounded-md mt-[.5vw] bg-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+              errors[field.value] ? "border-red-500" : ""
+            }`}
+            onChange={handleChange}
+          />
+        );
       }
     }
-  }
+  };
 
   return (
     <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
