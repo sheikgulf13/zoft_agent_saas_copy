@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import GradientButton from "./buttons/GradientButton";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -24,12 +24,15 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useRouter();
   const { email, password, fadeIn } = useSelector((state) => state.user);
   const url = process.env.url;
   const loginHandler = async (e) => {
     e.preventDefault();
-
+    email ? setEmailError("") : setEmailError("Enter a Username");
+    password ? setPasswordError("") : setPasswordError("Enter a password");
     if (email && password) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -137,7 +140,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(setFadeIn(true));
     setTimeout(() => {
-      dispatch(setShowLogin(false));
+      // dispatch(setShowLogin(false));
       dispatch(setFadeIn(false));
     }, 300); // Duration should match the animation time
   };
@@ -179,9 +182,15 @@ const Login = () => {
           <form className="w-full h-full flex flex-col justify-start gap-[2vw]">
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-start">
-                <label className="capitalize Hmd font-medium" htmlFor="email">
-                  email
-                </label>
+                <div className="flex">
+                  <label className="capitalize Hmd font-medium" htmlFor="email">
+                    email&nbsp;
+                  </label>
+                  {emailError && (
+                    <span className="text-red-500 font-medium text-sm">{" "}*{emailError}</span>
+                  )}
+                </div>
+
                 <div className="flex items-center relative">
                   <MdEmail className="H5 absolute left-3" />
                   <input
@@ -197,12 +206,17 @@ const Login = () => {
 
             <div className="flex items-center justify-center w-full">
               <div className="flex flex-col items-start">
-                <label
-                  className="capitalize Hmd font-medium"
-                  htmlFor="password"
-                >
-                  password
-                </label>
+                <div className="flex">
+                  <label
+                    className="capitalize Hmd font-medium"
+                    htmlFor="password"
+                  >
+                    password&nbsp;
+                  </label>
+                  {passwordError && (
+                    <span className="text-red-500 font-medium text-sm">{" "}*{passwordError}</span>
+                  )}
+                </div>
                 <div className="flex items-center relative">
                   <FaLock className="H5 absolute left-3" />
                   <input
@@ -221,15 +235,20 @@ const Login = () => {
                 text="log in"
                 className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
                 onClick={loginHandler}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    loginHandler();
+                  }
+                }}
               />
             </div>
+          </form>
             <h6 className="ml-[8vw] capitalize font-semibold">
               don't have an account?{" "}
               <button className="text-[#630063]" onClick={registerHandler}>
                 sign up
               </button>
             </h6>
-          </form>
         </div>
       </div>
     </motion.div>

@@ -20,6 +20,8 @@ import {
 import { FiPhone, FiClock, FiDownload, FiShare2 } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { getChatListApi } from "../../../api/chat-list";
+import { getChatDatatApi } from "../../../api/chatData";
+
 import { humanizeUnixTimestamp } from "@/utility/data-utility";
 
 // Create a light theme with grey accents
@@ -75,12 +77,14 @@ function ChatListAgent(props) {
   const { selectedChatAgent } = props;
 
   const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedChatData, setSelectedChatData] = useState(null);
   const [chatList, setChatList] = useState([]);
   const [page, setPage] = useState(1);
   const logsPerPage = 10;
 
   const handleCallSelect = (chat) => {
     setSelectedChat(chat);
+    console.log(chat);
   };
 
   const handlePageChange = (event, value) => {
@@ -140,7 +144,7 @@ function ChatListAgent(props) {
                     key={chat.chat_agent_id}
                     button
                     onClick={() => handleCallSelect(chat)}
-                    className={`mb-2 ${
+                    className={`mb-2 cursor-pointer ${
                       selectedChat?.chat_agent_id === chat.chat_agent_id
                         ? "bg-gray-200"
                         : ""
@@ -185,35 +189,24 @@ function ChatListAgent(props) {
                     </Box>
                   </Box>
                   <Box
-                    className="overflow-y-auto bg-gray-100 rounded p-4"
+                    className="overflow-y-auto bg-gray-100 rounded p-4 flex flex-col"
                     style={{ height: "calc(100vh - 330px)" }}
                   >
-                    {selectedChat?.conversation?.map((message, index) => (
-                      <Box
-                        key={index}
-                        className={`mb-4 ${
-                          message.role === "Assistant"
-                            ? "text-left"
-                            : "text-right"
-                        }`}
-                      >
-                        <Box
-                          className={`inline-block p-3 rounded-lg ${
-                            message.role === "Assistant"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-200 text-gray-800"
+                    {selectedChat &&
+                      selectedChat?.conversation.map((chat, index) => (
+                        <div
+                          key={index}
+                          className={`p-3 rounded-lg max-w-[75%] mb-2 ${
+                            chat.type === "bot"
+                              ? "bg-gray-200 self-start"
+                              : "bg-blue-500 text-white self-end"
                           }`}
                         >
-                          <Typography>{message.content}</Typography>
                           <p
-                            variant="caption"
-                            className="mt-2 text-xs text-gray-600"
-                          >
-                            {message.role}
-                          </p>
-                        </Box>
-                      </Box>
-                    ))}
+                            dangerouslySetInnerHTML={{ __html: chat.message }}
+                          ></p>
+                        </div>
+                      ))}
                   </Box>
                 </>
               ) : (
@@ -240,24 +233,24 @@ const Activity = () => {
         }`}
       >
         <div
-        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
-        }`}
-      >
-        <div className="absolute left-[2vw] top-[-.6vw]">
-          <OutlinedButton
-            onClick={() =>
-              router.push(
-                `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
-              )
-            }
-          >
-            <FaArrowLeftLong />
-            <span className="ml-2">Back to workspace</span>
-          </OutlinedButton>
+          className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
+            theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+          }`}
+        >
+          <div className="absolute left-[2vw] top-[-.6vw]">
+            <OutlinedButton
+              onClick={() =>
+                router.push(
+                  `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
+                )
+              }
+            >
+              <FaArrowLeftLong />
+              <span className="ml-2">Back to workspace</span>
+            </OutlinedButton>
+          </div>
+          <ChatSettingNav />
         </div>
-        <ChatSettingNav />
-      </div>
         <ChatListAgent selectedChatAgent={selectedChatAgent} />
       </div>
     </div>

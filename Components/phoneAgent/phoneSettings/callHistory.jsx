@@ -49,13 +49,16 @@ const callLogs = Array.from({ length: 100 }, (_, i) => ({
 function PhoneCallAgent(props) {
   const { callList, phoneAgent } = props;
 
-  const [selectedCall, setSelectedCall] = useState(null);
+  const [selectedCall, setSelectedCall] = useState("");
   const [page, setPage] = useState(1);
   const logsPerPage = 10;
 
   const handleCallSelect = (call, index) => {
     setSelectedCall({ call, index });
   };
+  const callingdata = JSON.parse(selectedCall?.call?.conversation || "{}");
+  console.log(callingdata);
+  
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -67,12 +70,12 @@ function PhoneCallAgent(props) {
 
   const getAverageCallDuration = () => {
     let totalSecs = 0;
-    callList.forEach(call => {
-      totalSecs += parseInt(call.call_duration_sec)
+    callList.forEach((call) => {
+      totalSecs += parseInt(call.call_duration_sec);
     });
 
-    return parseInt(totalSecs / callList.length)
-  }
+    return parseInt(totalSecs / callList.length);
+  };
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -93,7 +96,9 @@ function PhoneCallAgent(props) {
           <Box className="flex items-center space-x-6">
             <Box className="flex items-center">
               <FiPhone className="mr-2 text-gray-600" />
-              <Typography className="text-gray-600">Calls: {callList.length}</Typography>
+              <Typography className="text-gray-600">
+                Calls: {callList.length}
+              </Typography>
             </Box>
             <Box className="flex items-center">
               <FiClock className="mr-2 text-gray-600" />
@@ -176,33 +181,25 @@ function PhoneCallAgent(props) {
                     </Box>
                   </Box>
                   <Box
-                    className="overflow-y-auto bg-gray-100 rounded p-4"
+                    className="overflow-y-auto bg-gray-100 rounded p-4 flex flex-col mb-2"
                     style={{ height: "calc(100vh - 342px)" }}
                   >
-                    {conversations.map((message, index) => (
-                      <Box
-                        key={index}
-                        className={`mb-4 ${
-                          message.role === "user" ? "text-right" : "text-left"
-                        }`}
-                      >
-                        <Box
-                          className={`inline-block p-3 rounded-lg ${
-                            message.role === "user"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-200 text-gray-800"
+                    {callingdata &&
+                      callingdata.map((chat, index) => (
+                        <div
+                          key={index}
+                          className={`p-3 rounded-lg max-w-[75%] flex ${
+                            chat.role === "user"
+                              ? "bg-gray-200 self-start justify-start"
+                              : "bg-blue-500 text-white self-end justify-end"
                           }`}
                         >
-                          <Typography>{message.content}</Typography>
                           <p
-                            variant="caption"
-                            className="mt-2 text-xs text-gray-600"
-                          >
-                            {message.role}
-                          </p>
-                        </Box>
-                      </Box>
-                    ))}
+                            dangerouslySetInnerHTML={{ __html: chat.content }}
+                          ></p>
+                        </div>
+                      ))}
+                    
                   </Box>
                 </>
               ) : (
@@ -218,7 +215,7 @@ function PhoneCallAgent(props) {
 
 const callHistory = () => {
   const { theme } = useTheme();
-  const {selectedPhoneAgent} = useSelector(state => state.selectedData);
+  const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
   const router = useRouter();
   const [callList, setCallList] = useState([]);
   const { conversations, phoneAgentId } = useSelector(
