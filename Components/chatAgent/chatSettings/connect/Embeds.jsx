@@ -15,11 +15,7 @@ const Embeds = () => {
   const router = useRouter();
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
-  const text = `<iframe 
-  style="position: fixed; bottom: 0; right: 0; width: 40vw; height: 110vh; border: none;" 
-  src="https://chat-embed.zoft.ai/?id=${selectedChatAgent?.id}" 
-  align="right">
-</iframe>`
+  const text = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${selectedChatAgent?.id}"/>`
 
   return (
     <div

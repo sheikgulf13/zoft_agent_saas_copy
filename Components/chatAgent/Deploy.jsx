@@ -34,11 +34,7 @@ const Deploy = () => {
   const [progress, setprogress] = useState(false);
   const [currentSentence, setCurrentSentence] = useState(0);
   const [toast, setToast] = useState("");
-  const frame = `<iframe 
-style="position: fixed; bottom:0; right:0; width: 40vw; height: 110vh; border: none;" 
-src="https://chat-embed.zoft.ai/?id=${chatId}" 
-align="right">
-</iframe>`;
+  const frame = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${chatId}"/>`
 
   const sentences = [
     "Heating up the oven...",
