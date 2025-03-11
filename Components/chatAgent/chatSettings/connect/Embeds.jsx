@@ -15,7 +15,7 @@ const Embeds = () => {
   const router = useRouter();
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
-  const text = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${selectedChatAgent?.id}"/>`
+  const text = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${selectedChatAgent?.id}"></script>`
 
   return (
     <div
