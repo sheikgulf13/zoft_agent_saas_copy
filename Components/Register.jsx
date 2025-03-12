@@ -388,19 +388,19 @@ const FormInput = ({
           {label}
         </label>
         {userNameError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{userNameError}
           </span>
         )}
         {emailError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{emailError}
           </span>
         )}
         {passwordError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{passwordError}
           </span>
