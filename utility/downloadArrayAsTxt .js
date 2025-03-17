@@ -24,3 +24,4 @@ export const downloadArrayAsTxt = (chatArray, filename = "chat_history.txt") => 
   a.click();
   document.body.removeChild(a);
 };
+  

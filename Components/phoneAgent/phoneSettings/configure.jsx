@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PhoneSettingNav from "./PhoneSettingNav";
 import { useRouter } from "next/navigation";
 import useTheme from "next-theme";
@@ -8,24 +8,65 @@ import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { useSelector } from "react-redux";
 import { deletePhoneAgentApi, updatePhoneAgentApi } from "@/api/agent";
 import { showSuccessToast } from "../../../Components/toast/success-toast";
-import { elevenlabsVoice } from "../../../utility/eleven-labs-voice";
+import {
+  elevenlabsVoice,
+  language_mapping_accent,
+} from "../../../utility/eleven-labs-voice";
+
 import ConfirmationDialog from "@/Components/chatAgent/chatSettings/settings/ConfirmationDialog";
 
 const Configure = () => {
   const { theme } = useTheme();
   const navigate = useRouter();
-  const { selectedPhoneAgent, selectedWorkSpace } = useSelector((state) => state.selectedData);
+  const { selectedPhoneAgent, selectedWorkSpace } = useSelector(
+    (state) => state.selectedData
+  );
 
-  console.log(selectedPhoneAgent)
+  console.log(selectedPhoneAgent);
   const [phoneAgentID, setPhoneAgentID] = useState(selectedPhoneAgent?.id);
+  const [filteredVoiceNames, setFilteredVoiceNames] = useState([]);
+  const [language, setLanguage] = useState(selectedPhoneAgent?.language);
+  const [voiceUrl, setVoiceUrl] = useState("");
+  const audioRef = useRef();
 
+  useEffect(() => {
+    if (!language_mapping_accent) return;
+    // console.log(language_mapping_accent[language]);
+
+    const filteredVoiceNames = elevenlabsVoice.filter((item) => {
+      return (
+        !language ||
+        language_mapping_accent[language].includes(item.labels.accent)
+      );
+    });
+
+    setFilteredVoiceNames(filteredVoiceNames);
+  }, [language, language_mapping_accent]);
+
+  const handleVoiceChange = (e) => {
+    const filteredVoiceUrl = elevenlabsVoice.find(
+      (item) => item.voice_id === e.target.value
+    );
+
+    if (filteredVoiceUrl) {
+      console.log(filteredVoiceUrl);
+      setVoiceUrl(filteredVoiceUrl.preview_url);
+    } else {
+      setVoiceUrl("");
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.load(); // This forces the audio element to reload
+    }
+  }, [voiceUrl]);
 
   // State variables for AI Assistant Configuration
   const [name, setName] = useState(selectedPhoneAgent?.phone_agent_name);
   const [purpose, setPurpose] = useState(
     selectedPhoneAgent?.conversation_purpose
   );
-  const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voice, setVoice] = useState(selectedPhoneAgent?.voice_id);
   const [phoneNumber, setPhoneNumber] = useState(
     selectedPhoneAgent?.phone_number
@@ -73,7 +114,7 @@ const Configure = () => {
       voiceId: voice,
       countryCode,
       phoneNumber,
-      language
+      language,
     };
 
     await updatePhoneAgentApi(data);
@@ -99,13 +140,13 @@ const Configure = () => {
     setCompanyBusiness(text);
   };
 
-  const languages = elevenlabsVoice?.map((item) => item.language_accent);
+  const languages = Object?.keys(language_mapping_accent);
 
   const uniqueLanguages = [...new Set(languages)];
 
-  const filteredVoiceNames = elevenlabsVoice.filter(
-    (item) => item.language_accent === language
-  );
+  // const filteredVoiceNames = elevenlabsVoice.filter(
+  //   (item) => item.language_accent === language
+  // );
 
   console.log(uniqueLanguages);
   // console.log(" PRINTING ")
@@ -124,11 +165,17 @@ const Configure = () => {
       <div className="h-full flex-1 px-8  overflow-hidden scrollbar scrollbar-light">
         <div className="w-[70%] flex flex-col justify-center gap-4 mx-auto p-5 bg-white text-gray-800 rounded-lg">
           <div className="flex justify-end">
-            <ContainedButton backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"} onClick={handleDeleteClick}>
+            <ContainedButton
+              backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"}
+              onClick={handleDeleteClick}
+            >
               Delete
             </ContainedButton>
           </div>
-          <div className="overflow-y-auto" style={{height: "calc(100vh - 340px)"}}>
+          <div
+            className="overflow-y-auto"
+            style={{ height: "calc(100vh - 340px)" }}
+          >
             {/* AI Assistant Configuration Form */}
             <div className="bg-gray-100 rounded-lg p-6  !transition-all !duration-1000">
               <h1 className="text-2xl font-bold mb-4">
@@ -215,16 +262,25 @@ const Configure = () => {
                     >
                       Voice <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      id="voice"
-                      value={voice}
-                      onChange={(e) => setVoice(e.target.value)}
-                      className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      {filteredVoiceNames.map((data) => (
-                        <option value={data.voice_id}>{data.name}</option>
-                      ))}
-                    </select>
+                    <div className="flex bg-white border border-gray-300 rounded-md p-1">
+                      <select
+                        id="voice"
+                        value={voice}
+                        onChange={(e) => {
+                          setVoice(e.target.value);
+                          handleVoiceChange(e);
+                        }}
+                        className="w-[50%] text-base rounded-md px-3 py-2 appearance-none"
+                      >
+                        {filteredVoiceNames.map((data) => (
+                          <option value={data.voice_id}>{data.name}</option>
+                        ))}
+                      </select>
+                      <audio ref={audioRef} controls>
+                        <source src={voiceUrl} type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
                     <p className="text-xs text-gray-500">
                       Select what voice your agent will use
                     </p>
@@ -239,9 +295,9 @@ const Configure = () => {
                       Phone number <span className="text-red-500">*</span>
                     </label>
 
-                    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                    <div className="w-full">
                       {/* Country Code Select */}
-                      <select
+                      {/* <select
                         name="country code"
                         id="countryCode"
                         className="border-0 text-base bg-transparent focus:ring-0 focus:outline-none py-2 px-3"
@@ -250,17 +306,19 @@ const Configure = () => {
                         <option value="+91">+91</option>
                         <option value="+92">+92</option>
                         <option value="+93">+93</option>
-                      </select>
+                      </select> */}
 
                       {/* Phone Number Input */}
-                      <input
-                        id="phone"
-                        type="tel"
+                      <select
+                        className="w-full appearance-none px-2 py-1"
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder={countryCode}
-                        className="w-full text-base border-0 focus:ring-0 focus:outline-none px-3 py-2"
-                        value={phoneNumber}
-                      />
+                      >
+                        <option
+                          id="phone"
+                          className="w-full text-base border-0 focus:ring-0 focus:outline-none px-3 py-2"
+                          value={phoneNumber}
+                        >{phoneNumber}</option>
+                      </select>
                     </div>
 
                     <p className="text-xs text-gray-500">
