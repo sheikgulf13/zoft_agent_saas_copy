@@ -139,23 +139,59 @@ function ActionForm({
     formData?.data?.content || ""
   ); // State for Quill editor
 
-
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
+
+  const match = formData?.data?.forward_to.match(/^(\+\d+)\s*(\d*)$/);
+  const initialCountryCode = match ? match[1] : "";
+  const initialNumber = match ? match[2] : "";
+
+  const [countryCode, setCountryCode] = useState(initialCountryCode);
+  const [phoneNumber, setPhoneNumber] = useState(initialNumber);
+
+
+  useEffect(() => {
+    if (formData?.data?.forward_to) {
+      setCountryCode(initialCountryCode);
+      setPhoneNumber(initialNumber);
+    }
+  }, [formData?.data?.forward_to]);
+
+  const handleCountryCodeChange = (e) => {
+    const newCode = e.target.value;
+    setCountryCode(newCode);
+    updatePhoneNumber(newCode, phoneNumber);
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ""); 
+    setPhoneNumber(value);
+    updatePhoneNumber(countryCode, value);
+  };
+
+  const updatePhoneNumber = (code, number) => {
+    setFormData((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        forward_to: `${code} ${number}`, 
+      },
+    }));
+  };
 
   const maxRequestDataPairs = 15;
   const maxHttpHeadersPairs = 10;
 
   const handleAddPair = (maxLimit, isActive, fieldName) => {
     if (!isActive) return;
-  
+
     setFormData((prev) => {
       const newData = prev.data ? { ...prev.data } : {};
-    const existingData = newData[fieldName] ?? []; 
+      const existingData = newData[fieldName] ?? [];
       if (existingData.length >= maxLimit) return prev;
-  
+
       const updatedData = [...existingData, { key: "", value: "" }];
-  
+
       return {
         ...prev,
         data: {
@@ -171,43 +207,42 @@ function ActionForm({
       setIsHTTPActive(true);
     }
   };
-  
-  
+
   const handleInputChange = (index, fieldName) => (e) => {
     const { name, value } = e.target;
-  
+
     setFormData((prev) => {
       const existingData = prev.data[fieldName] || [];
       const updatedData = existingData.map((pair, i) =>
         i === index ? { ...pair, [name]: value } : pair
       );
-  
+
       return {
         ...prev,
         data: { ...prev.data, [fieldName]: updatedData },
       };
     });
   };
-  
 
   const handleRemovePair = (index, fieldName) => {
     setFormData((prev) => {
       const existingData = prev.data[fieldName] || [];
       const updatedData = existingData.filter((_, i) => i !== index);
-  
+
       return {
         ...prev,
-        data: updatedData.length === 0
-          ? Object.fromEntries(Object.entries(prev.data).filter(([key]) => key !== fieldName))
-          : { ...prev.data, [fieldName]: updatedData },
+        data:
+          updatedData.length === 0
+            ? Object.fromEntries(
+                Object.entries(prev.data).filter(([key]) => key !== fieldName)
+              )
+            : { ...prev.data, [fieldName]: updatedData },
       };
     });
   };
-  
 
   useEffect(() => {
     if (!isRequestDataActive) {
-   
       setFormData((prev) => {
         const newData = { ...prev.data };
         delete newData.request_data;
@@ -218,7 +253,6 @@ function ActionForm({
 
   useEffect(() => {
     if (!isHTTPActive) {
-
       setFormData((prev) => {
         const newData = { ...prev.data };
         delete newData.http_headers;
@@ -229,24 +263,20 @@ function ActionForm({
 
   useEffect(() => {
     if (!formData?.data) return;
-  
-    const hasValidRequestData =
-      (formData.data.request_data ?? []).some(
-        (pair) => pair.key.trim() !== "" && pair.value.trim() !== ""
-      );
-  
-    const hasValidHttpHeaders =
-      (formData.data.http_headers ?? []).some(
-        (pair) => pair.key.trim() !== "" && pair.value.trim() !== ""
-      );
-  
+
+    const hasValidRequestData = (formData.data.request_data ?? []).some(
+      (pair) => pair.key.trim() !== "" && pair.value.trim() !== ""
+    );
+
+    const hasValidHttpHeaders = (formData.data.http_headers ?? []).some(
+      (pair) => pair.key.trim() !== "" && pair.value.trim() !== ""
+    );
+
     // Only update state if it is not already true
-    if (!isRequestDataActive && hasValidRequestData) setIsRequestDataActive(true);
+    if (!isRequestDataActive && hasValidRequestData)
+      setIsRequestDataActive(true);
     if (!isHTTPActive && hasValidHttpHeaders) setIsHTTPActive(true);
   }, [formData?.data?.request_data, formData?.data?.http_headers]);
-  
-  
-  
 
   useEffect(() => {
     console.log(formData);
@@ -448,17 +478,28 @@ function ActionForm({
 
       case "Forward to": {
         return (
-          <input
-            type="text"
-            name={field.label}
-            id={field.value}
-            placeholder={field.placeholder}
-            value={formData?.data?.forward_to || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
-              errors[field.value] ? "border-red-500" : ""
-            }`}
-            onChange={handleChange}
-          />
+          <div className="flex gap-2 items-center">
+            <select
+              value={countryCode}
+              onChange={handleCountryCodeChange}
+              className="border p-2 rounded-md w-[25%]"
+            >
+              <option value="" disabled hidden>eg. 91+</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+81">🇯🇵 +81</option>
+            </select>
+
+            <input
+              type="text"
+              placeholder="Enter number"
+              value={phoneNumber}
+              onChange={handlePhoneNumberChange}
+              className="border p-2 rounded-md w-full"
+            />
+          </div>
         );
       }
 
@@ -532,10 +573,17 @@ function ActionForm({
                   </div>
                 ))}
 
-                {(formData?.data?.http_headers ?? []).length  < maxHttpHeadersPairs && (
+                {(formData?.data?.http_headers ?? []).length <
+                  maxHttpHeadersPairs && (
                   <button
                     type="button"
-                    onClick={() => handleAddPair(maxHttpHeadersPairs, isHTTPActive, "http_headers")}
+                    onClick={() =>
+                      handleAddPair(
+                        maxHttpHeadersPairs,
+                        isHTTPActive,
+                        "http_headers"
+                      )
+                    }
                     className="text-[#702963] w-full text-start mr-5"
                   >
                     + Add Key
@@ -583,10 +631,17 @@ function ActionForm({
                   </div>
                 ))}
 
-                {(formData?.data?.request_data ?? []).length  < maxRequestDataPairs && (
+                {(formData?.data?.request_data ?? []).length <
+                  maxRequestDataPairs && (
                   <button
                     type="button"
-                    onClick={() => handleAddPair(maxRequestDataPairs, isRequestDataActive, "request_data")}
+                    onClick={() =>
+                      handleAddPair(
+                        maxRequestDataPairs,
+                        isRequestDataActive,
+                        "request_data"
+                      )
+                    }
                     className="text-[#702963] w-full text-start"
                   >
                     + Add Key
@@ -602,11 +657,13 @@ function ActionForm({
           <select
             name={field.label}
             id={field.value}
-            value={formData?.data?.request_data_type || ''}
+            value={formData?.data?.request_data_type || ""}
             onChange={handleChange}
             className="mt-1 block w-full py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
           >
-            <option value="" disabled hidden>Select Type</option>
+            <option value="" disabled hidden>
+              Select Type
+            </option>
             <option value="JSON">JSON</option>
             <option value="Form">Form</option>
           </select>
