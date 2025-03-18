@@ -142,13 +142,12 @@ function ActionForm({
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
 
-  const match = formData?.data?.forward_to.match(/^(\+\d+)\s*(\d*)$/);
+  const match = formData?.data?.forward_to?.match(/^(\+\d+)\s*(\d*)$/);
   const initialCountryCode = match ? match[1] : "";
   const initialNumber = match ? match[2] : "";
 
   const [countryCode, setCountryCode] = useState(initialCountryCode);
   const [phoneNumber, setPhoneNumber] = useState(initialNumber);
-
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
@@ -164,7 +163,7 @@ function ActionForm({
   };
 
   const handlePhoneNumberChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ""); 
+    const value = e.target.value.replace(/\D/g, "");
     setPhoneNumber(value);
     updatePhoneNumber(countryCode, value);
   };
@@ -174,7 +173,7 @@ function ActionForm({
       ...prev,
       data: {
         ...prev.data,
-        forward_to: `${code} ${number}`, 
+        forward_to: `${code} ${number}`,
       },
     }));
   };
@@ -370,18 +369,43 @@ function ActionForm({
 
   const validateForm = () => {
     const newErrors = {};
+
     selectedAction.fields.forEach((field) => {
-      let isExist = Boolean(formData[field.value]);
-      if (formData?.data) {
-        if (formData?.data[field.value]) {
-          isExist = true;
-        }
+      console.log("Validating field:", field);
+      let isExist =
+        Boolean(formData?.[field.value]) ||
+        Boolean(formData?.data?.[field.value]);
+
+      if (field.value === "http_headers") {
+        isExist =
+          !isHTTPActive ||
+          (Array.isArray(formData?.data?.http_headers) &&
+            formData.data.http_headers.some(
+              (pair) => pair.key?.trim() !== "" && pair.value?.trim() !== ""
+            ));
       }
 
+      if (field.value === "request_data") {
+        isExist =
+          !isRequestDataActive ||
+          (Array.isArray(formData?.data?.request_data) &&
+            formData.data.request_data.some(
+              (pair) => pair.key?.trim() !== "" && pair.value?.trim() !== ""
+            ));
+      }
+
+      if (!isRequestDataActive && field.value === "request_data_type") {
+        isExist = true;
+      }
+
+      console.log("Final isExist:", isExist);
+
+      // Set error if field is required but missing
       if (!isExist) {
         newErrors[field.value] = "This field is required.";
       }
     });
+
     return newErrors;
   };
 
@@ -484,7 +508,9 @@ function ActionForm({
               onChange={handleCountryCodeChange}
               className="border p-2 rounded-md w-[25%]"
             >
-              <option value="" disabled hidden>eg. 91+</option>
+              <option value="" disabled hidden>
+                eg. 91+
+              </option>
               <option value="+1">🇺🇸 +1</option>
               <option value="+44">🇬🇧 +44</option>
               <option value="+91">🇮🇳 +91</option>
