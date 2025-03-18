@@ -12,7 +12,7 @@ import {
   elevenlabsVoice,
   language_mapping_accent,
 } from "../../../utility/eleven-labs-voice";
-
+import AudioPlayer from "../../AudioPlayer"
 import ConfirmationDialog from "@/Components/chatAgent/chatSettings/settings/ConfirmationDialog";
 
 const Configure = () => {
@@ -230,28 +230,52 @@ const Configure = () => {
 
                 {/* Right Column */}
                 <div className="space-y-6">
-                  {/* Language Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="language"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Language <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="language"
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select Language</option>
-                      {uniqueLanguages.map((data) => (
-                        <option value={data}>{data}</option>
-                      ))}
-                    </select>
-                    <p className="text-xs text-gray-500">
-                      Select the language your agent will use
-                    </p>
+                  <div className="flex gap-2">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="gender"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Gender <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="gender"
+                        onChange={(e) => dispatch(setGender(e.target.value))}
+                        className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="female" selected>
+                          Female
+                        </option>
+                        <option value="male">Male</option>
+                      </select>
+                      <p className="text-xs text-gray-500">
+                        Select the Gender your agent will use
+                      </p>
+                    </div>
+                    {/* Language Field */}
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="language"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Language <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        id="language"
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select Language</option>
+                        {uniqueLanguages.map((data) => (
+                          <option value={data}>{data}</option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-500">
+                        Select the language your agent will use
+                      </p>
+                    </div>
                   </div>
 
                   {/* Voice Field */}
@@ -276,10 +300,11 @@ const Configure = () => {
                           <option value={data.voice_id}>{data.name}</option>
                         ))}
                       </select>
-                      <audio ref={audioRef} controls>
+                      <AudioPlayer voiceUrl={voiceUrl} />
+                      {/* <audio ref={audioRef} controls>
                         <source src={voiceUrl} type="audio/mpeg" />
                         Your browser does not support the audio element.
-                      </audio>
+                      </audio> */}
                     </div>
                     <p className="text-xs text-gray-500">
                       Select what voice your agent will use
@@ -317,7 +342,9 @@ const Configure = () => {
                           id="phone"
                           className="w-full text-base border-0 focus:ring-0 focus:outline-none px-3 py-2"
                           value={phoneNumber}
-                        >{phoneNumber}</option>
+                        >
+                          {phoneNumber}
+                        </option>
                       </select>
                     </div>
 

@@ -122,7 +122,9 @@ function PhoneCallAgent(props) {
             >
               {callList
                 .slice((page - 1) * logsPerPage, page * logsPerPage)
-                .map((log, index) => (
+                .map((log, index) =>{ 
+                  const originalIndex = (page - 1) * logsPerPage + index;
+                  return(
                   <ListItem
                     key={log.id}
                     button
@@ -132,7 +134,7 @@ function PhoneCallAgent(props) {
                     }`}
                   >
                     <ListItemText
-                      primary={`Call ${index + 1}`}
+                      primary={`Call ${originalIndex + 1}`}
                       secondary={
                         <>
                           <Typography
@@ -142,15 +144,13 @@ function PhoneCallAgent(props) {
                             {humanizeUnixTimestamp(log.created_at)}
                           </Typography>
                           <Typography>
-                            {`Call duration: (${humanizeSeconds(
-                              log.call_duration_sec
-                            )})`}
+                            {`Call duration: (${log?.duration_in_mins} mins ${log?.duration_in_sec} sec)`}
                           </Typography>
                         </>
                       }
                     />
                   </ListItem>
-                ))}
+                )})}
             </List>
             <Pagination
               count={Math.ceil(callLogs.length / logsPerPage)}
