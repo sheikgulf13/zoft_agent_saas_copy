@@ -17,7 +17,7 @@ const AudioPlayer = ({ voiceUrl }) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 pr-2">
       <audio ref={audioRef} src={voiceUrl} />
       <button
         onClick={togglePlayPause}
@@ -25,7 +25,7 @@ const AudioPlayer = ({ voiceUrl }) => {
       >
         {isPlaying ? <Pause size={24} /> : <Play size={24} />}
       </button>
-      {isPlaying ? "Pause" : "Play"}
+      <span className="w-[50px]">{isPlaying ? "Pause" : "Play"}</span>
     </div>
   );
 };

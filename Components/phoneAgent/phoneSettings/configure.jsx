@@ -68,6 +68,7 @@ const Configure = () => {
     selectedPhoneAgent?.conversation_purpose
   );
   const [voice, setVoice] = useState(selectedPhoneAgent?.voice_id);
+  const [gender, setGender] = useState(selectedPhoneAgent?.voice_gender);
   const [phoneNumber, setPhoneNumber] = useState(
     selectedPhoneAgent?.phone_number
   );
@@ -240,14 +241,15 @@ const Configure = () => {
                       </label>
                       <select
                         id="gender"
-                        onChange={(e) => dispatch(setGender(e.target.value))}
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
                         className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Select Gender</option>
-                        <option value="female" selected>
+                        <option value="Female">
                           Female
                         </option>
-                        <option value="male">Male</option>
+                        <option value="Male">Male</option>
                       </select>
                       <p className="text-xs text-gray-500">
                         Select the Gender your agent will use
@@ -286,7 +288,7 @@ const Configure = () => {
                     >
                       Voice <span className="text-red-500">*</span>
                     </label>
-                    <div className="flex bg-white border border-gray-300 rounded-md p-1">
+                    <div className="flex bg-white border border-gray-300 rounded-md p-1 justify-between">
                       <select
                         id="voice"
                         value={voice}

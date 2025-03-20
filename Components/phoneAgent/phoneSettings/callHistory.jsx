@@ -57,8 +57,9 @@ function PhoneCallAgent(props) {
     setSelectedCall({ call, index });
   };
   const callingdata = JSON.parse(selectedCall?.call?.conversation || "{}");
+  console.log(callList);
+
   console.log(callingdata);
-  
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -89,7 +90,7 @@ function PhoneCallAgent(props) {
             <Avatar src="/placeholder.svg" alt="Nick" className="mr-4" />
             <Box>
               <Typography variant="h6" className="text-gray-800">
-                {`${phoneAgent.phone_agent_name} (${phoneAgent.phone_agent_type})`}
+                {`${phoneAgent?.phone_agent_name} (${phoneAgent?.phone_agent_type})`}
               </Typography>
             </Box>
           </Box>
@@ -122,35 +123,36 @@ function PhoneCallAgent(props) {
             >
               {callList
                 .slice((page - 1) * logsPerPage, page * logsPerPage)
-                .map((log, index) =>{ 
+                .map((log, index) => {
                   const originalIndex = (page - 1) * logsPerPage + index;
-                  return(
-                  <ListItem
-                    key={log.id}
-                    button
-                    onClick={() => handleCallSelect(log, index)}
-                    className={`mb-2 ${
-                      selectedCall?.id === log.id ? "bg-gray-200" : ""
-                    }`}
-                  >
-                    <ListItemText
-                      primary={`Call ${originalIndex + 1}`}
-                      secondary={
-                        <>
-                          <Typography
-                            variant="body2"
-                            className="text-green-600 text-base"
-                          >
-                            {humanizeUnixTimestamp(log.created_at)}
-                          </Typography>
-                          <Typography>
-                            {`Call duration: (${log?.duration_in_mins} mins ${log?.duration_in_sec} sec)`}
-                          </Typography>
-                        </>
-                      }
-                    />
-                  </ListItem>
-                )})}
+                  return (
+                    <ListItem
+                      key={log.id}
+                      button
+                      onClick={() => handleCallSelect(log, index)}
+                      className={`mb-2 ${
+                        selectedCall?.id === log.id ? "bg-gray-200" : ""
+                      }`}
+                    >
+                      <ListItemText
+                        primary={`Call ${originalIndex + 1}`}
+                        secondary={
+                          <>
+                            <Typography
+                              variant="body2"
+                              className="text-green-600 text-base"
+                            >
+                              {humanizeUnixTimestamp(log.created_at)}
+                            </Typography>
+                            <Typography>
+                              {`Call duration: (${log?.duration_in_mins} mins ${log?.duration_in_sec} sec)`}
+                            </Typography>
+                          </>
+                        }
+                      />
+                    </ListItem>
+                  );
+                })}
             </List>
             <Pagination
               count={Math.ceil(callLogs.length / logsPerPage)}
@@ -199,7 +201,6 @@ function PhoneCallAgent(props) {
                           ></p>
                         </div>
                       ))}
-                    
                   </Box>
                 </>
               ) : (
@@ -223,12 +224,12 @@ const callHistory = () => {
   );
   const dispatch = useDispatch();
 
-  console.log(conversations, phoneAgentId);
+  // console.log(conversations, phoneAgentId);
 
   const getCallList = async (phoneAgentId) => {
     const result = await getCallListApi(phoneAgentId);
     if (result.length) {
-      console.log(result);
+      console.log("call List" + result);
       dispatch(setConversations({ phoneAgentId, conversations: result }));
       return setCallList(result);
     }
@@ -240,6 +241,14 @@ const callHistory = () => {
       getCallList(selectedPhoneAgent.id);
     }
   }, [selectedPhoneAgent]);
+  
+  useEffect(() => {
+    if (selectedPhoneAgent?.id) {
+      getCallList(selectedPhoneAgent.id);
+    }
+    console.log("calling");
+    
+  }, []);
 
   return (
     <div
