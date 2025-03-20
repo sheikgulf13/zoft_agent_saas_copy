@@ -21,7 +21,7 @@ import { FiPhone, FiClock, FiDownload, FiShare2 } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { getChatListApi } from "../../../api/chat-list";
 import { getChatDatatApi } from "../../../api/chatData";
-import {downloadArrayAsTxt} from "../../../utility/downloadArrayAsTxt "
+import { downloadArrayAsTxt } from "../../../utility/downloadArrayAsTxt ";
 import { humanizeUnixTimestamp } from "@/utility/data-utility";
 
 // Create a light theme with grey accents
@@ -82,9 +82,12 @@ function ChatListAgent(props) {
   const [page, setPage] = useState(1);
   const logsPerPage = 10;
 
-  const handleDownload = ()=>{
-    downloadArrayAsTxt(selectedChat?.conversation, `${selectedChatAgent?.bot_name}_chat_${selectedChat?.conversation_id}.txt`)
-  }
+  const handleDownload = () => {
+    downloadArrayAsTxt(
+      selectedChat?.conversation,
+      `${selectedChatAgent?.bot_name}_chat_${selectedChat?.conversation_id}.txt`
+    );
+  };
 
   const handleCallSelect = (chat) => {
     setSelectedChat(chat);
@@ -144,21 +147,23 @@ function ChatListAgent(props) {
               {chatList
                 .slice((page - 1) * logsPerPage, page * logsPerPage)
                 .map((chat, index) => {
-                  const originalIndex = (page - 1) * logsPerPage + index; 
-              
+                  const originalIndex = (page - 1) * logsPerPage + index;
+
                   return (
                     <ListItem
                       key={chat.chat_agent_id}
+                      sx={{ width: "auto" }}
                       button
                       onClick={() => handleCallSelect(chat)}
-                      className={`mb-2 cursor-pointer ${
-                        selectedChat?.chat_agent_id === chat.chat_agent_id ? "bg-gray-200" : ""
-                      }`}
+                      className={`mb-2 mx-2 border rounded-lg cursor-pointer`}
                     >
                       <ListItemText
-                        primary={`Chat ${originalIndex + 1}`}
+                        primary={`Chat #${originalIndex + 1}`}
                         secondary={
-                          <Typography variant="body2" className="text-green-600 text-base">
+                          <Typography
+                            variant="body2"
+                            className="text-green-600 text-base"
+                          >
                             {humanizeUnixTimestamp(chat.created_at)}
                           </Typography>
                         }
@@ -181,7 +186,10 @@ function ChatListAgent(props) {
               {selectedChat ? (
                 <>
                   <Box className="flex justify-between items-center mb-4">
-                    <Typography variant="h6" className="text-gray-800 font-normal">
+                    <Typography
+                      variant="h6"
+                      className="text-gray-800 font-normal"
+                    >
                       ID : {selectedChat?.conversation_id}
                     </Typography>
                     <Box>

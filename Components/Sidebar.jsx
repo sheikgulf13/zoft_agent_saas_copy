@@ -157,13 +157,13 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           }`}
         >
           <img
-            src="/images/logo.svg"
+            src="/images/ZOFT_LOGO.png"
             alt="Logo"
             className="w-[40px] h-[40px]"
           />
           {isOpen && (
             <h1 className="text-2xl mt-[.5vh] text-center text-[#8B008B] ">
-              Kayzen
+              Zoft
             </h1>
           )}
         </div>

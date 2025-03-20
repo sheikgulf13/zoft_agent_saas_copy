@@ -128,14 +128,13 @@ function PhoneCallAgent(props) {
                   return (
                     <ListItem
                       key={log.id}
+                      sx={{ width: "auto" }}
                       button
                       onClick={() => handleCallSelect(log, index)}
-                      className={`mb-2 ${
-                        selectedCall?.id === log.id ? "bg-gray-200" : ""
-                      }`}
+                      className={`mb-2 mx-2 border rounded-lg cursor-pointer`}
                     >
                       <ListItemText
-                        primary={`Call ${originalIndex + 1}`}
+                        primary={`Call #${originalIndex + 1}`}
                         secondary={
                           <>
                             <Typography
@@ -145,7 +144,7 @@ function PhoneCallAgent(props) {
                               {humanizeUnixTimestamp(log.created_at)}
                             </Typography>
                             <Typography>
-                              {`Call duration: (${log?.duration_in_mins} mins ${log?.duration_in_sec} sec)`}
+                              {`Call duration: ${log?.duration_in_mins}m ${log?.duration_in_sec}s`}
                             </Typography>
                           </>
                         }
@@ -241,13 +240,12 @@ const callHistory = () => {
       getCallList(selectedPhoneAgent.id);
     }
   }, [selectedPhoneAgent]);
-  
+
   useEffect(() => {
     if (selectedPhoneAgent?.id) {
       getCallList(selectedPhoneAgent.id);
     }
     console.log("calling");
-    
   }, []);
 
   return (

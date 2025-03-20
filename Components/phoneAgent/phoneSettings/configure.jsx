@@ -302,11 +302,11 @@ const Configure = () => {
                           <option value={data.voice_id}>{data.name}</option>
                         ))}
                       </select>
-                      <AudioPlayer voiceUrl={voiceUrl} />
-                      {/* <audio ref={audioRef} controls>
+                      {/* <AudioPlayer voiceUrl={voiceUrl} /> */}
+                      <audio ref={audioRef} controls>
                         <source src={voiceUrl} type="audio/mpeg" />
                         Your browser does not support the audio element.
-                      </audio> */}
+                      </audio>
                     </div>
                     <p className="text-xs text-gray-500">
                       Select what voice your agent will use
