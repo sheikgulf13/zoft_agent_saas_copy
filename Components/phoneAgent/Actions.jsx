@@ -240,7 +240,7 @@ const Actions = () => {
                           key={action.id}
                           className="rounded-lg p-[1%] mb-[1.5%] bg-white flex justify-between items-center"
                         >
-                          <p> Action Type: {action.type}</p>
+                          <p> Action Type: {action.action_type}</p>
                           <div className="flex">
                             <button
                               onClick={() => handleEditAction(action.id)}
@@ -280,12 +280,13 @@ const Actions = () => {
               >
                 {showForm && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex justify-center items-center">
-                    <div className="bg-white w-1/4 rounded-lg shadow-lg">
+                    <div className="bg-white w-[40%] rounded-lg shadow-lg">
                       <ActionForm
                         show={showForm}
                         toggle={toggleForm}
                         handleCreateAction={handleCreateAction}
                         initialData={selectedAction}
+                        forPhoneActions={true}
                       />
                     </div>
                   </div>
