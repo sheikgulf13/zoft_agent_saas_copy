@@ -28,20 +28,28 @@ const Configure = () => {
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
   const audioRef = useRef();
+  const [gender, setGender] = useState((selectedPhoneAgent?.voice_gender).toLowerCase());
 
   useEffect(() => {
     if (!language_mapping_accent) return;
     // console.log(language_mapping_accent[language]);
 
+    // const filteredVoiceNames = elevenlabsVoice.filter((item) => {
+    //   return (
+    //     !language ||
+    //     language_mapping_accent[language].includes(item.labels.accent)
+    //   );
+    // });
     const filteredVoiceNames = elevenlabsVoice.filter((item) => {
-      return (
-        !language ||
-        language_mapping_accent[language].includes(item.labels.accent)
-      );
-    });
+          return (
+            (!gender || item.labels.gender === gender) &&
+            (!language ||
+              language_mapping_accent[language].includes(item.labels.accent))
+          );
+        });
 
     setFilteredVoiceNames(filteredVoiceNames);
-  }, [language, language_mapping_accent]);
+  }, [language, gender, language_mapping_accent]);
 
   const handleVoiceChange = (e) => {
     const filteredVoiceUrl = elevenlabsVoice.find(
@@ -68,7 +76,6 @@ const Configure = () => {
     selectedPhoneAgent?.conversation_purpose
   );
   const [voice, setVoice] = useState(selectedPhoneAgent?.voice_id);
-  const [gender, setGender] = useState(selectedPhoneAgent?.voice_gender);
   const [phoneNumber, setPhoneNumber] = useState(
     selectedPhoneAgent?.phone_number
   );
@@ -246,10 +253,10 @@ const Configure = () => {
                         className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Select Gender</option>
-                        <option value="Female">
+                        <option value="female">
                           Female
                         </option>
-                        <option value="Male">Male</option>
+                        <option value="male">Male</option>
                       </select>
                       <p className="text-xs text-gray-500">
                         Select the Gender your agent will use
