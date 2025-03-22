@@ -3,6 +3,29 @@
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import useTheme from "next-theme";
 import React, { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+  BarElement,
+  Filler,
+} from "chart.js";
+import { Line, Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  LinearScale,
+  CategoryScale,
+  BarElement,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  Filler
+);
 
 const DashboardContainer = () => {
   const { theme } = useTheme();
@@ -23,6 +46,65 @@ const DashboardContainer = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  const [chart, setChart] = useState("Line");
+  const [isOpen, setIsOpen] = useState(false);
+  const [detail, setDetail] = useState([
+    {
+      employee_name: "subdeep",
+      employee_salary: 45000,
+      employee_age: 45,
+    },
+    {
+      employee_name: "sheik",
+      employee_salary: 87000,
+      employee_age: 22,
+    },
+    {
+      employee_name: "no name",
+      employee_salary: 500,
+      employee_age: 32,
+    },
+    {
+      employee_name: "elon",
+      employee_salary: 4000,
+      employee_age: 5,
+    },
+  ]);
+
+  const dataa = {
+    labels: detail?.map((name) => name?.employee_name),
+    datasets: [
+      {
+        label: "Employee Salary",
+        data: detail?.map((salary) => salary?.employee_salary),
+        fill: true,
+        borderColor: "rgba(0, 148, 255, 0.3)",
+        backgroundColor: "rgba(0, 148, 255, 0.3)",
+        tension: 0.3,
+      },
+      {
+        label: "Employee Age",
+        data: detail?.map((age) => age?.employee_age),
+        fill: true,
+        borderColor: "rgba(0, 38, 255, 0.3)",
+        backgroundColor: "rgba(0, 38, 255, 0.3)",
+        tension: 0.3,
+      },
+    ],
+  };
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: true,
+    },
+    scales: {
+      y: {
+        type: "linear",
+      },
+    },
+  };
 
   return (
     <div
@@ -74,12 +156,37 @@ const DashboardContainer = () => {
         </div>
       </div>
 
+      <div className="grid">
+        <div className="select-container">
+          <select
+            onChange={(e) => setChart(e.target.value)}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <option value="Line">Line Chart</option>
+            <option value="Bar">Bar Chart</option>
+            <option value="Both">Both</option>
+          </select>
+          {isOpen ? <h1>open</h1> : <h1>close</h1>}
+        </div>
+        <div className="chart">
+          {/* Show or hide a component depending upon state */}
+          {chart === "Line" ? (
+            <Line data={dataa} options={options} className="chartBox" />
+          ) : chart === "Bar" ? (
+            <Bar data={dataa} options={options} className="chartBox" />
+          ) : (
+            <>
+              <Line data={dataa} options={options} className="chartBox" />
+              <Bar data={dataa} options={options} className="chartBox" />
+            </>
+          )}
+        </div>
+      </div>
+
       <div className="flex justify-between items-start mt-20">
         <div className="w-[43%] shadow-sm border-gray-300 border-[1px] rounded-xl p-6">
           <div>
-            <h4 className="text-lg font-semibold mb-0.5">
-              Cost Breakdown
-            </h4>
+            <h4 className="text-lg font-semibold mb-0.5">Cost Breakdown</h4>
             <p className="text-sm font-normal text-gray-400">
               Cost analysis by agent and usage
             </p>
@@ -114,76 +221,91 @@ const DashboardContainer = () => {
           <div className="flex flex-col gap-5">
             <div className="flex w-[100%] h-[70px] border-gray-300 border-[1px] rounded-lg items-center justify-between p-3">
               <div className="flex gap-3">
-                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full">
-
-                </div>
+                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full"></div>
 
                 <div className="flex flex-col justify-between h-[100%]">
                   <p className="text-md font-medium">Emily Johnson</p>
-                  <p className="text-xs font-medium text-gray-400">Chat Agent #46 . 5m 23s</p>
+                  <p className="text-xs font-medium text-gray-400">
+                    Chat Agent #46 . 5m 23s
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-col justify-between h-[100%] items-end">
-                <p className="bg-black rounded-full text-white px-3 py-1 text-xs font-semibold">Completed</p>
-                <p className="text-xs font-medium text-gray-400">15 minutes ago</p>
+                <p className="bg-black rounded-full text-white px-3 py-1 text-xs font-semibold">
+                  Completed
+                </p>
+                <p className="text-xs font-medium text-gray-400">
+                  15 minutes ago
+                </p>
               </div>
             </div>
 
             <div className="flex w-[100%] h-[70px] border-gray-300 border-[1px] rounded-lg items-center justify-between p-3">
               <div className="flex gap-3">
-                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full">
-
-                </div>
+                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full"></div>
 
                 <div className="flex flex-col justify-between h-[100%]">
                   <p className="text-md font-medium">John Smith</p>
-                  <p className="text-xs font-medium text-gray-400">Phone Agent #53 . 7m 23s</p>
+                  <p className="text-xs font-medium text-gray-400">
+                    Phone Agent #53 . 7m 23s
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-col justify-between h-[100%] items-end">
-                <p className="bg-red-500 rounded-full text-white px-3 py-1 text-xs font-semibold">Abondoned</p>
-                <p className="text-xs font-medium text-gray-400">23 minutes ago</p>
+                <p className="bg-red-500 rounded-full text-white px-3 py-1 text-xs font-semibold">
+                  Abondoned
+                </p>
+                <p className="text-xs font-medium text-gray-400">
+                  23 minutes ago
+                </p>
               </div>
             </div>
 
             <div className="flex w-[100%] h-[70px] border-gray-300 border-[1px] rounded-lg items-center justify-between p-3">
               <div className="flex gap-3">
-                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full">
-
-                </div>
+                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full"></div>
 
                 <div className="flex flex-col justify-between h-[100%]">
                   <p className="text-md font-medium">Emily Johnson</p>
-                  <p className="text-xs font-medium text-gray-400">Chat Agent #46 . 5m 23s</p>
+                  <p className="text-xs font-medium text-gray-400">
+                    Chat Agent #46 . 5m 23s
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-col justify-between h-[100%] items-end">
-                <p className="bg-black rounded-full text-white px-3 py-1 text-xs font-semibold">Completed</p>
-                <p className="text-xs font-medium text-gray-400">15 minutes ago</p>
+                <p className="bg-black rounded-full text-white px-3 py-1 text-xs font-semibold">
+                  Completed
+                </p>
+                <p className="text-xs font-medium text-gray-400">
+                  15 minutes ago
+                </p>
               </div>
             </div>
             <div className="flex w-[100%] h-[70px] border-gray-300 border-[1px] rounded-lg items-center justify-between p-3">
               <div className="flex gap-3">
-                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full">
-
-                </div>
+                <div className="w-[40px] h-[40px] bg-gray-300 rounded-full"></div>
 
                 <div className="flex flex-col justify-between h-[100%]">
                   <p className="text-md font-medium">John Smith</p>
-                  <p className="text-xs font-medium text-gray-400">Phone Agent #53 . 7m 23s</p>
+                  <p className="text-xs font-medium text-gray-400">
+                    Phone Agent #53 . 7m 23s
+                  </p>
                 </div>
               </div>
 
               <div className="flex flex-col justify-between h-[100%] items-end">
-                <p className="bg-red-500 rounded-full text-white px-3 py-1 text-xs font-semibold">Abondoned</p>
-                <p className="text-xs font-medium text-gray-400">23 minutes ago</p>
+                <p className="bg-red-500 rounded-full text-white px-3 py-1 text-xs font-semibold">
+                  Abondoned
+                </p>
+                <p className="text-xs font-medium text-gray-400">
+                  23 minutes ago
+                </p>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

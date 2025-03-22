@@ -654,3 +654,71 @@ display: none;
   border-left: none !important;
   border-right: none !important;
 }
+
+
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 100px;
+
+  .select-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    background-color: rgb(88, 88, 214);
+    color: white; 
+    border-radius: 5px !important;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1),
+                inset .5px .5px 2em rgba(0, 0, 0, 0.1);
+    position: relative;
+    
+    select {
+      appearance: none;
+      background: transparent;
+      border: none;
+      width: 100%;
+      background-color: rgb(88, 88, 214);
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      padding: 10px 10px;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
+    .icon {
+      position: absolute;
+      right: 10px;
+      font-weight: bolder;
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+    .icon-rotate {
+      transform: rotateX(90deg);
+    }
+  }
+
+  .chart {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    background-color: rgb(252, 252, 252);
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1),
+                inset .5px .5px 2em rgba(0, 0, 0, 0.1);
+
+    .chartBox {
+      width: 100%;
+      height: 400px !important;
+    }
+    
+  }
+}
