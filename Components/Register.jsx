@@ -220,8 +220,8 @@ const Register = () => {
                     <div className="logo w-full h-[3vh] flex items-center justify-center">
                       <img
                         className="w-[2.2vw]"
-                        src="/images/logo.svg"
-                        alt="Kayzen"
+                        src="/images/ZOFT_LOGO.png"
+                        alt="Zoft"
                       />
                       <h1 className="H4 uppercase font-semibold">Zoft</h1>
                     </div>
@@ -388,19 +388,19 @@ const FormInput = ({
           {label}
         </label>
         {userNameError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{userNameError}
           </span>
         )}
         {emailError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{emailError}
           </span>
         )}
         {passwordError && (
-          <span className="text-red-500 font-medium text-sm">
+          <span className="text-red-500 font-medium text-xs">
             {" "}
             *{passwordError}
           </span>

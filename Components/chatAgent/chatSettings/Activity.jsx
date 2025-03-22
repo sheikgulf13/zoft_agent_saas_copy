@@ -21,7 +21,7 @@ import { FiPhone, FiClock, FiDownload, FiShare2 } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { getChatListApi } from "../../../api/chat-list";
 import { getChatDatatApi } from "../../../api/chatData";
-
+import { downloadArrayAsTxt } from "../../../utility/downloadArrayAsTxt ";
 import { humanizeUnixTimestamp } from "@/utility/data-utility";
 
 // Create a light theme with grey accents
@@ -82,6 +82,13 @@ function ChatListAgent(props) {
   const [page, setPage] = useState(1);
   const logsPerPage = 10;
 
+  const handleDownload = () => {
+    downloadArrayAsTxt(
+      selectedChat?.conversation,
+      `${selectedChatAgent?.bot_name}_chat_${selectedChat?.conversation_id}.txt`
+    );
+  };
+
   const handleCallSelect = (chat) => {
     setSelectedChat(chat);
     console.log(chat);
@@ -116,15 +123,15 @@ function ChatListAgent(props) {
         style={{ height: "calc(100vh - 128px)" }}
       >
         {/* Header */}
-        <Box className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
-          <Box className="flex items-center">
-            <Box>
-              <Typography variant="h6" className="text-gray-800">
-                {selectedChatAgent?.bot_name}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
+        <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
+          <div className="text-gray-800 font-bold">
+            {selectedChatAgent?.bot_name}
+          </div>
+          <div className="text-gray-800">
+            No of conversation{" "}
+            <span className="font-bold">{chatList?.length}</span>
+          </div>
+        </div>
 
         {/* Main content */}
         <Box
@@ -139,30 +146,31 @@ function ChatListAgent(props) {
             >
               {chatList
                 .slice((page - 1) * logsPerPage, page * logsPerPage)
-                .map((chat, index) => (
-                  <ListItem
-                    key={chat.chat_agent_id}
-                    button
-                    onClick={() => handleCallSelect(chat)}
-                    className={`mb-2 cursor-pointer ${
-                      selectedChat?.chat_agent_id === chat.chat_agent_id
-                        ? "bg-gray-200"
-                        : ""
-                    }`}
-                  >
-                    <ListItemText
-                      primary={`Chat ${index + 1}`}
-                      secondary={
-                        <Typography
-                          variant="body2"
-                          className="text-green-600 text-base"
-                        >
-                          {humanizeUnixTimestamp(chat.created_at)}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                ))}
+                .map((chat, index) => {
+                  const originalIndex = (page - 1) * logsPerPage + index;
+
+                  return (
+                    <ListItem
+                      key={chat.chat_agent_id}
+                      sx={{ width: "auto" }}
+                      button
+                      onClick={() => handleCallSelect(chat)}
+                      className={`mb-2 mx-2 border rounded-lg cursor-pointer`}
+                    >
+                      <ListItemText
+                        primary={`Chat #${originalIndex + 1}`}
+                        secondary={
+                          <Typography
+                            variant="body2"
+                            className="text-green-600 text-base"
+                          >
+                            {humanizeUnixTimestamp(chat.created_at)}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                  );
+                })}
             </List>
             <Pagination
               count={Math.ceil(chatList.length / logsPerPage)}
@@ -178,13 +186,18 @@ function ChatListAgent(props) {
               {selectedChat ? (
                 <>
                   <Box className="flex justify-between items-center mb-4">
-                    <Typography variant="h6" className="text-gray-800">
-                      {selectedChat.name}
+                    <Typography
+                      variant="h6"
+                      className="text-gray-800 font-normal"
+                    >
+                      ID : {selectedChat?.conversation_id}
                     </Typography>
                     <Box>
-                      <OutlinedButton className="mr-4">
-                        <FiDownload />
-                        downloads
+                      <OutlinedButton className="mr-4" onClick={handleDownload}>
+                        <span className="flex items-center gap-2">
+                          <FiDownload />
+                          downloads
+                        </span>
                       </OutlinedButton>
                     </Box>
                   </Box>

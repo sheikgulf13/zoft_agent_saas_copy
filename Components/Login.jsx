@@ -154,8 +154,8 @@ const Login = () => {
     >
       <div className="w-[105%] h-[85vh] flex flex-col gap-[2vw] py-[2vw]">
         <div className="logo w-full h-[3vh] flex items-center justify-center">
-          <img className="w-[2.2vw]" src="/images/logo.svg" alt="Kayzen" />
-          <h1 className="H4 uppercase font-semibold">Kayzen</h1>
+          <img className="w-[2.2vw]" src="/images/ZOFT_LOGO.png" alt="Zoft" />
+          <h1 className="H4 uppercase font-semibold">ZOFT</h1>
         </div>
 
         <div className="flex flex-col items-center w-full h-[18vh] gap-[2vw]">
