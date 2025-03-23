@@ -143,7 +143,7 @@ function ActionForm({
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
 
   const match = formData?.data?.forward_to?.match(/^(\+\d+)\s*(\d*)$/);
-  const initialCountryCode = match ? match[1] : "";
+  const initialCountryCode = match ? match[1] : "+1";
   const initialNumber = match ? match[2] : "";
 
   const [countryCode, setCountryCode] = useState(initialCountryCode);
@@ -508,9 +508,6 @@ function ActionForm({
               onChange={handleCountryCodeChange}
               className="border p-2 rounded-md w-[25%]"
             >
-              <option value="" disabled hidden>
-                eg. 91+
-              </option>
               <option value="+1">🇺🇸 +1</option>
               <option value="+44">🇬🇧 +44</option>
               <option value="+91">🇮🇳 +91</option>
@@ -722,7 +719,7 @@ function ActionForm({
         className="overflow-y-auto pr-2"
         style={{ height: "calc(70vh - 160px)" }}
       >
-        <div className="bg-gray-100 rounded-lg p-5 mb-16">
+        <div className="bg-gray-100 rounded-lg p-5 mb-8">
           <div>
             <label
               htmlFor="action-type"
@@ -766,7 +763,11 @@ function ActionForm({
           ))}
         </div>
 
-        <div className="bg-gray-100 rounded-lg p-5">
+        <div className="w-full flex justify-center">
+          <div className="bg-gray-300 h-[1px] w-[80%]" />
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-5 mt-8">
           {selectedAction?.fields.slice(2).map((field, index) => (
             <div
               key={index}

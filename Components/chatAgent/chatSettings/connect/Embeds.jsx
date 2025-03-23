@@ -15,7 +15,10 @@ const Embeds = () => {
   const router = useRouter();
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
-  const text = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${selectedChatAgent?.id}"></script>`
+  const text = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${selectedChatAgent?.id}">
+</script>`
+  const formattedText = text.replace(/<script /g, "<script\n");
+
 
   return (
     <div
@@ -75,8 +78,12 @@ const Embeds = () => {
                 language="html"
                 showLineNumbers={true}
                 theme={dracula}
-                codeBlock
                 wrapLongLines
+                customStyle={{
+                  whiteSpace: "pre-wrap",
+                  fontSize: "14px",
+                  padding: "0px 30px",
+                }}
               />
             </div>
           </div>

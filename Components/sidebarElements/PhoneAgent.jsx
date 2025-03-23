@@ -338,9 +338,9 @@ const PhoneAgent = () => {
                     <h1 className="text-2xl font-bold mb-3">
                       AI Assistant Configuration
                     </h1>
-                    <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form className="flex flex-wrap md:flex-nowrap gap-4">
                       {/* Left Column */}
-                      <div className="space-y-6">
+                      <div className="space-y-6 flex-1">
                         {/* Name Field */}
                         <div className="space-y-2">
                           <label
@@ -400,10 +400,10 @@ const PhoneAgent = () => {
                       </div>
 
                       {/* Right Column */}
-                      <div className="space-y-6">
+                      <div className="space-y-6 flex-1">
                         <div className="flex gap-5">
                           {/* Gender Feild */}
-                          <div className="space-y-2">
+                          <div className="space-y-2 flex-1">
                             <label
                               htmlFor="gender"
                               className="block text-sm font-medium text-gray-700"
@@ -434,7 +434,7 @@ const PhoneAgent = () => {
                             </p>
                           </div>
                           {/* Language Field */}
-                          <div className="space-y-2">
+                          <div className="space-y-2 flex-1">
                             <label
                               htmlFor="language"
                               className="block text-sm font-medium text-gray-700"
