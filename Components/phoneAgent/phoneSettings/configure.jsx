@@ -28,7 +28,7 @@ const Configure = () => {
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
   const audioRef = useRef();
-  const [gender, setGender] = useState((selectedPhoneAgent?.voice_gender).toLowerCase());
+  const [gender, setGender] = useState((selectedPhoneAgent?.voice_gender)?.toLowerCase());
 
   useEffect(() => {
     if (!language_mapping_accent) return;
