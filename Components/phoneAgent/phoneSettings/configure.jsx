@@ -189,9 +189,9 @@ const Configure = () => {
               <h1 className="text-2xl font-bold mb-4">
                 AI Assistant Configuration
               </h1>
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form className="flex flex-wrap md:flex-nowrap gap-6">
                 {/* Left Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 flex-1">
                   {/* Name Field */}
                   <div className="space-y-2">
                     <label
@@ -237,7 +237,7 @@ const Configure = () => {
                 </div>
 
                 {/* Right Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 flex-1">
                   <div className="flex gap-2">
                     <div className="space-y-2">
                       <label
@@ -371,9 +371,9 @@ const Configure = () => {
             {/* Company Configuration Form */}
             <div className="bg-gray-100 rounded-lg p-6">
               <h1 className="text-2xl font-bold mb-6">Company Configuration</h1>
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form className="flex flex-wrap md:flex-nowrap gap-6">
                 {/* Left Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 flex-1">
                   {/* Company Name Field */}
                   <div className="space-y-2">
                     <label
@@ -419,7 +419,7 @@ const Configure = () => {
                 </div>
 
                 {/* Right Column */}
-                <div className="space-y-6">
+                <div className="space-y-6 flex-1">
                   {/* Company Products Field */}
                   <div className="space-y-2">
                     <label
