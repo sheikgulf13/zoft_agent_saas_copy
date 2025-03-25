@@ -156,7 +156,7 @@ const DashboardContainer = () => {
         </div>
       </div>
 
-      <div className="grid">
+      {/* <div className="grid">
         <div className="select-container">
           <select
             onChange={(e) => setChart(e.target.value)}
@@ -168,9 +168,9 @@ const DashboardContainer = () => {
           </select>
           {isOpen ? <h1>open</h1> : <h1>close</h1>}
         </div>
-        <div className="chart">
+        <div className="chart"> */}
           {/* Show or hide a component depending upon state */}
-          {chart === "Line" ? (
+          {/* {chart === "Line" ? (
             <Line data={dataa} options={options} className="chartBox" />
           ) : chart === "Bar" ? (
             <Bar data={dataa} options={options} className="chartBox" />
@@ -181,7 +181,7 @@ const DashboardContainer = () => {
             </>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-between items-start mt-20">
         <div className="w-[43%] shadow-sm border-gray-300 border-[1px] rounded-xl p-6">

@@ -599,9 +599,9 @@ const PhoneAgent = () => {
                     <h1 className="text-2xl font-bold mb-6">
                       Company Configuration
                     </h1>
-                    <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form className="flex flex-wrap md:flex-nowrap gap-6">
                       {/* Left Column */}
-                      <div className="space-y-6">
+                      <div className="space-y-6 flex-1">
                         {/* Company Name Field */}
                         <div className="space-y-2">
                           <label
@@ -649,7 +649,7 @@ const PhoneAgent = () => {
                       </div>
 
                       {/* Right Column */}
-                      <div className="space-y-6">
+                      <div className="space-y-6 flex-1">
                         {/* Company Products Field */}
                         <div className="space-y-2">
                           <label
@@ -665,7 +665,7 @@ const PhoneAgent = () => {
                             onInput={autoResize} // Call autoResize on input
                             placeholder="List your company products"
                             rows={1} // Start with 1 row
-                            className="w-full border min-h-[206px] border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden transition-all duration-200 ease-in-out"
+                            className="w-full border min-h-[210px] border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden transition-all duration-200 ease-in-out"
                           />
                           <p className="text-xs text-gray-500">
                             List the products your company offers

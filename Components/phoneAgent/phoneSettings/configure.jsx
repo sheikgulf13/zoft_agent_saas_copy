@@ -12,7 +12,7 @@ import {
   elevenlabsVoice,
   language_mapping_accent,
 } from "../../../utility/eleven-labs-voice";
-import AudioPlayer from "../../AudioPlayer"
+import AudioPlayer from "../../AudioPlayer";
 import ConfirmationDialog from "@/Components/chatAgent/chatSettings/settings/ConfirmationDialog";
 
 const Configure = () => {
@@ -28,7 +28,9 @@ const Configure = () => {
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
   const audioRef = useRef();
-  const [gender, setGender] = useState((selectedPhoneAgent?.voice_gender)?.toLowerCase());
+  const [gender, setGender] = useState(
+    selectedPhoneAgent?.voice_gender?.toLowerCase()
+  );
 
   useEffect(() => {
     if (!language_mapping_accent) return;
@@ -41,12 +43,12 @@ const Configure = () => {
     //   );
     // });
     const filteredVoiceNames = elevenlabsVoice.filter((item) => {
-          return (
-            (!gender || item.labels.gender === gender) &&
-            (!language ||
-              language_mapping_accent[language].includes(item.labels.accent))
-          );
-        });
+      return (
+        (!gender || item.labels.gender === gender) &&
+        (!language ||
+          language_mapping_accent[language].includes(item.labels.accent))
+      );
+    });
 
     setFilteredVoiceNames(filteredVoiceNames);
   }, [language, gender, language_mapping_accent]);
@@ -228,10 +230,10 @@ const Configure = () => {
                       // Call autoResize on input
                       placeholder="Describe the purpose or goal of your AI assistant"
                       rows={1} // Start with 1 row
-                      className="w-full border min-h-[17.5vh] text-base border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden !transition-all !duration-300"
+                      className="w-full border min-h-[19.3vh] text-base border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden !transition-all !duration-300"
                     />
                     <p className="text-xs text-gray-500">
-                      Describe the main purpose or goal of your AI assistantx
+                      Describe the main purpose or goal of your AI assistant
                     </p>
                   </div>
                 </div>
@@ -253,9 +255,7 @@ const Configure = () => {
                         className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Select Gender</option>
-                        <option value="female">
-                          Female
-                        </option>
+                        <option value="female">Female</option>
                         <option value="male">Male</option>
                       </select>
                       <p className="text-xs text-gray-500">
@@ -344,12 +344,12 @@ const Configure = () => {
 
                       {/* Phone Number Input */}
                       <select
-                        className="w-full appearance-none px-2 py-1"
+                        className="w-full appearance-none px-2 py-1 border border-gray-300 rounded"
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       >
                         <option
                           id="phone"
-                          className="w-full text-base border-0 focus:ring-0 focus:outline-none px-3 py-2"
+                          className="w-full text-base focus:ring-0 focus:outline-none px-3 py-2"
                           value={phoneNumber}
                         >
                           {phoneNumber}
@@ -357,7 +357,7 @@ const Configure = () => {
                       </select>
                     </div>
 
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 mt-[1px]">
                       Select your Twilio phone number
                     </p>
                   </div>
