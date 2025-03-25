@@ -13,13 +13,15 @@ import {
   Legend,
   BarElement,
   Filler,
+  ArcElement,
 } from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
+import { Line, Bar, Pie } from "react-chartjs-2";
 
 ChartJS.register(
   LinearScale,
   CategoryScale,
   BarElement,
+  ArcElement,
   Tooltip,
   Legend,
   LineElement,
@@ -72,24 +74,63 @@ const DashboardContainer = () => {
     },
   ]);
 
-  const dataa = {
-    labels: detail?.map((name) => name?.employee_name),
+  useEffect(() => {
+    console.log("adata check", data);
+  }, [data]);
+
+  const callDirectionData = {
+    labels: data?.call_direction ? Object.keys(data.call_direction) : [],
     datasets: [
       {
-        label: "Employee Salary",
-        data: detail?.map((salary) => salary?.employee_salary),
-        fill: true,
-        borderColor: "rgba(0, 148, 255, 0.3)",
-        backgroundColor: "rgba(0, 148, 255, 0.3)",
-        tension: 0.3,
+        data: data?.call_direction ? Object.values(data.call_direction) : [],
+        backgroundColor: [
+          "#8A2BE2",
+          "#4B0082", 
+          "#1E90FF", 
+          "#4169E1", 
+          "#00FFFF"  
+        ],
+        borderColor: [
+          "#8A2BE2",
+          "#4B0082",
+          "#1E90FF",
+          "#4169E1",
+          "#00FFFF"
+        ],        
+        borderWidth: 1,
       },
+    ],
+  };
+  const callStatusData = {
+    labels: data?.call_status ? Object.keys(data.call_status) : [],
+    datasets: [
       {
-        label: "Employee Age",
-        data: detail?.map((age) => age?.employee_age),
-        fill: true,
-        borderColor: "rgba(0, 38, 255, 0.3)",
-        backgroundColor: "rgba(0, 38, 255, 0.3)",
-        tension: 0.3,
+        data: data?.call_status ? Object.values(data.call_status) : [],
+        backgroundColor: [
+          "#87CEFA",
+          "#9370DB",
+          "#B0C4DE",
+          "#4682B4",
+          "#D8BFD8",
+          "#6A5ACD",
+          "#E6E6FA",
+          "#4169E1",
+          "#BA55D3",
+          "#483D8B",
+        ],
+        borderColor: [
+          "#B0C4DE",
+          "#9370DB",
+          "#87CEFA",
+          "#4682B4",
+          "#D8BFD8",
+          "#6A5ACD",
+          "#E6E6FA",
+          "#4169E1",
+          "#BA55D3",
+          "#483D8B",
+        ],
+        borderWidth: 1,
       },
     ],
   };
@@ -113,8 +154,8 @@ const DashboardContainer = () => {
       }`}
     >
       <h3 className="text-xl font-bold">Dashboard</h3>
-      <div className="flex items-center justify-between my-4">
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 w-[260px] h-[150px] flex flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+      <div className="flex items-center justify-between my-4 gap-4">
+        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">Total Phone Agents</h4>
           <p className="text-2xl font-semibold">{data?.Total_phone_agents}</p>
           <p className="text-xs font-medium text-green-500">
@@ -122,7 +163,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 w-[260px] h-[150px] flex flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">Total Calls</h4>
           <p className="text-2xl font-semibold">{data?.Total_calls}</p>
           <p className="text-xs font-medium text-green-500">
@@ -130,7 +171,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 w-[260px] h-[150px] flex flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">
             Total Call Duration (mins)
           </h4>
@@ -142,7 +183,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 w-[260px] h-[150px] flex flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">
             Average Call Duration (mins)
           </h4>
@@ -156,32 +197,26 @@ const DashboardContainer = () => {
         </div>
       </div>
 
-      {/* <div className="grid">
-        <div className="select-container">
-          <select
-            onChange={(e) => setChart(e.target.value)}
-            onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <option value="Line">Line Chart</option>
-            <option value="Bar">Bar Chart</option>
-            <option value="Both">Both</option>
-          </select>
-          {isOpen ? <h1>open</h1> : <h1>close</h1>}
+      <div className="flex w-full gap-10 my-10">
+        <div className="flex flex-1 flex-col gap-5 items-center justify-center bg-gray-100 p-5 rounded-xl">
+          <h6 className="text-lg font-semibold w-full text-start">
+            Call Direction
+          </h6>
+
+          <div className="w-[70%]">
+            <Pie data={callDirectionData} className="my-5" />
+          </div>
         </div>
-        <div className="chart"> */}
-          {/* Show or hide a component depending upon state */}
-          {/* {chart === "Line" ? (
-            <Line data={dataa} options={options} className="chartBox" />
-          ) : chart === "Bar" ? (
-            <Bar data={dataa} options={options} className="chartBox" />
-          ) : (
-            <>
-              <Line data={dataa} options={options} className="chartBox" />
-              <Bar data={dataa} options={options} className="chartBox" />
-            </>
-          )}
+        <div className="flex flex-1 flex-col gap-5 items-center justify-center bg-gray-100 p-5 rounded-xl">
+          <h6 className="text-lg font-semibold w-full text-start">
+            Call Status
+          </h6>
+
+          <div className="w-[70%]">
+            <Pie data={callStatusData} className="my-5"/>
+          </div>
         </div>
-      </div> */}
+      </div>
 
       <div className="flex justify-between items-start mt-20">
         <div className="w-[43%] shadow-sm border-gray-300 border-[1px] rounded-xl p-6">

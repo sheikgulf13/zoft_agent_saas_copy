@@ -275,7 +275,7 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
           </div>
         )}
         <div>
-          <span>{name.split(/\s+/).filter(Boolean).length} words</span>
+          <span>{fileWordCounts[name]?.wordCount} words</span>
           <button
             onClick={() => handleDelete(name)}
             className="ml-[1vw] bg-red-500 text-white p-[.2vw] rounded"

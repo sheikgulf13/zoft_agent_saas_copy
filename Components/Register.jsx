@@ -80,12 +80,20 @@ const Register = () => {
 
     if (check && username && email && password) {
       const { data, error } = await supabase.auth.signUp({ email, password });
+      console.log('register data', data)
       if (error) {
         console.error("Sign up error:", error.message);
       } else {
         showSuccessToast(
           "We have sent you a verification email. Please follow the steps in the email to log in."
         );
+        await fetch('/public/auth/new', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+            'Content-Type': 'application/json'
+          }
+        })
         dispatch(setShowLogin(true));
       }
     }

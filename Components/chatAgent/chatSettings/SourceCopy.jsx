@@ -43,6 +43,10 @@ const Source = () => {
   }, [url, rawText]);
 
   useEffect(() => {
+    console.log('pasted url', pastedUrl)
+  }, [pastedUrl])
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 0);
@@ -76,6 +80,7 @@ const Source = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log('data fetched', data)
       return data;
     } catch (error) {
       console.log(error);
@@ -105,6 +110,7 @@ const Source = () => {
       } else if (pastedUrl.length < 3) {
         try {
           const updatedUrl = await fetchWordData(inputUrl);
+          console.log('updated url:', updatedUrl)
           updatedUrl.url = inputUrl;
           const updatedUrls = [...pastedUrl, updatedUrl];
           console.log(updatedUrl);
@@ -130,13 +136,14 @@ const Source = () => {
   };
 
   const totalWordCount =
-    Object.values(fileWordCounts).reduce((acc, count) => acc + count, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
+    Object.values(fileWordCounts).reduce((acc, count) => acc + count.wordCount, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
     rawWordCounts;
 
   const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0);
   const links = [{ label: "Files" }, { label: "URLs" }, { label: "Raw Text" }];
 
   const [selectedSection, setSelectedSection] = useState(0);
+
   const handleSectionClick = (section) => {
     setSelectedSection(section);
   };
@@ -210,7 +217,7 @@ const Source = () => {
                         >
                           <span className="text-black">
                             {urlObj?.url?.length < 45 ? (
-                              <span> {urlObj} </span>
+                              <span> {urlObj.url} </span>
                             ) : (
                               <div className="relative">
                                 <div className="group">

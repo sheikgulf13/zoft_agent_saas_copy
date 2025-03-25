@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from "uuid";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { cloneDeep } from "lodash";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const name = {
   label: "Name",
@@ -147,7 +149,7 @@ function ActionForm({
   const initialNumber = match ? match[2] : "";
 
   const [countryCode, setCountryCode] = useState(initialCountryCode);
-  const [phoneNumber, setPhoneNumber] = useState(initialNumber);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
@@ -162,10 +164,18 @@ function ActionForm({
     updatePhoneNumber(newCode, phoneNumber);
   };
 
-  const handlePhoneNumberChange = (e) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setPhoneNumber(value);
-    updatePhoneNumber(countryCode, value);
+  const handlePhoneNumberChange = (phone) => {
+    console.log("phone number", phone);
+    //const value = e.target.value.replace(/\D/g, "");
+    setPhoneNumber(phone || "");
+    setFormData((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        forward_to: phone || "",
+      },
+    }));
+    //updatePhoneNumber(countryCode, value);
   };
 
   const updatePhoneNumber = (code, number) => {
@@ -502,25 +512,13 @@ function ActionForm({
 
       case "Forward to": {
         return (
-          <div className="flex gap-2 items-center">
-            <select
-              value={countryCode}
-              onChange={handleCountryCodeChange}
-              className="border p-2 rounded-md w-[25%]"
-            >
-              <option value="+1">🇺🇸 +1</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+61">🇦🇺 +61</option>
-              <option value="+81">🇯🇵 +81</option>
-            </select>
-
-            <input
-              type="text"
-              placeholder="Enter number"
+          <div className="flex items-center space-x-2">
+            <PhoneInput
+              placeholder="Enter phone number"
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
-              className="border p-2 rounded-md w-full"
+              defaultCountry="US"
+              className="w-full flex px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         );
@@ -576,7 +574,7 @@ function ActionForm({
                       placeholder="Header Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
                     />
                     <input
                       type="text"
@@ -584,7 +582,7 @@ function ActionForm({
                       placeholder="Header Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
                     />
                     <button
                       type="button"
@@ -607,7 +605,7 @@ function ActionForm({
                         "http_headers"
                       )
                     }
-                    className="text-[#702963] w-full text-start mr-5"
+                    className="text-[#702963] w-full text-start text-base mr-5"
                   >
                     + Add Key
                   </button>
@@ -634,7 +632,7 @@ function ActionForm({
                       placeholder="Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
                     />
                     <input
                       type="text"
@@ -642,7 +640,7 @@ function ActionForm({
                       placeholder="Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
                     />
                     <button
                       type="button"
@@ -665,7 +663,7 @@ function ActionForm({
                         "request_data"
                       )
                     }
-                    className="text-[#702963] w-full text-start"
+                    className="text-[#702963] w-full text-start text-base"
                   >
                     + Add Key
                   </button>
