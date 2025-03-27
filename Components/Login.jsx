@@ -47,7 +47,7 @@ const Login = () => {
           navigate.push("/dashboard");
         }, 1);
       }
-      await fetch("https://3c53-49-206-11-27.ngrok-free.app/public/auth/new", {
+      await fetch(`${url}/public/auth/new`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${data.session.access_token}`,
