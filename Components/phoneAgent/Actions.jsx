@@ -226,7 +226,7 @@ const Actions = () => {
                 {/* Render Created Actions */}
                 <div className="flex flex-col items-center mt-[2%]">
                   <div
-                    className={`mt-[1%] mb-[2%] w-full max-h-auto pr-[2vw]  overflow-y-scroll scrollBar ${
+                    className={`mt-[1%] mb-[2%] w-full max-h-auto  bg-white p-5 rounded-lg  ${
                       theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
                     }`}
                   >
@@ -235,12 +235,12 @@ const Actions = () => {
                         No actions created yet.
                       </p>
                     ) : (
-                      createdActions?.map((action) => (
+                      createdActions?.map((action, index) => (
                         <div
                           key={action.id}
-                          className="rounded-lg p-[1%] mb-[1.5%] bg-white flex justify-between items-center"
+                          className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${index !== createdActions?.length -1 && 'border-b-[1px] pb-[2.5%] border-gray-300'} flex justify-between items-center`}
                         >
-                          <p> Action Type: {action.action_type}</p>
+                          <p className="text-md">{action.action_type} - {action.action_name}</p>
                           <div className="flex">
                             <button
                               onClick={() => handleEditAction(action.id)}

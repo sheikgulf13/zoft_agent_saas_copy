@@ -87,13 +87,7 @@ const Register = () => {
         showSuccessToast(
           "We have sent you a verification email. Please follow the steps in the email to log in."
         );
-        await fetch('/public/auth/new', {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
-            'Content-Type': 'application/json'
-          }
-        })
+       
         dispatch(setShowLogin(true));
       }
     }

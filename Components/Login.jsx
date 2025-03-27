@@ -38,6 +38,7 @@ const Login = () => {
         email,
         password,
       });
+      console.log("login data", data);
       if (error) {
         showErrorToast(error.message);
       } else {
@@ -46,6 +47,13 @@ const Login = () => {
           navigate.push("/dashboard");
         }, 1);
       }
+      await fetch("https://3c53-49-206-11-27.ngrok-free.app/public/auth/new", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
     } else {
       // Handle client-side validation errors here
       console.error("Email and password are required");
@@ -187,7 +195,10 @@ const Login = () => {
                     email&nbsp;
                   </label>
                   {emailError && (
-                    <span className="text-red-500 font-medium text-sm">{" "}*{emailError}</span>
+                    <span className="text-red-500 font-medium text-sm">
+                      {" "}
+                      *{emailError}
+                    </span>
                   )}
                 </div>
 
@@ -214,7 +225,10 @@ const Login = () => {
                     password&nbsp;
                   </label>
                   {passwordError && (
-                    <span className="text-red-500 font-medium text-sm">{" "}*{passwordError}</span>
+                    <span className="text-red-500 font-medium text-sm">
+                      {" "}
+                      *{passwordError}
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center relative">
@@ -243,12 +257,12 @@ const Login = () => {
               />
             </div>
           </form>
-            <h6 className="ml-[8vw] capitalize font-semibold">
-              don't have an account?{" "}
-              <button className="text-[#630063]" onClick={registerHandler}>
-                sign up
-              </button>
-            </h6>
+          <h6 className="ml-[8vw] capitalize font-semibold">
+            don't have an account?{" "}
+            <button className="text-[#630063]" onClick={registerHandler}>
+              sign up
+            </button>
+          </h6>
         </div>
       </div>
     </motion.div>

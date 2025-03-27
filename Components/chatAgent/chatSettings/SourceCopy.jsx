@@ -55,6 +55,7 @@ const Source = () => {
 
   useEffect(() => {
     dispatch(setFileCount(fileWordCounts));
+    console.log('file word count', fileWordCounts)
   }, [fileWordCounts]);
   const urlHandler = (e) => {
     setInputUrl(e.target.value);
@@ -139,7 +140,7 @@ const Source = () => {
     Object.values(fileWordCounts).reduce((acc, count) => acc + count.wordCount, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
     rawWordCounts;
 
-  const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0);
+  const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0) + Object.values(fileWordCounts).reduce((acc, count) => acc + count.characterCount, 0);
   const links = [{ label: "Files" }, { label: "URLs" }, { label: "Raw Text" }];
 
   const [selectedSection, setSelectedSection] = useState(0);

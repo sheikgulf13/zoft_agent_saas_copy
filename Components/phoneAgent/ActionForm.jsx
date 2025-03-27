@@ -143,47 +143,23 @@ function ActionForm({
 
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
-
-  const match = formData?.data?.forward_to?.match(/^(\+\d+)\s*(\d*)$/);
-  const initialCountryCode = match ? match[1] : "+1";
-  const initialNumber = match ? match[2] : "";
-
-  const [countryCode, setCountryCode] = useState(initialCountryCode);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
-      setCountryCode(initialCountryCode);
-      setPhoneNumber(initialNumber);
+    
+      setPhoneNumber(formData?.data?.forward_to);
     }
   }, [formData?.data?.forward_to]);
 
-  const handleCountryCodeChange = (e) => {
-    const newCode = e.target.value;
-    setCountryCode(newCode);
-    updatePhoneNumber(newCode, phoneNumber);
-  };
-
   const handlePhoneNumberChange = (phone) => {
-    console.log("phone number", phone);
-    //const value = e.target.value.replace(/\D/g, "");
+
     setPhoneNumber(phone || "");
     setFormData((prev) => ({
       ...prev,
       data: {
         ...prev.data,
         forward_to: phone || "",
-      },
-    }));
-    //updatePhoneNumber(countryCode, value);
-  };
-
-  const updatePhoneNumber = (code, number) => {
-    setFormData((prev) => ({
-      ...prev,
-      data: {
-        ...prev.data,
-        forward_to: `${code} ${number}`,
       },
     }));
   };
@@ -574,7 +550,7 @@ function ActionForm({
                       placeholder="Header Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
                     />
                     <input
                       type="text"
@@ -582,7 +558,7 @@ function ActionForm({
                       placeholder="Header Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
                     />
                     <button
                       type="button"
@@ -605,7 +581,7 @@ function ActionForm({
                         "http_headers"
                       )
                     }
-                    className="text-[#702963] w-full text-start text-base mr-5"
+                    className="text-[#702963] w-full text-start text-sm mr-5"
                   >
                     + Add Key
                   </button>
@@ -632,7 +608,7 @@ function ActionForm({
                       placeholder="Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
                     />
                     <input
                       type="text"
@@ -640,7 +616,7 @@ function ActionForm({
                       placeholder="Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-base shadow-sm w-[45%] bg-gray-100"
+                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
                     />
                     <button
                       type="button"
@@ -663,7 +639,7 @@ function ActionForm({
                         "request_data"
                       )
                     }
-                    className="text-[#702963] w-full text-start text-base"
+                    className="text-[#702963] w-full text-start text-sm"
                   >
                     + Add Key
                   </button>
@@ -698,6 +674,7 @@ function ActionForm({
             name={field.label}
             id={field.value}
             placeholder={field.placeholder}
+            maxLength={30}
             value={formData?.action_name || ""}
             className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
               errors[field.value] ? "border-red-500" : ""

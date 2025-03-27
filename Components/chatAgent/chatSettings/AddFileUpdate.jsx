@@ -9,10 +9,10 @@ import "pdfjs-dist/build/pdf.worker.mjs";
 import mammoth from "mammoth";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 
-const AddFile = ({ existingFile, setExistingFile }) => {
+const AddFile = ({ existingFile, setExistingFile, setFileWordCounts, fileWordCounts }) => {
   const dispatch = useDispatch();
   const file = useSelector((state) => state.fileUpdate.file);
-  const { fileWordCounts } = useSelector((state) => state.fileUpdate);
+  //const { fileWordCounts } = useSelector((state) => state.fileUpdate);
   const [fileNames, setFileNames] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +36,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
               [f.name]: wordCount,
             };
             initialWordCounts = updatedWordCounts;
-            dispatch(setFileWordCounts(updatedWordCounts));
+            setFileWordCounts(updatedWordCounts);
           });
         } else if (
           f.type ===
@@ -48,7 +48,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
               [f.name]: wordCount,
             };
             initialWordCounts = updatedWordCounts;
-            dispatch(setFileWordCounts(updatedWordCounts));
+            setFileWordCounts(updatedWordCounts);
           });
         } else {
           const reader = new FileReader();
@@ -60,7 +60,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
               [f.name]: wordCount,
             };
             initialWordCounts = updatedWordCounts;
-            dispatch(setFileWordCounts(updatedWordCounts));
+            setFileWordCounts(updatedWordCounts);
           };
           reader.readAsText(f);
         }
@@ -142,7 +142,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
         extractTextFromPDF(file).then((wordCount) => {
           const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
           wordCounts = updatedWordCounts;
-          dispatch(setFileWordCounts(updatedWordCounts));
+          setFileWordCounts(updatedWordCounts);
         });
       } else if (
         file.type ===
@@ -151,7 +151,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
         extractTextFromDOCX(file).then((wordCount) => {
           const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
           wordCounts = updatedWordCounts;
-          dispatch(setFileWordCounts(updatedWordCounts));
+          setFileWordCounts(updatedWordCounts);
         });
       } else {
         const reader = new FileReader();
@@ -160,7 +160,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
           const wordCount = fileContent.split(/\s+/).filter(Boolean).length;
           const updatedWordCounts = { ...wordCounts, [file.name]: wordCount };
           wordCounts = updatedWordCounts;
-          dispatch(setFileWordCounts(updatedWordCounts));
+          setFileWordCounts(updatedWordCounts);
         };
         reader.readAsText(file);
       }
@@ -178,6 +178,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
           .getDocument(fileContent)
           .promise.then((pdf) => {
             let textContent = "";
+            let characterCount = 0;
             let numPages = pdf.numPages;
 
             const extractPageText = (pageNum) => {
@@ -189,6 +190,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
                     .then((text) => {
                       text.items.forEach((item) => {
                         textContent += item.str + " ";
+                        characterCount += item.str.length;
                       });
 
                       if (pageNum < numPages) {
@@ -197,7 +199,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
                         const wordCount = textContent
                           .split(/\s+/)
                           .filter(Boolean).length;
-                        resolve(wordCount);
+                          resolve({ wordCount, characterCount });
                       }
                     })
                     .catch(reject); // Add error handling
@@ -238,7 +240,7 @@ const AddFile = ({ existingFile, setExistingFile }) => {
     const updatedFileNames = fileNames.filter((name) => name !== fileName);
     const updatedWordCounts = { ...fileWordCounts };
     delete updatedWordCounts[fileName];
-    dispatch(setFileWordCounts(updatedWordCounts));
+    setFileWordCounts(updatedWordCounts);
 
     const updatedFiles = file?.filter((f) => f.name !== fileName);
     dispatch(setFileUpdate(updatedFiles));
@@ -329,7 +331,7 @@ const FileList = ({ fileNames, fileWordCounts = {}, handleDelete }) => (
       >
         <span>{name}</span>
         <div>
-          <span className="mr-4">{fileWordCounts[name] || 0} words</span>
+          <span className="mr-4">{fileWordCounts[name]?.wordCount || 0} words</span>
           <ContainedButton backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"} onClick={() => handleDelete(name)}>
             Delete
           </ContainedButton>

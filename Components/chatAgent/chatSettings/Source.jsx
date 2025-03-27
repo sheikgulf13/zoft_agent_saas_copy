@@ -33,8 +33,9 @@ const Source = () => {
   const [err, setErr] = useState("");
   const [rawWordCounts, setRawWordCounts] = useState(0);
   const [rawText, setRawText] = useState("");
+   const [rawCharCount, setRawCharCount] = useState(0);
   const [selectedSection, setSelectedSection] = useState(0);
-  const { fileWordCounts } = useSelector((state) => state.fileUpdate);
+  const [fileWordCounts, setFileWordCounts] = useState({});
   const file = useSelector((state) => state.fileUpdate.file);
   const urlFetch = process.env.url;
   const totalWordCount =
@@ -47,8 +48,13 @@ const Source = () => {
   useEffect(() => {
     console.log("rawwordscounts", rawWordCounts);
     console.log("filwordscouns", fileWordCounts);
+    console.log("selectedAgent", selectedChatAgent);
     console.log("totalwordscounts", totalWordCount);
   }, [pastedUrl, rawWordCounts, fileWordCounts, totalWordCount]);
+
+    useEffect(() => {
+      setRawCharCount(rawText.replace(/\s+/g, "").length);
+    }, [inputUrl, rawText]);
 
   // Retrieve chat agent from local storage
   useEffect(() => {
@@ -56,16 +62,22 @@ const Source = () => {
     setRawText(selectedChatAgent?.raw_text || "");
     setRawWordCounts(
       selectedChatAgent?.raw_text
-        ? selectedChatAgent?.raw_text.split(",").length
+        ? selectedChatAgent?.raw_text.split(/[\s,]+/).filter(Boolean).length
         : 0
     );
+
+    setRawCharCount(selectedChatAgent?.raw_text.replace(/\s+/g, "").length);
     const f = selectedChatAgent?.file_name?.reduce((acc, fi) => {
       acc[fi] = { name: fi };
       return acc;
     }, {});
-    dispatch(setFileWordCounts(selectedChatAgent?.file_word_count));
+    setFileWordCounts(selectedChatAgent?.file_word_count);
     setExistingFile(selectedChatAgent?.file_word_count);
   }, [selectedChatAgent]);
+
+  useEffect(() => {
+    console.log('raw char cout', rawCharCount)
+  }, [rawText])
 
   const DetectChanges = (urls) => {
     let change = 0;
@@ -132,7 +144,7 @@ const Source = () => {
     formData.append("raw_text", rawText);
     formData.append("existing_files", existingFiles);
     formData.append("url_word_count", JSON.stringify(dict));
-    formData.append("file_word_count", JSON.stringify(fileWordCounts));
+    formData.append("file_word_count", JSON.stringify(fileWordCounts.wordCount));
     formData.append("raw_text_word_count", rawWordCounts);
     const response = await fetch(`${urlFetch}/public/chat_agent/update_base`, {
       ...getApiConfig(),
@@ -173,7 +185,7 @@ const Source = () => {
   const rawTextHandler = (e) => {
     const text = e.target.value;
     setRawText(text);
-    setRawWordCounts(text.split(",").length - 1); // Update word count
+    setRawWordCounts(text.split(/[\s,]+/).filter(Boolean).length); // Update word count
     if (e.target.tagName === "TEXTAREA") {
       autoResizeTextarea(e.target);
     }
@@ -211,6 +223,8 @@ const Source = () => {
     const updatedUrl = pastedUrl.filter((_, i) => i !== index);
     setPastedUrl(updatedUrl);
   };
+
+  const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0) + Object.values(fileWordCounts ?? {}).reduce((acc, count) => acc + count.characterCount, 0);
 
   const links = [{ label: "file" }, { label: "URLs" }, { label: "Raw Text" }];
 
@@ -282,6 +296,8 @@ const Source = () => {
                   <AddFile
                     existingFile={existingFile}
                     setExistingFile={setExistingFile}
+                    setFileWordCounts={setFileWordCounts}
+                    fileWordCounts={fileWordCounts}
                   />
                 </div>
               ) : selectedSection === 1 ? (
@@ -362,12 +378,16 @@ const Source = () => {
         >
           <h5 className={`font-semibold text-base`}>Sources</h5>
           <h6 className={`font-semibold text-base pt-[.7vw]`}>
-            Total characters detected
+            Total words detected
           </h6>
           <p className={`text-sm pb-[.7vw]`}>
-            <span className={`font-semibold`}>{totalWordCount}</span> /1,000,000
+            <span className={`font-semibold`}>{totalWordCount}</span> /10,000
             limit
           </p>
+          <h6 className={`font-semibold text-base pt-[.7vw]`}>
+            Approx character
+          </h6>
+          <p className={`text-sm pb-[.7vw]`}>{charCount}</p>
           <span className="absolute top-[43vh] text-red-900 text-sm">
             *{err}
           </span>
