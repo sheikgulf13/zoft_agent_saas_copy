@@ -1,36 +1,34 @@
-import React from 'react'
-import useTheme from "next-theme"
+'use client';
+
+import React from 'react';
+import { Box } from '@mui/material';
+import useTheme from "next-theme";
+import PricingPage from '@/app/pricing/page';
+
 const Plan = () => {
-  const { theme, setTheme } = useTheme()
+  const { theme } = useTheme();
+  
   return (
-    <div className='w-full h-screen'>
-      <div className='flex justify-between items-center'>
-      <div className='flex flex-col items- w-fit gap-[1vw]  '>
-        <h1 className='H25 capitalize text-center'>current plan</h1>
-        <div className={` w-[20vw] h-[7vh] rounded-[0.833vw] flex justify-start items-center px-[2vw] border-[0.052vw] border-[#EB1CD6] shadow-lg  ${theme==="dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
-          <h1 className='text-[1.042vw] capitalize font-semibold'>starter</h1>
-        </div>
+    <div className='w-full text-base'>
+      <div className={`pt-4 px-4 ${theme === "dark" ? 'text-white' : 'text-black'}`}>
+        <h1 className='text-2xl font-semibold mb-2'>Pricing Plans</h1>
+        <p className='text-sm text-zinc-400 mb-4'>Choose the right plan for your needs</p>
       </div>
-
-      <div className='flex flex-col items-center w-fit  gap-[1vw]  '>
-        <h1 className='H25 capitalize text-center'>upgrade plan</h1>
-        <div className={` w-[20vw] h-[7vh] rounded-[0.833vw] flex justify-start items-center px-[2vw] border-[0.052vw] border-[#EB1CD6] shadow-lg  ${theme==="dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
-          <h1 className='text-[1.042vw] capitalize font-semibold'>starter</h1>
-        </div>
-      </div>
-      </div>
-    
-
-      <div className='flex flex-col items-center w-full gap-[1vw]  mt-[10vw] '>
-        <h1 className='H25 capitalize text-center'>growth plan</h1>
-        <div className={` w-[20vw] h-[7vh] rounded-[0.833vw] flex justify-start items-center px-[2vw] border-[0.052vw] border-[#EB1CD6] shadow-lg  ${theme==="dark" ? 'bg-[#1A1C22] text-white' : 'bg-white text-black'}`}>
-          <h1 className='text-[1.042vw] capitalize font-semibold'>growth</h1>
-        </div>
-      </div>
-
       
+      {/* Scrollable Pricing Page container with fixed width */}
+      <Box sx={{ 
+        height: 'calc(100vh - 220px)', 
+        overflow: 'auto',
+        paddingBottom: 2,
+        paddingX: 2,
+        width: '100%',
+        maxWidth: '1200px',
+        mx: 'auto'
+      }}>
+        <PricingPage />
+      </Box>
     </div>
-  )
-}
+  );
+};
 
-export default Plan
+export default Plan;

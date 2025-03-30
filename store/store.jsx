@@ -16,6 +16,7 @@ import callList from "./reducers/phoneCallListSlice";
 import workSpaceList from "./reducers/workSpaceListSlice";
 import selectedData from "./reducers/selectedDataSlice";
 import workSpaceAgentList from "./reducers/workSpaceAgentListSlice";
+import pricingReducer from "./reducers/pricingReducer";
 
 const store = configureStore({
   reducer: {
@@ -35,7 +36,8 @@ const store = configureStore({
     callList: callList,
     workSpaceList: workSpaceList,
     selectedData: selectedData,
-    workSpaceAgentList: workSpaceAgentList
+    workSpaceAgentList: workSpaceAgentList,
+    pricing: pricingReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

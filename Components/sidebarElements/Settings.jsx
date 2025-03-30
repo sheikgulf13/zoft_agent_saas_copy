@@ -5,10 +5,10 @@ import useTheme from "next-theme"
 const Settings = () => {
   const { theme, setTheme } = useTheme()
   return ( 
-    <div className={`relative w-full h-screen mx-auto px-[4vw] pt-[2vh] py-[.7vw] rounded-[0.417vw] shadow-lg justify-self-end ${theme==="dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F2F4F7] text-black'}`}>
-      <h1 className="text-[2vw] font-semibold mb-[.5vh]">Settings</h1>
-      <p className=" text-[1.25vw] text-zinc-400 mb-[2vh]">Manage your account settings and preferences</p>
-      <div className='h-[.1vh] w-full bg-zinc-400 mb-[3vh]'></div>
+    <div className={`relative w-full h-screen mx-auto px-6 pt-4 py-3 rounded-md shadow-lg justify-self-end overflow-visible ${theme==="dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F2F4F7] text-black'}`}>
+      <h1 className="text-3xl font-semibold mb-2">Settings</h1>
+      <p className="text-base text-zinc-400 mb-4">Manage your account settings and preferences</p>
+      <div className='h-px w-full bg-zinc-400 mb-6'></div>
       <Tabs darkMode={theme==="dark"} />
       
     </div>
