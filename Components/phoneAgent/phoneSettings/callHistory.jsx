@@ -154,7 +154,7 @@ function PhoneCallAgent(props) {
                 })}
             </List>
             <Pagination
-              count={Math.ceil(callLogs.length / logsPerPage)}
+              count={Math.ceil(callList.length / logsPerPage)}
               page={page}
               onChange={handlePageChange}
               className="m-y-4 flex justify-center"

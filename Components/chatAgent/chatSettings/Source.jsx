@@ -66,7 +66,7 @@ const Source = () => {
         : 0
     );
 
-    setRawCharCount(selectedChatAgent?.raw_text.replace(/\s+/g, "").length);
+    setRawCharCount(selectedChatAgent?.raw_text?.replace(/\s+/g, "").length);
     const f = selectedChatAgent?.file_name?.reduce((acc, fi) => {
       acc[fi] = { name: fi };
       return acc;

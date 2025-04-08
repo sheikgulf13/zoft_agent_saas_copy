@@ -102,6 +102,7 @@ const Source = () => {
   };
 
   const keypressHandler = async (e) => {
+
     if (e.key === "Enter") {
       e.preventDefault();
       if (!inputUrl || inputUrl.trim() === "") {
@@ -114,7 +115,7 @@ const Source = () => {
           console.log('updated url:', updatedUrl)
           updatedUrl.url = inputUrl;
           const updatedUrls = [...pastedUrl, updatedUrl];
-          console.log(updatedUrl);
+          console.log("updated url" +updatedUrl);
 
           setPastedUrl(updatedUrls);
           dispatch(seturl(updatedUrls)); // Update Redux store with new URL list

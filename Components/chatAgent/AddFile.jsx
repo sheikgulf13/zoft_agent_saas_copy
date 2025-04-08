@@ -56,6 +56,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
           };
           reader.readAsText(f);
         }
+        
       });
     }
   }, [file]); // Only runs when `file` changes
@@ -321,7 +322,11 @@ const extractTextFromDOCX = (file) => {
       const arrayBuffer = reader.result;
       try {
         const { value } = await mammoth.extractRawText({ arrayBuffer });
-        resolve(value.split(/\s+/).filter(Boolean).length);
+        console.log(value);
+        
+        const wordCount = value.split(/\s+/).filter(Boolean).length;
+        const characterCount = value.length;
+        resolve({wordCount , characterCount });
       } catch (error) {
         reject(error);
       }

@@ -17,7 +17,7 @@ const Plan = () => {
       
       {/* Scrollable Pricing Page container with fixed width */}
       <Box sx={{ 
-        height: 'calc(100vh - 220px)', 
+        height: 'calc(100vh - 280px)', 
         overflow: 'auto',
         paddingBottom: 2,
         paddingX: 2,
