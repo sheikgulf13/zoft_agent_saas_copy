@@ -157,9 +157,9 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           }`}
         >
           <img
-            src="/images/ZOFT_LOGO.png"
+            src="/images/ZOFT_LOGO2.png"
             alt="Logo"
-            className="w-[40px] h-[40px]"
+            className="w-[60px] h-[60px]"
           />
           {isOpen && (
             <h1 className="text-2xl mt-[.5vh] text-center text-[#8B008B] ">

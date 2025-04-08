@@ -221,8 +221,8 @@ const Register = () => {
                   <>
                     <div className="logo w-full h-[3vh] flex items-center justify-center">
                       <img
-                        className="w-[2.2vw]"
-                        src="/images/ZOFT_LOGO.png"
+                        className="w-[4.2vw]"
+                        src="/images/ZOFT_LOGO2.png"
                         alt="Zoft"
                       />
                       <h1 className="H4 uppercase font-semibold">Zoft</h1>
