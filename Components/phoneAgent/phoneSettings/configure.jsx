@@ -23,14 +23,36 @@ const Configure = () => {
   );
 
   console.log(selectedPhoneAgent);
+  const audioRef = useRef(null);
   const [phoneAgentID, setPhoneAgentID] = useState(selectedPhoneAgent?.id);
   const [filteredVoiceNames, setFilteredVoiceNames] = useState([]);
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
-  const audioRef = useRef();
   const [gender, setGender] = useState(
     selectedPhoneAgent?.voice_gender?.toLowerCase()
   );
+  useEffect(() => {
+    console.log(selectedPhoneAgent);
+    
+    if (selectedPhoneAgent?.voice_id) {
+      const filteredVoiceUrl = elevenlabsVoice.find(
+        (item) => item.voice_id === selectedPhoneAgent?.voice_id
+      );
+  
+      if (filteredVoiceUrl) {
+        console.log(filteredVoiceUrl);
+        setVoiceUrl(filteredVoiceUrl.preview_url);
+      } else {
+        setVoiceUrl("");
+      }
+    }
+  }, [selectedPhoneAgent]);
+
+  useEffect(() => {
+    if (audioRef.current && voiceUrl) {
+      audioRef.current.load();
+    }
+  }, [voiceUrl]);
 
   useEffect(() => {
     if (!language_mapping_accent) return;
