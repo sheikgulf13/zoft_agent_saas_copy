@@ -16,6 +16,7 @@ import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { CookieManager } from "../utility/cookie-manager";
 import { showErrorToast } from "./toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
+import { IoEyeSharp } from "react-icons/io5";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -24,6 +25,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useRouter();
@@ -148,7 +150,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(setFadeIn(true));
     setTimeout(() => {
-      // dispatch(setShowLogin(false));
+      dispatch(setShowLogin(false));
       dispatch(setFadeIn(false));
     }, 300); // Duration should match the animation time
   };
@@ -236,9 +238,13 @@ const Login = () => {
                   <input
                     value={password}
                     onChange={(e) => dispatch(setPassword(e.target.value))}
-                    type="password"
+                    type={show ? "text" : "password"}
                     className="border border-zinc-300 rounded-lg w-[30vw] h-[5vh] pl-[3vw] pr-[1vw]"
                     placeholder="Enter Password"
+                  />
+                  <IoEyeSharp
+                    onClick={() => setShow(!show)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xl cursor-pointer text-gray-600"
                   />
                 </div>
               </div>

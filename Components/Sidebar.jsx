@@ -157,7 +157,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           }`}
         >
           <img
-            src="/images/ZOFT_LOGO2.png"
+            src={` ${theme === "dark" ? "/images/ZOFT_LOGO2_Dark.png" : "/images/ZOFT_LOGO2.png" }`}
             alt="Logo"
             className="w-[60px] h-[60px]"
           />

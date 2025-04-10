@@ -25,6 +25,7 @@ import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { CookieManager } from "../utility/cookie-manager";
 import { showErrorToast, showSuccessToast } from "./toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
+import { IoEyeSharp } from "react-icons/io5";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -32,6 +33,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [check, setCheck] = useState(false);
   const [userNameError, setUserNameError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -44,7 +46,7 @@ const Register = () => {
   const { username, email, password, animationComplete, showLogin, fadeIn } =
     useSelector((state) => state.user);
 
-  console.log(fadeIn);
+  // console.log(fadeIn);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -80,14 +82,14 @@ const Register = () => {
 
     if (check && username && email && password) {
       const { data, error } = await supabase.auth.signUp({ email, password });
-      console.log('register data', data)
+      console.log("register data", data);
       if (error) {
         console.error("Sign up error:", error.message);
       } else {
         showSuccessToast(
           "We have sent you a verification email. Please follow the steps in the email to log in."
         );
-       
+
         dispatch(setShowLogin(true));
       }
     }
@@ -186,7 +188,10 @@ const Register = () => {
     }, 300);
   };
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && document.activeElement !== document.getElementById("submit-btn")) {
+    if (
+      e.key === "Enter" &&
+      document.activeElement !== document.getElementById("submit-btn")
+    ) {
       e.preventDefault();
     }
   };
@@ -251,7 +256,10 @@ const Register = () => {
                     </div>
 
                     <div className="w-full h-[40vh]">
-                      <form onKeyDown={handleKeyDown} className="w-full h-full flex flex-col justify-start gap-[1.5vw]">
+                      <form
+                        onKeyDown={handleKeyDown}
+                        className="w-full h-full flex flex-col justify-start gap-[1.5vw]"
+                      >
                         <FormInput
                           label="Username"
                           icon={<FaUser className="H5 absolute left-3" />}
@@ -282,12 +290,15 @@ const Register = () => {
                         />
                         <FormInput
                           label="Password"
+                          showPassword={showPassword}
+                          setShowPassword={setShowPassword}
+                          eyeIcon={true}
                           icon={<FaLock className="H5 absolute left-3" />}
                           value={password}
                           onChange={(e) =>
                             dispatch(setPassword(e.target.value))
                           }
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           placeholder="Enter Password"
                           id="password"
                           passwordError={passwordError}
@@ -382,6 +393,9 @@ const FormInput = ({
   userNameError,
   emailError,
   passwordError,
+  eyeIcon,
+  setShowPassword,
+  showPassword,
 }) => (
   <div className="flex items-center justify-center w-full">
     <div className="flex flex-col items-start">
@@ -420,6 +434,10 @@ const FormInput = ({
           aria-label={label}
           required
         />
+        {eyeIcon && <IoEyeSharp
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xl text-gray-600 cursor-pointer"
+        />}
       </div>
     </div>
   </div>

@@ -85,18 +85,12 @@ const DashboardContainer = () => {
         data: data?.call_direction ? Object.values(data.call_direction) : [],
         backgroundColor: [
           "#8A2BE2",
-          "#4B0082", 
-          "#1E90FF", 
-          "#4169E1", 
-          "#00FFFF"  
-        ],
-        borderColor: [
-          "#8A2BE2",
           "#4B0082",
           "#1E90FF",
           "#4169E1",
-          "#00FFFF"
-        ],        
+          "#00FFFF",
+        ],
+        borderColor: ["#8A2BE2", "#4B0082", "#1E90FF", "#4169E1", "#00FFFF"],
         borderWidth: 1,
       },
     ],
@@ -198,22 +192,42 @@ const DashboardContainer = () => {
       </div>
 
       <div className="flex w-full gap-10 my-10">
-        <div className="flex flex-1 flex-col gap-5 items-center justify-center bg-gray-100 p-5 rounded-xl">
+      <div
+          className={`flex flex-1 flex-col gap-5 items-center justify-center  p-5 rounded-xl ${
+            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-100 text-black"
+          }`}
+        >
           <h6 className="text-lg font-semibold w-full text-start">
             Call Direction
           </h6>
 
-          <div className="w-[70%]">
+          <div
+            className={`w-[70%]  ${
+              theme === "dark"
+                ? "bg-[#1F222A] text-white"
+                : "bg-gray-100 text-black"
+            }`}
+          >
             <Pie data={callDirectionData} className="my-5" />
           </div>
         </div>
-        <div className="flex flex-1 flex-col gap-5 items-center justify-center bg-gray-100 p-5 rounded-xl">
+        <div
+          className={`flex flex-1 flex-col gap-5 items-center justify-center  p-5 rounded-xl ${
+            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-100 text-black"
+          }`}
+        >
           <h6 className="text-lg font-semibold w-full text-start">
             Call Status
           </h6>
 
-          <div className="w-[70%]">
-            <Pie data={callStatusData} className="my-5"/>
+          <div
+            className={`w-[70%]  ${
+              theme === "dark"
+                ? "bg-[#1F222A] text-white"
+                : "bg-gray-100 text-black"
+            }`}
+          >
+            <Pie data={callStatusData} className="my-5" />
           </div>
         </div>
       </div>
