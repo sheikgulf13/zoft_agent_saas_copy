@@ -50,6 +50,7 @@ const Actions = () => {
     phoneAgentName,
     phoneAgentPurpose,
     language,
+    gender,
     voice,
     countryCode,
     phoneNumber,
@@ -122,7 +123,7 @@ const Actions = () => {
     formdata.append("prompt", prompt);
     formdata.append("script", script)
     // formdata.append("use_tools", "false");
-    // formdata.append("voice_gender", gender);
+    formdata.append("voice_gender", gender);
     // formdata.append("voice_adv_setting", advancedSetting ? "true" : "false");
     // formdata.append("voice_adv_stability", stability);
     // formdata.append("voice_adv_similarity", similarity);
