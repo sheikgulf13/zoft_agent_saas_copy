@@ -11,6 +11,7 @@ import { ContainedButton } from "../buttons/ContainedButton";
 import { cloneDeep } from "lodash";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import RequiredParam from "@/Components/RequiredParam";
 
 const name = {
   label: "Name",
@@ -135,25 +136,24 @@ function ActionForm({
   const [selectedAction, setSelectedAction] = useState(
     forPhoneActions ? phoneActions[0] : chatActions[0]
   );
+  const [parameterData, setParameterData] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [editorContent, setEditorContent] = useState(
     formData?.data?.content || ""
   ); // State for Quill editor
-
+  
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
-
+  
   useEffect(() => {
     if (formData?.data?.forward_to) {
-    
       setPhoneNumber(formData?.data?.forward_to);
     }
   }, [formData?.data?.forward_to]);
 
   const handlePhoneNumberChange = (phone) => {
-
     setPhoneNumber(phone || "");
     setFormData((prev) => ({
       ...prev,
@@ -291,6 +291,10 @@ function ActionForm({
       setEditorContent(""); // Reset editor content
     }
   }, [initialData]);
+
+  useEffect(() => {
+    
+  }, [parameterData]);
 
   const handleActionChange = (e) => {
     const actionId = parseInt(e.target.value);
@@ -686,6 +690,7 @@ function ActionForm({
     }
   };
 
+
   return (
     <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
       <h2 className="text-xl font-semibold mb-[1vw]">Action Form</h2>
@@ -791,12 +796,19 @@ function ActionForm({
                   </label>
                 )}
               </div>
+
               {GetField(field)}
               {errors[field.value] && (
                 <p className="text-red-500 text-xs">{errors[field.value]}</p>
               )}
             </div>
           ))}
+        </div>
+        <div>
+          <RequiredParam
+            parameterData={parameterData}
+            setParameterData={setParameterData}
+          />
         </div>
       </form>
       <div className="flex items-center justify-between mt-[15px]">
