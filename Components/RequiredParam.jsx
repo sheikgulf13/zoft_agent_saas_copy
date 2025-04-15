@@ -1,22 +1,37 @@
-import { useState } from "react";
-import { FaChevronDown, FaChevronUp,FaPlusCircle,FaTrash  } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaPlusCircle,
+  FaTrash,
+} from "react-icons/fa";
 
-const RequiredParam = ({parameterData, setParameterData}) => {
-    
+const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
   const [modal, setModal] = useState(false);
+
+  useEffect(() => {
+    setModal(true);
+  }, [parameterData]);
+
   const addParameter = () => {
     console.log(parameterData);
-    
+
     setParameterData([
       ...parameterData,
-      { key: "", defaultValue: "", description: "" },
+      { key: "", value: "", description: "" },
     ]);
   };
 
   // Update any field
+  // const updateParameter = (index, field, value) => {
+  //   const updated = [...parameterData];
+  //   updated[index][field] = value;
+  //   setParameterData(updated);
+  // };
   const updateParameter = (index, field, value) => {
-    const updated = [...parameterData];
-    updated[index][field] = value;
+    const updated = parameterData.map((param, i) =>
+      i === index ? { ...param, [field]: value } : param
+    );
     setParameterData(updated);
   };
 
@@ -27,9 +42,9 @@ const RequiredParam = ({parameterData, setParameterData}) => {
   };
   return (
     <div className="bg-[#f3f4f6] mt-[10px] px-5 rounded-md">
-      <div className="flex justify-between py-2">
+      <div className="flex justify-between py-3 cursor-pointer items-center" onClick={() => setModal(!modal)}>
         <h1>Required Parameters</h1>
-        <h1 className="cursor-pointer" onClick={() => setModal(!modal)}>
+        <h1 className="">
           {modal ? <FaChevronUp /> : <FaChevronDown />}
         </h1>
       </div>
@@ -58,35 +73,43 @@ const RequiredParam = ({parameterData, setParameterData}) => {
             <label className="block text-sm font-medium mb-1">Key</label>
             <input
               type="text"
-              className="w-full border px-3 py-2 mb-3 rounded-md"
+              className="w-full border px-3 py-2 rounded-md text-sm"
               placeholder="Parameter name"
               value={param.key}
               onChange={(e) => updateParameter(index, "key", e.target.value)}
             />
-
+            {formSubmitted && !param.key && (
+              <p className="text-red-500 text-sm mb-2">
+                * This field is required.
+              </p>
+            )}
             <label className="block text-sm font-medium mb-1">
               Default Value (optional)
             </label>
             <input
               type="text"
-              className="w-full border px-3 py-2 mb-3 rounded-md"
+              className="w-full border px-3 py-2 mb-3 rounded-md text-sm"
               placeholder="Default value"
-              value={param.defaultValue}
-              onChange={(e) =>
-                updateParameter(index, "defaultValue", e.target.value)
-              }
+              value={param.value}
+              onChange={(e) => updateParameter(index, "value", e.target.value)}
             />
 
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1">
+              Description
+            </label>
             <textarea
-              className="w-full border px-3 py-2 mb-3 rounded-md"
+              className="w-full border px-3 py-2 rounded-md text-sm"
               placeholder="Explain what this parameter is for..."
               value={param.description}
               onChange={(e) =>
                 updateParameter(index, "description", e.target.value)
               }
             />
-
+            {formSubmitted && !param.description && (
+              <p className="text-red-500 text-sm mb-2">
+                * This field is required.
+              </p>
+            )}
             <button
               type="button"
               onClick={() => deleteParameter(index)}
@@ -96,11 +119,12 @@ const RequiredParam = ({parameterData, setParameterData}) => {
             </button>
           </div>
         ))}
-        <div className="bg-white border p-2 rounded-md my-2 item-center flex justify-center cursor-pointer gap-2" onClick={addParameter}>
-            <FaPlusCircle className="text-purple-500"/>
-           <h1 className="text-purple-500 text-sm">
-             Add Parameter
-            </h1>
+        <div
+          className="bg-white border p-2 rounded-md my-2 item-center flex justify-center cursor-pointer gap-2"
+          onClick={addParameter}
+        >
+          <FaPlusCircle className="text-purple-500" />
+          <h1 className="text-purple-500 text-sm">Add Parameter</h1>
         </div>
       </div>
     </div>

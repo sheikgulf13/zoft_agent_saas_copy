@@ -8,7 +8,13 @@ import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
 import ActionForm from "./ActionForm";
-import { removeAction, upsertAction, setPrompt, setScript, setPhoneAgentId } from "@/store/actions/phoneAgentActions";
+import {
+  removeAction,
+  upsertAction,
+  setPrompt,
+  setScript,
+  setPhoneAgentId,
+} from "@/store/actions/phoneAgentActions";
 import DeleteIcon from "../Icons/DeleteIcon";
 import SettingIcon from "../Icons/SettingIcon";
 import { v4 as uuidv4 } from "uuid";
@@ -19,6 +25,9 @@ import { ContainedButton } from "../buttons/ContainedButton";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { CookieManager } from "@/utility/cookie-manager";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
+
+import { IoMailOutline } from "react-icons/io5";
+import { MdOutlineWebhook } from "react-icons/md";
 
 const promptFields = [
   {
@@ -59,7 +68,7 @@ const Actions = () => {
     companyServices,
     createdActions,
     prompt,
-    script
+    script,
   } = useSelector((state) => state.phoneAgent);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
@@ -87,8 +96,8 @@ const Actions = () => {
   };
 
   const handleCreateAction = (newAction) => {
-    console.log('checking action', newAction);
-    
+    console.log("checking action", newAction);
+
     const actionWithId = { ...newAction, id: newAction.id || uuidv4() }; // Generate a unique ID
     console.log(actionWithId.id);
     dispatch(upsertAction(actionWithId));
@@ -96,13 +105,13 @@ const Actions = () => {
   };
 
   const handleEditAction = (action) => {
-    const editAction = createdActions.find((act) => act.id === action)
-    
+    const editAction = createdActions.find((act) => act.id === action);
+
     setSelectedAction(editAction); // Set the selected action for editing
     setTimeout(() => {
-      console.log('selected action to edit', selectedAction);
-      console.log('selected action checking', editAction);
-    }, 1000)
+      console.log("selected action to edit", selectedAction);
+      console.log("selected action checking", editAction);
+    }, 1000);
     setShowForm(true); // Show the form for editing
   };
 
@@ -113,7 +122,7 @@ const Actions = () => {
     formdata.append("phone_agent_name", phoneAgentName);
     formdata.append("conversation_purpose", phoneAgentPurpose);
     formdata.append("language", language);
-    formdata.append("voice_id", voice)
+    formdata.append("voice_id", voice);
     formdata.append("country_code", countryCode);
     formdata.append("phone_number", phoneNumber);
     formdata.append("company_name", companyName);
@@ -121,7 +130,7 @@ const Actions = () => {
     formdata.append("company_products_services", companyServices);
     formdata.append("created_actions", JSON.stringify(createdActions));
     formdata.append("prompt", prompt);
-    formdata.append("script", script)
+    formdata.append("script", script);
     // formdata.append("use_tools", "false");
     formdata.append("voice_gender", gender);
     // formdata.append("voice_adv_setting", advancedSetting ? "true" : "false");
@@ -142,7 +151,7 @@ const Actions = () => {
 
     console.log(response);
 
-    if(response.status === 200) {
+    if (response.status === 200) {
       response = await response.json();
       dispatch(setPhoneAgentId(response.phone_agent_id));
       navigate.push("/workspace/agents/phone/preview");
@@ -239,9 +248,25 @@ const Actions = () => {
                       createdActions?.map((action, index) => (
                         <div
                           key={action.id}
-                          className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${index !== createdActions?.length -1 && 'border-b-[1px] pb-[2.5%] border-gray-300'} flex justify-between items-center`}
+                          className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${
+                            index !== createdActions?.length - 1 &&
+                            "border-b-[1px] pb-[2.5%] border-gray-300"
+                          } flex justify-between items-center`}
                         >
-                          <p className="text-md">{action.action_type} - {action.action_name}</p>
+                          <div className="flex gap-1">
+                            {action.action_type === "Send email" ? (
+                              <IoMailOutline className="text-2xl" />
+                            ) : (
+                              <MdOutlineWebhook className="text-2xl" />
+                            )}
+
+                            <p>
+                              <span className="font-bold">
+                                {action.action_type}
+                              </span>{" "}
+                              : {action.action_name}
+                            </p>
+                          </div>
                           <div className="flex">
                             <button
                               onClick={() => handleEditAction(action.id)}
@@ -321,7 +346,9 @@ const Actions = () => {
                   <textarea
                     type="text"
                     value={prompt}
-                    onChange={(event) => dispatch(setPrompt(event.target.value))}
+                    onChange={(event) =>
+                      dispatch(setPrompt(event.target.value))
+                    }
                     ref={promptRef}
                     //onChange={(e) => dispatch(setopenaikey(e.target.value))}
                     //value={openaikey}

@@ -91,6 +91,7 @@ const Actions = () => {
 
   const handleEditAction = (action) => {
     const editAction = createdActions.find((act) => act.id === action);
+    console.log(editAction);
 
     setSelectedAction(editAction); // Set the selected action for editing
     setTimeout(() => {

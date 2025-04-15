@@ -136,17 +136,22 @@ function ActionForm({
   const [selectedAction, setSelectedAction] = useState(
     forPhoneActions ? phoneActions[0] : chatActions[0]
   );
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [parameterData, setParameterData] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [editorContent, setEditorContent] = useState(
     formData?.data?.content || ""
   ); // State for Quill editor
-  
+
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
-  
+
+  useEffect(() => {
+    setParameterData(initialData?.parameters || []);
+  }, []);
+
   useEffect(() => {
     if (formData?.data?.forward_to) {
       setPhoneNumber(formData?.data?.forward_to);
@@ -293,7 +298,12 @@ function ActionForm({
   }, [initialData]);
 
   useEffect(() => {
-    
+    console.log(formData);
+
+    setFormData((prev) => ({
+      ...prev,
+      parameters: parameterData,
+    }));
   }, [parameterData]);
 
   const handleActionChange = (e) => {
@@ -401,7 +411,15 @@ function ActionForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
+    const allValid = parameterData.every(
+      (param) => param.key.trim() && param.description.trim()
+    );
 
+    if (!allValid) {
+      console.log("Validation failed!");
+      return;
+    }
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -443,7 +461,7 @@ function ActionForm({
   }
 
   const GetField = (field) => {
-    console.log(field);
+    // console.log(field);
     switch (field.label) {
       case "Instructions": {
         return (
@@ -690,7 +708,6 @@ function ActionForm({
     }
   };
 
-
   return (
     <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
       <h2 className="text-xl font-semibold mb-[1vw]">Action Form</h2>
@@ -808,6 +825,7 @@ function ActionForm({
           <RequiredParam
             parameterData={parameterData}
             setParameterData={setParameterData}
+            formSubmitted={formSubmitted}
           />
         </div>
       </form>
