@@ -83,7 +83,7 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
                 * This field is required.
               </p>
             )}
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1 mt-3">
               Default Value (optional)
             </label>
             <input

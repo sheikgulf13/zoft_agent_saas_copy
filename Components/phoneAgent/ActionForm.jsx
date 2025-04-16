@@ -149,7 +149,7 @@ function ActionForm({
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
 
   useEffect(() => {
-    setParameterData(initialData?.parameters || []);
+    setParameterData(initialData?.required_params || []);
   }, []);
 
   useEffect(() => {
@@ -288,7 +288,7 @@ function ActionForm({
               (action) => action.name === initialData.action_type
             )
       );
-      // console.log(initialData?.data?.content);
+      // console.log(initialData?.data?.content)
       
       setFormData(initialData);
       setEditorContent(initialData?.data?.content || ""); // Initialize editor content
