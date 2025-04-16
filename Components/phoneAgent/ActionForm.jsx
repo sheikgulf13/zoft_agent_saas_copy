@@ -288,8 +288,10 @@ function ActionForm({
               (action) => action.name === initialData.action_type
             )
       );
+      console.log(initialData?.data?.content);
+      
       setFormData(initialData);
-      setEditorContent(initialData.Content || ""); // Initialize editor content
+      setEditorContent(initialData?.data?.content || ""); // Initialize editor content
     } else {
       setSelectedAction(forPhoneActions ? phoneActions[0] : chatActions[0]);
       setFormData({});
@@ -302,7 +304,7 @@ function ActionForm({
 
     setFormData((prev) => ({
       ...prev,
-      parameters: parameterData,
+      required_params: parameterData,
     }));
   }, [parameterData]);
 

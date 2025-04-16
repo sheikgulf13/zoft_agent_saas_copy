@@ -27,6 +27,8 @@ import { CookieManager } from "@/utility/cookie-manager";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 
 import { IoMailOutline } from "react-icons/io5";
+import { BsFillTelephoneForwardFill } from "react-icons/bs";
+
 import { MdOutlineWebhook } from "react-icons/md";
 
 const promptFields = [
@@ -257,7 +259,7 @@ const Actions = () => {
                             {action.action_type === "Send email" ? (
                               <IoMailOutline className="text-2xl" />
                             ) : (
-                              <MdOutlineWebhook className="text-2xl" />
+                              <BsFillTelephoneForwardFill  className="text-2xl" />
                             )}
 
                             <p>
