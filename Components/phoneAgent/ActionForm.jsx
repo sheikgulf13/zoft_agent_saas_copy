@@ -288,7 +288,7 @@ function ActionForm({
               (action) => action.name === initialData.action_type
             )
       );
-      console.log(initialData?.data?.content);
+      // console.log(initialData?.data?.content);
       
       setFormData(initialData);
       setEditorContent(initialData?.data?.content || ""); // Initialize editor content
