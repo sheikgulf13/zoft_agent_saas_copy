@@ -12,7 +12,7 @@ const Page = () => {
 
   const authenticateCalendly = () => {
     const url =
-      "https://auth.calendly.com/oauth/authorize?client_id=jq3Jg3umJnGpDjSjfRtdrvt3SZE9yVxhiVdcBNgtbiI&response_type=code&redirect_uri=https://api.zoft.ai/dashboard";
+      "https://auth.calendly.com/oauth/authorize?client_id=jq3Jg3umJnGpDjSjfRtdrvt3SZE9yVxhiVdcBNgtbiI&response_type=code&redirect_uri=https://app.zoft.ai/dashboard";
 
     window.open(url);
   };
