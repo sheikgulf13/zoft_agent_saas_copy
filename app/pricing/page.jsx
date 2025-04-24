@@ -168,6 +168,11 @@ const PricingPage = () => {
   const isUpgradable = (planType, isYearlyPlan) => {
     if (!currentPlanType) return true; // No current plan, can subscribe to any
     
+    // Block yearly to monthly transitions
+    if (isCurrentYearly && !isYearlyPlan) {
+      return false;
+    }
+    
     // Allow upgrade from monthly to yearly for same tier
     if (planType === currentPlanType && isYearlyPlan && !isCurrentYearly) {
       return true;
