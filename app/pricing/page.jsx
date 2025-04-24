@@ -121,10 +121,16 @@ const PricingPage = () => {
   }
 
   const isYearly = billingCycle === 'yearly';
+  
+  // Duration in unix timestamp
+  const duration = currentSubscription?.end_date - currentSubscription?.start_date;
+
+  // Duration in days
+  const durationDays = Math.ceil(duration / (1000 * 60 * 60 * 24));
 
   // Format the plans from the API response
   const formattedPlans = plans && plans.length > 0 
-    ? plans.map(plan => formatPlanData(plan, isYearly))
+    ? plans.map(plan => formatPlanData(plan, isYearly, durationDays))
     : [];
     
   // Sort plans in the correct order
@@ -220,7 +226,7 @@ const PricingPage = () => {
             Your Current Plan: {currentSubscription?.subscription_type?.subscription_type || 'Unknown'}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem', lineHeight: 1.5 }}>
-            Status: {currentSubscription?.status || 'N/A'} | Duration: {currentSubscription?.duration || 0} days | Start Date: {currentSubscription?.start_date ? new Date(currentSubscription.start_date).toLocaleDateString() : 'N/A'} | End Date: {currentSubscription?.end_date ? new Date(currentSubscription.end_date).toLocaleDateString() : 'N/A'}
+            Status: {currentSubscription?.status || 'N/A'} | Duration: {durationDays || 0} days | Start Date: {currentSubscription?.start_date ? new Date(currentSubscription.start_date).toLocaleDateString() : 'N/A'} | End Date: {currentSubscription?.end_date ? new Date(currentSubscription.end_date).toLocaleDateString() : 'N/A'}
           </Typography>
         </Box>
       )}
