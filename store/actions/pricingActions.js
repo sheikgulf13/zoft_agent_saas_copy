@@ -100,7 +100,7 @@ export const fetchCurrentSubscription = () => async (dispatch) => {
         status: "ACTIVE",
         subscription_type: {
           id: 3,
-          subscription_type: "SILVER",
+          subscription_type: "FREE",
           agent_limit: 50,
           conversation_limit: 2500,
           voice_seconds_limit: 6000,

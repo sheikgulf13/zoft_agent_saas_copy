@@ -174,7 +174,16 @@ const PricingPage = () => {
     }
     
     // Allow upgrade to higher tier
-    return planOrder[planType] > planOrder[currentPlanType];
+    if (planOrder[planType] > planOrder[currentPlanType]) {
+      return true;
+    }
+    
+    // Allow monthly to yearly even for lower tier plans
+    if (isYearlyPlan && !isCurrentYearly) {
+      return true;
+    }
+    
+    return false;
   };
 
   // Function to check if a plan is the current subscription
