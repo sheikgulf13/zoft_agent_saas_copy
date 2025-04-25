@@ -88,6 +88,11 @@ const chatActions = [
       requestDataType,
     ],
   },
+  {
+    id: 4,
+    name: "Booking appointment",
+    fields: [name, instructions],
+  },
 ];
 const phoneActions = [
   {
@@ -145,9 +150,10 @@ function ActionForm({
   ); // State for Quill editor
 
   const [isHTTPActive, setIsHTTPActive] = useState(false);
+  const [selectedCalenderValue, setSelectedCalenderValue] = useState(null);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
-
+  const [fileName, setFileName] = useState("");
   useEffect(() => {
     setParameterData(initialData?.required_params || []);
   }, []);
@@ -158,6 +164,18 @@ function ActionForm({
     }
   }, [formData?.data?.forward_to]);
 
+  const handleCalenderChange = (e) => {
+    setSelectedCalenderValue(e.target.value);
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.name.endsWith(".json")) {
+      setFileName(file.name);
+    } else {
+      alert("Please upload a valid .json file.");
+      setFileName("");
+    }
+  };
   const handlePhoneNumberChange = (phone) => {
     setPhoneNumber(phone || "");
     setFormData((prev) => ({
@@ -289,7 +307,7 @@ function ActionForm({
             )
       );
       // console.log(initialData?.data?.content)
-      
+
       setFormData(initialData);
       setEditorContent(initialData?.data?.content || ""); // Initialize editor content
     } else {
@@ -310,6 +328,8 @@ function ActionForm({
 
   const handleActionChange = (e) => {
     const actionId = parseInt(e.target.value);
+    console.log(actionId);
+
     const action = forPhoneActions
       ? phoneActions.find((action) => action.id === actionId)
       : chatActions.find((action) => action.id === actionId);
@@ -318,6 +338,7 @@ function ActionForm({
     setFormData({});
     setErrors({});
     setEditorContent(""); // Reset editor content on action change
+    setSelectedCalenderValue("");
   };
 
   const handleChange = (e, _id, val) => {
@@ -822,6 +843,73 @@ function ActionForm({
               )}
             </div>
           ))}
+          {selectedAction.name === "Booking appointment" && (
+            <>
+              <div className="flex items-center gap-2">
+                <label htmlFor="calendar" className="font-medium">
+                  Calendar
+                </label>
+                <select
+                  name="calendar"
+                  id="calendar"
+                  value={selectedCalenderValue}
+                  onChange={handleCalenderChange}
+                  className="mt-1 block flex-1 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+                >
+                  <option value="" disabled hidden>
+                    Select Method
+                  </option>
+                  <option value="Google Calendar">Google Calendar</option>
+                  <option value="Calendy">Calendy</option>
+                </select>
+              </div>
+
+              {selectedCalenderValue === "Calendy" ? (
+                <div className="mt-4 text-blue-600 font-medium">
+                  You have selected Calendy
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <div className="mt-4 flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg">
+                      <label className="cursor-pointer bg-[#702963] hover:bg-[#702963] text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition-all duration-200">
+                        Upload JSON File
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+
+                      {fileName && (
+                        <p className="mt-4 text-green-600 font-medium">
+                          ✅ File uploaded:{" "}
+                          <span className="font-semibold">{fileName}</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-2">
+                    <label
+                      htmlFor="calendarId"
+                      className=" font-medium text-sm mb-1"
+                    >
+                      Choose Calendar ID
+                    </label>
+                    <select
+                      name="id"
+                      id="calendarId"
+                      className=" w-4/6 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+                    >
+                      <option value="id1">ID 1</option>
+                      <option value="id2">ID 2</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
         <div>
           <RequiredParam
