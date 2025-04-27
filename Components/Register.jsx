@@ -81,8 +81,7 @@ const Register = () => {
     }
 
     if (check && username && email && password) {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      console.log("register data", data);
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: username } } });
       if (error) {
         console.error("Sign up error:", error.message);
       } else {

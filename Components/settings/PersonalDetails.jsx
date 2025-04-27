@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GradientButton from '../buttons/GradientButton';
 import { updateProfile } from '../../store/reducers/profileSlice';
 import useTheme from "next-theme";
 import { ContainedButton } from '../buttons/ContainedButton';
-
+import { getProfileDetailsApi } from '../../api/profile/profile-details';
 const PersonalDetails = () => {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.profile);
   const [formData, setFormData] = useState(profile);
   const [isEditing, setIsEditing] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  const getProfileDetails = async () => {
+    const response = await getProfileDetailsApi();
+    setFormData(response);
+  }
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -31,6 +36,10 @@ const PersonalDetails = () => {
     setIsEditing(true);
   };
 
+  useEffect(() => {
+    getProfileDetails();
+  }, []);
+
   return (
     <div className={` Hmd p-[1.3vw] rounded-[0.417vw] shadow-md h-[55vh] w-[35vw] relative ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
       <form className={`flex flex-col justify-evenly items-start px-[2vw] gap-[1.5vw] ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
@@ -46,7 +55,7 @@ const PersonalDetails = () => {
             type="text"
             id="displayName"
             name="displayName"
-            value={formData.displayName}
+            value={formData.username}
             onChange={changeHandler}
             disabled={!isEditing}
             className={`w-full text-zinc-400 pl-2 pr-[3.5vw] py-[0.8vh]  ${isEditing ? 'border-[1.5px]' : 'border-0' } rounded-[0.417vw] focus:outline-none focus:ring-2 focus:ring-purple-500 ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-50 text-black'}`}
@@ -83,7 +92,7 @@ const PersonalDetails = () => {
               type="tel"
               id="phoneNumber"
               name="phoneNumber"
-              value={formData.phoneNumber}
+              value={formData.phone_number}
               onChange={changeHandler}
               disabled={!isEditing}
               className={`w-full pl-2 text-zinc-400 py-[0.8vh] ${isEditing ? 'border-[1.5px]' : 'border-0' }  rounded-r-[.4vw] focus:outline-none focus:ring-2 focus:ring-purple-500 ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-50 text-black'}`}

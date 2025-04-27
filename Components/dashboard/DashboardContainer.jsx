@@ -1,6 +1,6 @@
 "use client";
 
-import { getApiConfig, getApiHeaders } from "@/utility/api-config";
+import { getDashboardDataApi } from "@/api/dashboard/dashboard";
 import useTheme from "next-theme";
 import React, { useEffect, useState } from "react";
 import {
@@ -34,15 +34,9 @@ const DashboardContainer = () => {
   const [data, setData] = useState();
 
   const fetchDashboardData = async () => {
-    const url = process.env.url;
-    const response = await fetch(`${url}/dashboard`, {
-      ...getApiConfig(),
-      method: "GET",
-      headers: new Headers({ ...getApiHeaders() }),
-    });
+    const response = await getDashboardDataApi()
 
-    const res = await response.json();
-    setData(res);
+    setData(response);
   };
 
   useEffect(() => {

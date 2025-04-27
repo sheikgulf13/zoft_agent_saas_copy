@@ -14,6 +14,10 @@ const getWorkSpaceListApi = async () => {
     cache: "no-cache",
   });
 
+  if(response.status === 401) {
+    return window.location.href = "/register";
+  }
+
   if (response.status === 200) {
     response = await response.json();
 

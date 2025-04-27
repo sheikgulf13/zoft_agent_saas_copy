@@ -173,18 +173,13 @@ const PricingPage = () => {
       return false;
     }
     
-    // Allow upgrade from monthly to yearly for same tier
-    if (planType === currentPlanType && isYearlyPlan && !isCurrentYearly) {
-      return true;
-    }
-    
-    // Allow upgrade to higher tier
-    if (planOrder[planType] > planOrder[currentPlanType]) {
-      return true;
-    }
-    
-    // Allow monthly to yearly even for lower tier plans
+    // Allow upgrade from monthly to yearly for the same plan only
     if (isYearlyPlan && !isCurrentYearly) {
+      return true;
+    }
+    
+    // Allow upgrade to higher tier only if same billing cycle
+    if (planOrder[planType] > planOrder[currentPlanType] && isYearlyPlan === isCurrentYearly) {
       return true;
     }
     
@@ -373,7 +368,7 @@ const PricingPage = () => {
                         onClick={() => handleSubscription(plan)}
                         disabled={paymentLoading}
                       >
-                        {paymentLoading ? <CircularProgress size={20} /> : plan.name.toUpperCase() === currentPlanType && plan.isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                        {plan.name.toUpperCase() === currentPlanType && plan.isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
                       </Button>
                     )
                   )
@@ -468,7 +463,7 @@ const PricingPage = () => {
                       })}
                       disabled={paymentLoading}
                     >
-                      {paymentLoading ? <CircularProgress size={20} /> : currentPlanType === 'BRONZE' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                      {currentPlanType === 'BRONZE' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
                     </Button>
                   )
                 )}
@@ -566,7 +561,7 @@ const PricingPage = () => {
                       })}
                       disabled={paymentLoading}
                     >
-                      {paymentLoading ? <CircularProgress size={20} /> : currentPlanType === 'SILVER' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                      {currentPlanType === 'SILVER' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
                     </Button>
                   )
                 )}

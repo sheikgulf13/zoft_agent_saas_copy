@@ -1,17 +1,21 @@
 import { getApiConfig, getApiHeaders } from "../../utility/api-config";
 
-const getPricingPlansApi = async () => {
+const getProfileDetailsApi = async () => {
     const url = process.env.url;
     const config = getApiConfig();
     
     try {
-        let response = await fetch(`${url}/public/get/pricing`, {
+        let response = await fetch(`${url}/profile`, {
             method: 'GET',
             ...config,
-           headers: {
-            ...getApiHeaders(),
-           }
+            headers: {
+                ...getApiHeaders(),
+            }
         });
+
+        if(response.status === 401) {
+            return window.location.href = "/register";
+        }
         
         if (!response.ok) {
             throw new Error('Failed to fetch pricing plans');
@@ -24,30 +28,33 @@ const getPricingPlansApi = async () => {
     }
 };
 
-const getCurrentSubscriptionApi = async () => {
+const updateProfileDetailsApi = async (data) => {
     const url = process.env.url;
     const config = getApiConfig();
-    const headers = getApiHeaders();
     
     try {
-        let response = await fetch(`${url}/public/subscription/current`, {
+        let response = await fetch(`${url}/profile`, {
             method: 'POST',
+            ...config,
             headers: {
-                ...headers,
-                'Content-Type': 'application/json'
+                ...getApiHeaders(),
             },
-            ...config
+            body: data
         });
+
+        if(response.status === 401) {
+            return window.location.href = "/login";
+        }
         
         if (!response.ok) {
-            throw new Error('Failed to fetch current subscription');
+            throw new Error('Failed to fetch pricing plans');
         }
         
         return await response.json();
     } catch (error) {
-        console.error('Error fetching current subscription:', error);
+        console.error('Error fetching pricing plans:', error);
         return null;
     }
 };
 
-export { getPricingPlansApi, getCurrentSubscriptionApi };
+export { getProfileDetailsApi, updateProfileDetailsApi };

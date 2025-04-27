@@ -13,6 +13,10 @@ const getIntegrationList = async () => {
       }),
     });
 
+    if(response.status === 401) {
+      return window.location.href = "/register";
+    }
+
     if (response.status === 200) {
       response = await response.json();
       return response;
