@@ -19,6 +19,7 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import ActionForm from "../phoneAgent/ActionForm";
 import { IoMailOutline } from "react-icons/io5";
 import { MdOutlineWebhook } from "react-icons/md";
+import { LuCalendarClock } from "react-icons/lu";
 
 const promptFields = [
   {
@@ -160,9 +161,9 @@ const Actions = () => {
                       <div className="flex gap-1">
                         {action.action_type === "Send email" ? (
                           <IoMailOutline className="text-2xl" />
-                        ) : (
+                        ) : action.action_type === "Webhook" ? (
                           <MdOutlineWebhook className="text-2xl" />
-                        )}
+                        ) : <LuCalendarClock  className="text-2xl" /> }
 
                         <p>
                           <span className="font-bold">

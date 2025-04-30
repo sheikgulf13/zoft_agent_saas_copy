@@ -267,10 +267,9 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
         {name.length < 40 ? (
           <span>{name}</span>
         ) : (
-          <div className="group relative">
-            <span className="absolute bg-gray-400 text-white top-[-35px] left-0 w-full
-             rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-              {name}
+          <div className="group relative inline-block">
+          <span className="absolute bg-gray-400 top-[-35px] left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block min-w-max z-10">
+            {name}
             </span>
             <span className="cursor-pointer">{name.slice(0, 40)}.....</span>
           </div>

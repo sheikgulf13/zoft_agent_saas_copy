@@ -118,6 +118,11 @@ const phoneActions = [
       requestDataType,
     ],
   },
+  {
+    id: 4,
+    name: "Booking appointment",
+    fields: [name, instructions],
+  },
 ];
 
 // Mapping fields to help text
