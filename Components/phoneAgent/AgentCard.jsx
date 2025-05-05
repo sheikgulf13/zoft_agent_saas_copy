@@ -25,7 +25,7 @@ const AgentList = ({ agent }) => {
     deletePhoneAgentApi(agentId);
   };
 
-  console.log(agent);
+  // console.log(agent);
 
   return (
     <div

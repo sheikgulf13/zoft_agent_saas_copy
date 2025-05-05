@@ -68,7 +68,7 @@ const Configure = () => {
       return (
         (!gender || item.labels.gender === gender) &&
         (!language ||
-          language_mapping_accent[language].includes(item.labels.accent))
+          language_mapping_accent[language]?.includes(item.labels.accent))
       );
     });
 

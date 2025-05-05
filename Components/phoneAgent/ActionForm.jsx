@@ -857,7 +857,7 @@ function ActionForm({
               )}
             </div>
           ))}
-          {selectedAction.name === "Booking appointment" && (
+          {selectedAction?.name === "Booking appointment" && (
             <>
               <div className="flex items-center gap-2">
                 <label htmlFor="calendar" className="font-medium">

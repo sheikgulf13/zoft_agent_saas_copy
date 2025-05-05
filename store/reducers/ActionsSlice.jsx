@@ -22,6 +22,18 @@ const ActionsSlice = createSlice({
         state.createdActions.push(action.payload);
       }
     },
+    addMultipleActions: (state, action) => {
+      const newActions = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      newActions.forEach((item) => {
+        const exists = state.createdActions.some((act) => act.id === item.id);
+        if (!exists) {
+          state.createdActions.push(item);
+        }
+      });
+    },
     removeAction: (state, action) => {
       console.log("Current actions before removal:", state.createdActions);
       console.log(
@@ -43,12 +55,12 @@ const ActionsSlice = createSlice({
       state.createdActions = updatedActions;
     },
     clearState: (state, action) => {
-      state = {
-        createdActions: [],
-      };
+      state.createdActions = [];
+      // console.log("cleared state"+ state);
+      
     },
   },
 });
 
-export const { upsertAction, removeAction, clearState } = ActionsSlice.actions;
-export default ActionsSlice.reducer;
+export const { upsertAction, removeAction, clearState,addMultipleActions } = ActionsSlice.actions;
+export default ActionsSlice.reducer; 

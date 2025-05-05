@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
 import { useRouter } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
-import { removeAction, upsertAction } from "@/store/actions/actionActions";
+import {
+  clearState,
+  removeAction,
+  upsertAction,
+} from "@/store/actions/actionActions";
+import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentActions";
 import DeleteIcon from "../Icons/DeleteIcon";
 import SettingIcon from "../Icons/SettingIcon";
 import { v4 as uuidv4 } from "uuid";
@@ -20,6 +25,8 @@ import ActionForm from "../phoneAgent/ActionForm";
 import { IoMailOutline } from "react-icons/io5";
 import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
+import { addMultipleActions } from "@/store/reducers/ActionsSlice";
+import { upsertAction as upsertActionPhone } from "@/store/reducers/phoneAgentSlice";
 
 const promptFields = [
   {
@@ -54,8 +61,22 @@ const actions = [
 ];
 
 const Actions = () => {
+  const { selectedChatAgent } = useSelector((state) => state.selectedData);
+  const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
+
   const dispatch = useDispatch();
-  const { createdActions } = useSelector((state) => state.actions);
+  const { createdActions: createdActionschat } = useSelector(
+    (state) => state.actions
+  );
+  const { createdActions: createdActionsPhone } = useSelector(
+    (state) => state.phoneAgent
+  );
+
+  const createdActions =
+    createdActionschat && createdActionschat.length > 0
+      ? createdActionschat
+      : createdActionsPhone[0];
+
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -67,7 +88,40 @@ const Actions = () => {
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
+  // console.log(createdActions);
+  
+  // console.log(selectedChatAgent?.actions);
+  console.log("selectedChatAgent" , selectedChatAgent?.actions && JSON.parse(selectedChatAgent?.actions));
+  console.log("selectedPhoneAgent" , selectedPhoneAgent?.actions && JSON.parse(selectedPhoneAgent?.actions));
+  console.log("createdActions", createdActions);
 
+  const handleClear = () => {
+    dispatch(clearState());
+    dispatch(clearPhoneAgentState());
+  };
+  
+
+  useEffect(() => {
+    handleClear();
+    try {
+      if (selectedChatAgent?.actions) {
+        const selectedData = JSON.parse(selectedChatAgent?.actions);
+        if (selectedData) {
+          dispatch(addMultipleActions(selectedData));
+        }
+      }
+      if (selectedPhoneAgent?.actions) {
+        const selectedData = JSON.parse(selectedPhoneAgent?.actions);
+        if (selectedData) {
+          dispatch(upsertActionPhone(selectedData));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to parse actions:", error);
+    }
+  }, [selectedChatAgent]);
+
+  console.log("createdActions", createdActions);
   const toggleForm = () => {
     setShowForm(!showForm);
     if (showForm) {
@@ -145,14 +199,14 @@ const Actions = () => {
                   theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
                 }`}
               >
-                {createdActions?.length === 0 ? (
+                {createdActions?.length === 0 || Array.isArray(createdActions[0]) ? (
                   <p className="text-[#9f9f9f] text-[.9vw] text-center font-semibold my-[3%]">
                     No actions created yet.
                   </p>
                 ) : (
                   createdActions?.map((action, index) => (
                     <div
-                      key={action.id}
+                      key={action.id || index}
                       className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${
                         index !== createdActions?.length - 1 &&
                         "border-b-[1px] pb-[2.5%] border-gray-300"
@@ -163,7 +217,9 @@ const Actions = () => {
                           <IoMailOutline className="text-2xl" />
                         ) : action.action_type === "Webhook" ? (
                           <MdOutlineWebhook className="text-2xl" />
-                        ) : <LuCalendarClock  className="text-2xl" /> }
+                        ) : (
+                          <LuCalendarClock className="text-2xl" />
+                        )}
 
                         <p>
                           <span className="font-bold">

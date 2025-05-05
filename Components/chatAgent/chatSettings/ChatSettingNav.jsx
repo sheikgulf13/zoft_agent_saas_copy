@@ -26,6 +26,7 @@ const Content = () => {
     {href: '/workspace/agents/chats/chatsetting/activity', label: 'Activity'},
     {href: '/workspace/agents/chats/chatsetting/source', label: 'Source'},
     {href: '/workspace/agents/chats/chatsetting/connect/embeds', label: 'Connect'},
+    {href: '/workspace/agents/chats/chatsetting/action', label: 'Actions'},
   ]
     
   return (
