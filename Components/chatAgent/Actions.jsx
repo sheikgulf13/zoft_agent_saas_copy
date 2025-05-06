@@ -199,7 +199,7 @@ const Actions = () => {
                   theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
                 }`}
               >
-                {createdActions?.length === 0 || Array.isArray(createdActions[0]) ? (
+                {createdActions?.length === 0  ? (
                   <p className="text-[#9f9f9f] text-[.9vw] text-center font-semibold my-[3%]">
                     No actions created yet.
                   </p>
