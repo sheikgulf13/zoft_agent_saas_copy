@@ -34,6 +34,8 @@ import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentAc
 
 import { MdOutlineWebhook } from "react-icons/md";
 
+import { LuCalendarClock } from "react-icons/lu";
+
 const promptFields = [
   {
     label: "Agent Name",
@@ -57,7 +59,7 @@ const promptFields = [
   },
 ];
 
-const Actions = ({editPage}) => {
+const Actions = ({ editPage }) => {
   const dispatch = useDispatch();
   const {
     phoneAgentType,
@@ -77,7 +79,6 @@ const Actions = ({editPage}) => {
   } = useSelector((state) => state.phoneAgent);
 
   const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
-  
 
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
@@ -96,26 +97,25 @@ const Actions = ({editPage}) => {
   );
   console.log("createdActions", createdActions);
 
-   const handleClear = () => {
-      dispatch(clearPhoneAgentState());
-    };
-  
-    useEffect(() => {
-      handleClear();
-      try {
-        
-        if (selectedPhoneAgent?.actions) {
-          const selectedData = JSON.parse(selectedPhoneAgent?.actions);
-          if (selectedData) {
-            dispatch(upsertActionPhone(selectedData[0]));
-          }
+  const handleClear = () => {
+    dispatch(clearPhoneAgentState());
+  };
+
+  useEffect(() => {
+    handleClear();
+    try {
+      if (selectedPhoneAgent?.actions) {
+        const selectedData = JSON.parse(selectedPhoneAgent?.actions);
+        if (selectedData) {
+          dispatch(upsertActionPhone(selectedData[0]));
         }
-      } catch (error) {
-        console.error("Failed to parse actions:", error);
       }
-    }, [selectedPhoneAgent]);
-  
-    console.log("createdActions", createdActions);
+    } catch (error) {
+      console.error("Failed to parse actions:", error);
+    }
+  }, [selectedPhoneAgent]);
+
+  console.log("createdActions", createdActions);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -200,38 +200,44 @@ const Actions = ({editPage}) => {
       }`}
     >
       <div className="h-full w-full flex flex-col justify-start items-start  px-[2vw] py-[2vw]">
-      {!editPage && <div
-          className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
-            theme === "dark" ? "bg-[#1A1C21] text-white" : "bg-white text-black"
-          }`}
-        >
-          <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-                <TickIcon />
+        {!editPage && (
+          <div
+            className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
+              theme === "dark"
+                ? "bg-[#1A1C21] text-white"
+                : "bg-white text-black"
+            }`}
+          >
+            <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
+              <div className="h-full flex items-center justify-start gap-[.5vw]">
+                <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
+                  <TickIcon />
+                </div>
+                <h2 className="capitalize font-medium Hmd">
+                  phonebot creation
+                </h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">phonebot creation</h2>
-            </div>
 
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+              <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                2
+              <div className="h-full flex items-center justify-start gap-[.5vw]">
+                <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
+                  2
+                </div>
+                <h2 className="capitalize font-medium Hmd">actions</h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">actions</h2>
-            </div>
 
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+              <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                3
+              <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
+                <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
+                  3
+                </div>
+                <h2 className="capitalize font-medium Hmd">Preview</h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">Preview</h2>
             </div>
           </div>
-        </div>}
+        )}
 
         <div className="flex w-full h-[100vh] pb-[2vw] overflow-hidden ">
           <div
@@ -289,10 +295,16 @@ const Actions = ({editPage}) => {
                           } flex justify-between items-center`}
                         >
                           <div className="flex gap-1">
-                            {action.action_type === "email" ? (
+                            {action.action_type === "Send email" ? (
                               <IoMailOutline className="text-2xl" />
-                            ) : (
+                            ) : action.action_type === "Web hooks" ? (
+                              <MdOutlineWebhook className="text-2xl" />
+                            ) : action.action_type === "Booking appointment" ? (
+                              <LuCalendarClock className="text-2xl" />
+                            ) : action.action_type === "Call Forwarding" ? (
                               <BsFillTelephoneForwardFill className="text-2xl" />
+                            ) : (
+                              <></>
                             )}
 
                             <p>
