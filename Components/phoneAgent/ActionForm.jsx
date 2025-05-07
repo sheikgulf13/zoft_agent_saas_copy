@@ -142,6 +142,8 @@ function ActionForm({
   handleCreateAction,
   forPhoneActions,
 }) {
+  console.log(forPhoneActions);
+  
   const dispatch = useDispatch();
   const [selectedAction, setSelectedAction] = useState(
     forPhoneActions ? phoneActions[0] : chatActions[0]

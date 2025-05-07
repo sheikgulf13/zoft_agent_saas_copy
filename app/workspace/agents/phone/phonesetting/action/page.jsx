@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Actions from "../../../../../../Components/chatAgent/Actions";
+import Actions from "../../../../../../Components/phoneAgent/Actions";
 import useTheme from "next-theme";
 import { OutlinedButton } from "@/Components/buttons/OutlinedButton";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -19,7 +19,7 @@ const page = () => {
       >
         <PhoneSettingNav />
       </div>
-      <Actions />
+      <Actions editPage = {true} />
     </div>
   );
 };

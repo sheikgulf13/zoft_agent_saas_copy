@@ -8,8 +8,11 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import ChatSettingNav from "@/Components/chatAgent/chatSettings/ChatSettingNav";
 import { useSelector } from "react-redux";
 import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const page = () => {
+  
+  const router = useRouter();
   const { selectedChatAgent, selectedWorkSpace } = useSelector(
     (state) => state.selectedData
   ); 
@@ -24,9 +27,7 @@ const page = () => {
         <div className="absolute left-[2vw] top-[-.6vw]">
           <OutlinedButton
             onClick={() =>
-              Router.push(
-                `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
-              )
+              router.push(`/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`)
             }
           >
             <FaArrowLeftLong />
