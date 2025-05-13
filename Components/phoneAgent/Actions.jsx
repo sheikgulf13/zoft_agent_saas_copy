@@ -29,12 +29,16 @@ import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { IoMailOutline } from "react-icons/io5";
 import { BsFillTelephoneForwardFill } from "react-icons/bs";
 
-import { upsertAction as upsertActionPhone } from "@/store/reducers/phoneAgentSlice";
+import {
+  addMultiplePhoneActions,
+  upsertAction as upsertActionPhone,
+} from "@/store/reducers/phoneAgentSlice";
 import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentActions";
 
 import { MdOutlineWebhook } from "react-icons/md";
 
 import { LuCalendarClock } from "react-icons/lu";
+import { clearSelectedData } from "@/store/reducers/selectedDataSlice";
 
 const promptFields = [
   {
@@ -79,7 +83,7 @@ const Actions = ({ editPage }) => {
   } = useSelector((state) => state.phoneAgent);
 
   const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
-
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -97,6 +101,13 @@ const Actions = ({ editPage }) => {
   );
   console.log("createdActions", createdActions);
 
+  useEffect(() => {
+      
+      if (!pathSegments.includes('phonesetting')) {
+        dispatch(clearSelectedData());
+      }
+    }, []);
+
   const handleClear = () => {
     dispatch(clearPhoneAgentState());
   };
@@ -107,7 +118,7 @@ const Actions = ({ editPage }) => {
       if (selectedPhoneAgent?.actions) {
         const selectedData = JSON.parse(selectedPhoneAgent?.actions);
         if (selectedData) {
-          dispatch(upsertActionPhone(selectedData[0]));
+          dispatch(addMultiplePhoneActions(selectedData));
         }
       }
     } catch (error) {

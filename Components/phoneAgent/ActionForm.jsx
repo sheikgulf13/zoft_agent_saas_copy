@@ -165,6 +165,7 @@ function ActionForm({
   useEffect(() => {
     setParameterData(initialData?.required_params || []);
   }, []);
+  
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
@@ -449,6 +450,8 @@ function ActionForm({
   };
 
   const handleSubmit = (e) => {
+    console.log("one");
+    
     e.preventDefault();
     setFormSubmitted(true);
     const allValid = parameterData.every(

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -25,6 +25,8 @@ import { IoMailOutline } from "react-icons/io5";
 import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
+
+import { clearSelectedData } from "../../store/actions/selectedDataActions";
 
 const promptFields = [
   {
@@ -64,6 +66,12 @@ const Actions = () => {
   const dispatch = useDispatch();
   const { createdActions } = useSelector((state) => state.actions);
 
+  const pathSegments = window.location.pathname.split('/').filter(Boolean);
+
+
+  console.log(pathSegments);
+  
+  // const workspaceId = searchParams.get("workspaceId") || "default";
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -77,17 +85,24 @@ const Actions = () => {
   const [progress, setprogress] = useState(false);
   // console.log(createdActions);
 
-  // console.log(selectedChatAgent?.actions);
-  console.log(
-    "selectedChatAgent",
-    selectedChatAgent?.actions && JSON.parse(selectedChatAgent?.actions)
-  );
- 
-  console.log("createdActions", createdActions);
+  // console.log(JSON.parse(selectedChatAgent?.actions));
+  // console.log(
+  //   "selectedChatAgent",
+  //   selectedChatAgent?.actions
+  // );
+
+  // console.log("createdActions", createdActions);
 
   const handleClear = () => {
     dispatch(clearState());
   };
+
+  useEffect(() => {
+    
+    if (pathSegments.includes('createbot')) {
+      dispatch(clearSelectedData());
+    }
+  }, []);
 
   useEffect(() => {
     handleClear();

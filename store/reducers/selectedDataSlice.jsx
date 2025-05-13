@@ -19,6 +19,7 @@ const selectedDataSlice = createSlice({
     updateSelectedChatAgent: (state, action) => {
       state.selectedChatAgent = action.payload;
     },
+    clearSelectedData: () => initialState, 
   },
 });
 
@@ -26,5 +27,6 @@ export const {
   updateSelectedWorkSpace,
   updateSelectedChatAgent,
   updateSelectedPhoneAgent,
+  clearSelectedData,
 } = selectedDataSlice.actions;
 export default selectedDataSlice.reducer;

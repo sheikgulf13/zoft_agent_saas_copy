@@ -80,6 +80,18 @@ const phoneAgentslice = createSlice({
     setPreviewNumber: (state, action) => {
       state.previewNumber = action.payload;
     },
+    addMultiplePhoneActions: (state, action) => {
+      const newActions = Array.isArray(action.payload)
+        ? action.payload
+        : [action.payload];
+
+      newActions.forEach((item) => {
+        const exists = state.createdActions.some((act) => act.id === item.id);
+        if (!exists) {
+          state.createdActions.push(item);
+        }
+      });
+    },
     upsertAction: (state, action) => {
       const { id } = action.payload; // Assume the action payload includes an id
       const existingIndex = state.createdActions.findIndex(
@@ -137,6 +149,7 @@ export const {
   setpriceInquiry,
   setCountryCode,
   setPreviewNumber,
+  addMultiplePhoneActions,
   upsertAction,
   removeAction,
   clearState

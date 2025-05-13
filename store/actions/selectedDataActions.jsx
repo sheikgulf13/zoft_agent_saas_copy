@@ -1,1 +1,6 @@
-export { updateSelectedChatAgent, updateSelectedPhoneAgent, updateSelectedWorkSpace } from "@/store/reducers/selectedDataSlice";
+export {
+  updateSelectedChatAgent,
+  updateSelectedPhoneAgent,
+  updateSelectedWorkSpace,
+  clearSelectedData,
+} from "@/store/reducers/selectedDataSlice";
