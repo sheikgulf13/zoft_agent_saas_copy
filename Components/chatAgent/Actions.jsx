@@ -26,7 +26,7 @@ import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
 
-import { clearSelectedData } from "../../store/actions/selectedDataActions";
+import { clearSelectedAgents, clearSelectedData } from "../../store/actions/selectedDataActions";
 
 const promptFields = [
   {
@@ -100,7 +100,7 @@ const Actions = () => {
   useEffect(() => {
     
     if (pathSegments.includes('createbot')) {
-      dispatch(clearSelectedData());
+      dispatch(clearSelectedAgents());
     }
   }, []);
 

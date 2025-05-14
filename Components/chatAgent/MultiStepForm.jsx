@@ -26,6 +26,10 @@ const MultiStepForm = () => {
     (state) => state.bot
   );
   const [err, setErr] = useState("");
+  const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+  console.log('====================================');
+  console.log(selectedWorkSpace);
+  console.log('====================================');
 
   useEffect(() => {
     const timer = setTimeout(() => {

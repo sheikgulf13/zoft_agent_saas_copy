@@ -38,7 +38,7 @@ import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentAc
 import { MdOutlineWebhook } from "react-icons/md";
 
 import { LuCalendarClock } from "react-icons/lu";
-import { clearSelectedData } from "@/store/reducers/selectedDataSlice";
+import { clearSelectedAgents, clearSelectedData } from "@/store/reducers/selectedDataSlice";
 
 const promptFields = [
   {
@@ -95,6 +95,10 @@ const Actions = ({ editPage }) => {
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+  
+    console.log('====================================');
+    console.log(selectedWorkSpace);
+    console.log('====================================');
   console.log(
     "selectedPhoneAgent",
     selectedPhoneAgent?.actions && JSON.parse(selectedPhoneAgent?.actions)
@@ -104,7 +108,7 @@ const Actions = ({ editPage }) => {
   useEffect(() => {
       
       if (!pathSegments.includes('phonesetting')) {
-        dispatch(clearSelectedData());
+        dispatch(clearSelectedAgents());
       }
     }, []);
 
