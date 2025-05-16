@@ -57,6 +57,7 @@ const Source = () => {
     dispatch(setFileCount(fileWordCounts));
     console.log('file word count', fileWordCounts)
   }, [fileWordCounts]);
+
   const urlHandler = (e) => {
     setInputUrl(e.target.value);
   };
@@ -149,6 +150,8 @@ const Source = () => {
   const handleSectionClick = (section) => {
     setSelectedSection(section);
   };
+
+  console.log('pasted url', pastedUrl)
 
   return (
     <div className={`flex flex-col justify-start items-start w-full h-[80%]`}>

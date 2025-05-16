@@ -45,16 +45,22 @@ const Deploy = () => {
   const createChatBot = async () => {
     const dict = {};
     const formData = new FormData();
-    var urls = "";
+    const urls = [];
+
+    console.log('url', url);
+
     url.forEach((url1, index) => {
-      urls += url1 + ",";
-      dict[url1] = 0;
+      urls.push(url1.url);
+      dict[url1.url] = url1.word_count;
     });
+
+    console.log(dict)
+
     file?.forEach((file, index) => {
       formData.append(`files`, file);
     });
 
-    formData.append("URLs", urls);
+    formData.append("URLs", JSON.stringify(urls));
     formData.append("botname", botName);
     formData.append("description", description);
     formData.append("prompt", prompt);

@@ -10,7 +10,7 @@ import {CookieManager} from "../../utility/cookie-manager"
 const Chatbot = ({ width, height, chatAgent }) => {
   // State to store the messages
   const [messages, setMessages] = useState([
-    { text: "Hey! how can I help you today?.", sender: "bot" },
+    { message: "Hey! how can I help you today?.", type: "bot" },
   ]);
   const [sessionUUID, setSessionUUID] = useState("");
   const urlFetch = process.env.chat_url;
@@ -40,7 +40,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
     e.preventDefault();
     
     if (!input || input === null) return
-    setMessages((prevChatLog) => [...prevChatLog, { sender: 'user', text: input }])
+    setMessages((prevChatLog) => [...prevChatLog, { type: 'user', message: input }])
     setInput('')
     const textInput=input;
     const data = {
@@ -58,9 +58,9 @@ const Chatbot = ({ width, height, chatAgent }) => {
       }),
       body: JSON.stringify(data),
     })
-      .then((res) => res.text())
+      .then((res) => res.json())
       .then((res) => {
-        setMessages((pre) => [...pre, { sender: "bot", text: res }]);
+        setMessages((pre) => [...pre, { type: "bot", message: res.response }]);
       });
   };
 
@@ -71,7 +71,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
   // Function to handle sending a new message
   const handleSendMessage = () => {
     if (input.trim()) {
-      setMessages([...messages, { text: input, sender: "user" }]);
+      setMessages([...messages, { type: "user", message: input }]);
       setInput(""); // Clear input after sending
 
       // Simulate bot response (this is just an example, replace with real logic)
@@ -79,8 +79,8 @@ const Chatbot = ({ width, height, chatAgent }) => {
         setMessages((prevMessages) => [
           ...prevMessages,
           {
-            text: "Thanks for your message! We’ll get back to you shortly.",
-            sender: "bot",
+            message: "Thanks for your message! We’ll get back to you shortly.",
+            type: "bot",
           },
         ]);
       }, 1000);
@@ -126,12 +126,12 @@ const Chatbot = ({ width, height, chatAgent }) => {
           <div
             key={index}
             className={`p-3 rounded-lg text-base max-w-[15vw] w-fit chat-item ${
-              message.sender === "user"
+              message.type === "user"
                 ? "bg-gray-200 text-gray-800 ml-auto chat-item2"
                 : "bg-[#702963] text-white mr-auto chat-item1"
             }`}
           >
-            {message.text}
+            {message.message}
           </div>
         ))}
         {/* Add a div with ref to scroll into view */}

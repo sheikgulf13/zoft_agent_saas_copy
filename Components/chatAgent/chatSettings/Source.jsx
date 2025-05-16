@@ -232,6 +232,8 @@ const Source = () => {
     setSelectedSection(section);
   };
 
+  console.log('pasted url', pastedUrl)
+
   return (
     <div
       className={`flex flex-col justify-start items-center px-8  w-full h-[100vh]`}
@@ -324,7 +326,7 @@ const Source = () => {
                         >
                           <span className="text-black">
                             {urlObj?.url?.length < 45 ? (
-                              <span> {urlObj.url} </span>
+                              <span> {urlObj} </span>
                             ) : (
                               <div className="relative">
                                 <div className="group">

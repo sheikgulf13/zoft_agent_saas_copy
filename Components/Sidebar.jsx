@@ -145,6 +145,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           ? "bg-[#1A1C22] text-[#737791]"
           : "bg-white text-[#737791]"
       }`}
+      id="sidebar"
     >
       <div
         className={`w-[90%] flex items-center justify-between pb-[2vh] ${
