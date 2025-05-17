@@ -143,7 +143,7 @@ function ActionForm({
   forPhoneActions,
 }) {
   console.log(forPhoneActions);
-  
+
   const dispatch = useDispatch();
   const [selectedAction, setSelectedAction] = useState(
     forPhoneActions ? phoneActions[0] : chatActions[0]
@@ -165,7 +165,6 @@ function ActionForm({
   useEffect(() => {
     setParameterData(initialData?.required_params || []);
   }, []);
-  
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
@@ -311,28 +310,61 @@ function ActionForm({
     console.log("selected action check", selectedAction);
   }, [selectedAction]);
 
+  function toSnakeCase(input) {
+    return input.toLowerCase().trim().replace(/\s+/g, "_");
+  }
+
   useEffect(() => {
     if (initialData) {
-      console.log("inital data", initialData.action_type);
-      setSelectedAction(
-        forPhoneActions
-          ? phoneActions.find(
-              (action) => action.name === initialData.action_type
-            )
-          : chatActions.find(
-              (action) => action.name === initialData.action_type
-            )
-      );
-      // console.log(initialData?.data?.content)
+      console.log("initial data", initialData);
+      // Find the matching action type
+      const actionType = forPhoneActions
+        ? phoneActions.find(
+            (action) => action.name.toLowerCase() === initialData.action_type.replace(/_/g, ' ')
+          )
+        : chatActions.find(
+            (action) => action.name.toLowerCase() === initialData.action_type.replace(/_/g, ' ')
+          );
 
-      setFormData(initialData);
-      setEditorContent(initialData?.data?.content || ""); // Initialize editor content
+      if (actionType) {
+        setSelectedAction(actionType);
+      }
+
+      // Set form data with all fields
+      setFormData({
+        action_name: initialData.action_name || '',
+        instructions: initialData.instructions || '',
+        data: {
+          ...initialData.data,
+          content: initialData.data?.content || '',
+          subject: initialData.data?.subject || '',
+          forward_to: initialData.data?.forward_to || '',
+          api_method: initialData.data?.api_method || '',
+          end_point: initialData.data?.end_point || '',
+          http_headers: initialData.data?.http_headers || [],
+          request_data: initialData.data?.request_data || [],
+          request_data_type: initialData.data?.request_data_type || ''
+        }
+      });
+
+      // Set editor content
+      setEditorContent(initialData.data?.content || '');
+      
+      // Set HTTP headers and request data states
+      if (initialData.data?.http_headers?.length > 0) {
+        setIsHTTPActive(true);
+      }
+      if (initialData.data?.request_data?.length > 0) {
+        setIsRequestDataActive(true);
+      }
     } else {
       setSelectedAction(forPhoneActions ? phoneActions[0] : chatActions[0]);
       setFormData({});
-      setEditorContent(""); // Reset editor content
+      setEditorContent('');
+      setIsHTTPActive(false);
+      setIsRequestDataActive(false);
     }
-  }, [initialData]);
+  }, [initialData, forPhoneActions]);
 
   useEffect(() => {
     console.log(formData);
@@ -451,7 +483,7 @@ function ActionForm({
 
   const handleSubmit = (e) => {
     console.log("one");
-    
+
     e.preventDefault();
     setFormSubmitted(true);
     const allValid = parameterData.every(
@@ -472,13 +504,13 @@ function ActionForm({
     if (initialData) {
       actionData = {
         id: initialData.id,
-        action_type: selectedAction.name,
+        action_type: toSnakeCase(selectedAction.name),
         ...formData,
       };
     } else {
       actionData = {
         id: uuidv4(),
-        action_type: selectedAction.name,
+        action_type: toSnakeCase(selectedAction.name),
         ...formData,
       };
     }

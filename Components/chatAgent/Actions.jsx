@@ -26,7 +26,10 @@ import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
 
-import { clearSelectedAgents, clearSelectedData } from "../../store/actions/selectedDataActions";
+import {
+  clearSelectedAgents,
+  clearSelectedData,
+} from "../../store/actions/selectedDataActions";
 
 const promptFields = [
   {
@@ -66,11 +69,10 @@ const Actions = () => {
   const dispatch = useDispatch();
   const { createdActions } = useSelector((state) => state.actions);
 
-  const pathSegments = window.location.pathname.split('/').filter(Boolean);
-
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
 
   console.log(pathSegments);
-  
+
   // const workspaceId = searchParams.get("workspaceId") || "default";
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
@@ -79,7 +81,7 @@ const Actions = () => {
   //const [openAccordion02, setOpenAccordion02] = useState(false)
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedAction, setSelectedAction] = useState();
+  const [selectedAction, setSelectedAction] = useState(null);
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
@@ -98,31 +100,29 @@ const Actions = () => {
   };
 
   useEffect(() => {
-    
-    if (pathSegments.includes('createbot')) {
+    if (pathSegments.includes("createbot")) {
       dispatch(clearSelectedAgents());
     }
   }, []);
 
   useEffect(() => {
-    handleClear();
-    try {
-      if (selectedChatAgent?.actions) {
+    if (selectedChatAgent?.actions) {
+      try {
         const selectedData = JSON.parse(selectedChatAgent?.actions);
-        if (selectedData) {
+        if (selectedData && Array.isArray(selectedData)) {
           dispatch(addMultipleActions(selectedData));
         }
+      } catch (error) {
+        console.error("Failed to parse actions:", error);
       }
-    } catch (error) {
-      console.error("Failed to parse actions:", error);
     }
   }, [selectedChatAgent]);
 
   console.log("createdActions", createdActions);
   const toggleForm = () => {
     setShowForm(!showForm);
-    if (showForm) {
-      // If form is closing, reset selected action
+    if (!showForm) {
+      // If opening form, reset selected action
       setSelectedAction(null);
     }
   };
@@ -132,25 +132,26 @@ const Actions = () => {
     dispatch(removeAction(actionId));
   };
 
-  const handleCreateAction = (newAction) => {
-    console.log("checking action", newAction);
+  function fromSnakeCase(input) {
+    return input
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
 
-    const actionWithId = { ...newAction, id: newAction.id || uuidv4() }; // Generate a unique ID
-    console.log(actionWithId.id);
+  const handleCreateAction = (newAction) => {
+    const actionWithId = { ...newAction, id: newAction.id || uuidv4() };
     dispatch(upsertAction(actionWithId));
     setShowForm(false);
+    setSelectedAction(null);
   };
 
-  const handleEditAction = (action) => {
-    const editAction = createdActions.find((act) => act.id === action);
-    console.log(editAction);
-
-    setSelectedAction(editAction); // Set the selected action for editing
-    setTimeout(() => {
-      console.log("selected action to edit", selectedAction);
-      console.log("selected action checking", editAction);
-    }, 1000);
-    setShowForm(true); // Show the form for editing
+  const handleEditAction = (actionId) => {
+    const editAction = createdActions.find((act) => act.id === actionId);
+    if (editAction) {
+      setSelectedAction(editAction);
+      setShowForm(true);
+    }
   };
 
   const nextHandler = () => {
@@ -210,11 +211,11 @@ const Actions = () => {
                       } flex justify-between items-center`}
                     >
                       <div className="flex gap-1">
-                        {action.action_type === "Send email" ? (
+                        {action.action_type === "send_email" ? (
                           <IoMailOutline className="text-2xl" />
-                        ) : action.action_type === "Web hooks" ? (
+                        ) : action.action_type === "web_hooks" ? (
                           <MdOutlineWebhook className="text-2xl" />
-                        ) : action.action_type === "Booking appointment" ? (
+                        ) : action.action_type === "booking_appointment" ? (
                           <LuCalendarClock className="text-2xl" />
                         ) : (
                           <></>
@@ -222,7 +223,7 @@ const Actions = () => {
 
                         <p>
                           <span className="font-bold">
-                            {action.action_type}
+                            {fromSnakeCase(action.action_type)}
                           </span>{" "}
                           : {action.action_name}
                         </p>

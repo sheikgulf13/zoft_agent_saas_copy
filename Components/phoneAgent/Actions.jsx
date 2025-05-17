@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -38,7 +38,10 @@ import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentAc
 import { MdOutlineWebhook } from "react-icons/md";
 
 import { LuCalendarClock } from "react-icons/lu";
-import { clearSelectedAgents, clearSelectedData } from "@/store/reducers/selectedDataSlice";
+import {
+  clearSelectedAgents,
+  clearSelectedData,
+} from "@/store/reducers/selectedDataSlice";
 
 const promptFields = [
   {
@@ -83,7 +86,8 @@ const Actions = ({ editPage }) => {
   } = useSelector((state) => state.phoneAgent);
 
   const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
-  const pathSegments = window.location.pathname.split("/").filter(Boolean);
+   const pathname = usePathname();
+  const pathSegments = pathname.split('/').filter(Boolean);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -91,14 +95,14 @@ const Actions = ({ editPage }) => {
   //const [openAccordion02, setOpenAccordion02] = useState(false)
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedAction, setSelectedAction] = useState();
+  const [selectedAction, setSelectedAction] = useState(null);
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
-  
-    console.log('====================================');
-    console.log(selectedWorkSpace);
-    console.log('====================================');
+
+  console.log("====================================");
+  console.log(selectedWorkSpace);
+  console.log("====================================");
   console.log(
     "selectedPhoneAgent",
     selectedPhoneAgent?.actions && JSON.parse(selectedPhoneAgent?.actions)
@@ -106,36 +110,47 @@ const Actions = ({ editPage }) => {
   console.log("createdActions", createdActions);
 
   useEffect(() => {
-      
-      if (!pathSegments.includes('phonesetting')) {
-        dispatch(clearSelectedAgents());
-      }
-    }, []);
-
-  const handleClear = () => {
-    dispatch(clearPhoneAgentState());
-  };
+    // Only clear selected agents if we're not in phonesetting and not in edit mode
+    if (!pathSegments.includes("phonesetting") && !editPage) {
+      dispatch(clearSelectedAgents());
+    }
+  }, []);
 
   useEffect(() => {
-    handleClear();
-    try {
-      if (selectedPhoneAgent?.actions) {
+    console.log('phone agent', phoneAgentName, phoneAgentPurpose)
+  }, [phoneAgentName, phoneAgentPurpose])
+
+  const handleClear = () => {
+    //dispatch(clearPhoneAgentState());
+  };
+
+  function fromSnakeCase(input) {
+    return input
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
+  useEffect(() => {
+    // Only clear and reload if we're in edit mode and have a selected phone agent
+    if (editPage && selectedPhoneAgent?.actions) {
+      try {
         const selectedData = JSON.parse(selectedPhoneAgent?.actions);
-        if (selectedData) {
+        if (selectedData && Array.isArray(selectedData)) {
           dispatch(addMultiplePhoneActions(selectedData));
         }
+      } catch (error) {
+        console.error("Failed to parse actions:", error);
       }
-    } catch (error) {
-      console.error("Failed to parse actions:", error);
     }
-  }, [selectedPhoneAgent]);
+  }, [selectedPhoneAgent, editPage]);
 
   console.log("createdActions", createdActions);
 
   const toggleForm = () => {
     setShowForm(!showForm);
-    if (showForm) {
-      // If form is closing, reset selected action
+    if (!showForm) {
+      // If opening form, reset selected action
       setSelectedAction(null);
     }
   };
@@ -145,24 +160,19 @@ const Actions = ({ editPage }) => {
     dispatch(removeAction(actionId));
   };
 
-  const handleCreateAction = (newAction) => {
-    console.log("checking action", newAction);
-
-    const actionWithId = { ...newAction, id: newAction.id || uuidv4() }; // Generate a unique ID
-    console.log(actionWithId.id);
-    dispatch(upsertAction(actionWithId));
-    setShowForm(false);
+  const handleEditAction = (actionId) => {
+    const editAction = createdActions.find((act) => act.id === actionId);
+    if (editAction) {
+      setSelectedAction(editAction);
+      setShowForm(true);
+    }
   };
 
-  const handleEditAction = (action) => {
-    const editAction = createdActions.find((act) => act.id === action);
-
-    setSelectedAction(editAction); // Set the selected action for editing
-    setTimeout(() => {
-      console.log("selected action to edit", selectedAction);
-      console.log("selected action checking", editAction);
-    }, 1000);
-    setShowForm(true); // Show the form for editing
+  const handleCreateAction = (newAction) => {
+    const actionWithId = { ...newAction, id: newAction.id || uuidv4() };
+    dispatch(upsertAction(actionWithId));
+    setShowForm(false);
+    setSelectedAction(null);
   };
 
   const createPhoneAgent = async () => {
@@ -310,11 +320,11 @@ const Actions = ({ editPage }) => {
                           } flex justify-between items-center`}
                         >
                           <div className="flex gap-1">
-                            {action.action_type === "Send email" ? (
+                            {action.action_type === "send_email" ? (
                               <IoMailOutline className="text-2xl" />
-                            ) : action.action_type === "Web hooks" ? (
+                            ) : action.action_type === "web_hooks" ? (
                               <MdOutlineWebhook className="text-2xl" />
-                            ) : action.action_type === "Booking appointment" ? (
+                            ) : action.action_type === "booking_appointment" ? (
                               <LuCalendarClock className="text-2xl" />
                             ) : action.action_type === "Call Forwarding" ? (
                               <BsFillTelephoneForwardFill className="text-2xl" />
@@ -324,7 +334,7 @@ const Actions = ({ editPage }) => {
 
                             <p>
                               <span className="font-bold">
-                                {action.action_type}
+                                {fromSnakeCase(action.action_type)}
                               </span>{" "}
                               : {action.action_name}
                             </p>

@@ -116,6 +116,10 @@ const PhoneAgent = () => {
   const uniqueLanguages = [...new Set(languages)];
 
   useEffect(() => {
+    console.log('phone aent cheking', phoneAgentName, phoneAgentPurpose, phoneAgentType, companyBusiness, companyName, gender)
+  }, [phoneAgentName, phoneAgentPurpose, phoneAgentType])
+
+  useEffect(() => {
     if (!language_mapping_accent) return;
     // console.log(language_mapping_accent[language]);
 
