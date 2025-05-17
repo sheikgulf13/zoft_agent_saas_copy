@@ -17,6 +17,7 @@ export {
   setpriceInquiry,
   setCountryCode,
   setPreviewNumber,
+  addMultiplePhoneActions,
   upsertAction,
   removeAction,
   clearState

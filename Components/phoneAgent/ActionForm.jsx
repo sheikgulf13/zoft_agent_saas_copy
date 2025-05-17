@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { upsertAction } from "@/store/reducers/phoneAgentSlice";
 import dynamic from "next/dynamic";
@@ -88,6 +88,11 @@ const chatActions = [
       requestDataType,
     ],
   },
+  {
+    id: 4,
+    name: "Booking appointment",
+    fields: [name, instructions],
+  },
 ];
 const phoneActions = [
   {
@@ -113,6 +118,11 @@ const phoneActions = [
       requestDataType,
     ],
   },
+  {
+    id: 4,
+    name: "Booking appointment",
+    fields: [name, instructions],
+  },
 ];
 
 // Mapping fields to help text
@@ -132,6 +142,8 @@ function ActionForm({
   handleCreateAction,
   forPhoneActions,
 }) {
+  console.log(forPhoneActions);
+  
   const dispatch = useDispatch();
   const [selectedAction, setSelectedAction] = useState(
     forPhoneActions ? phoneActions[0] : chatActions[0]
@@ -145,12 +157,15 @@ function ActionForm({
   ); // State for Quill editor
 
   const [isHTTPActive, setIsHTTPActive] = useState(false);
+  const [selectedCalenderValue, setSelectedCalenderValue] = useState(null);
   const [isRequestDataActive, setIsRequestDataActive] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
-
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef(null);
   useEffect(() => {
     setParameterData(initialData?.required_params || []);
   }, []);
+  
 
   useEffect(() => {
     if (formData?.data?.forward_to) {
@@ -158,6 +173,26 @@ function ActionForm({
     }
   }, [formData?.data?.forward_to]);
 
+  const handleCalenderChange = (e) => {
+    setSelectedCalenderValue(e.target.value);
+  };
+  const handleDeleteFile = () => {
+    setFileName("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+
+    if (file && file.name.endsWith(".json")) {
+      setFileName(file);
+    } else {
+      alert("Please upload a valid .json file.");
+      setFileName("");
+    }
+  };
   const handlePhoneNumberChange = (phone) => {
     setPhoneNumber(phone || "");
     setFormData((prev) => ({
@@ -289,7 +324,7 @@ function ActionForm({
             )
       );
       // console.log(initialData?.data?.content)
-      
+
       setFormData(initialData);
       setEditorContent(initialData?.data?.content || ""); // Initialize editor content
     } else {
@@ -310,6 +345,8 @@ function ActionForm({
 
   const handleActionChange = (e) => {
     const actionId = parseInt(e.target.value);
+    console.log(actionId);
+
     const action = forPhoneActions
       ? phoneActions.find((action) => action.id === actionId)
       : chatActions.find((action) => action.id === actionId);
@@ -318,6 +355,7 @@ function ActionForm({
     setFormData({});
     setErrors({});
     setEditorContent(""); // Reset editor content on action change
+    setSelectedCalenderValue("");
   };
 
   const handleChange = (e, _id, val) => {
@@ -412,6 +450,8 @@ function ActionForm({
   };
 
   const handleSubmit = (e) => {
+    console.log("one");
+    
     e.preventDefault();
     setFormSubmitted(true);
     const allValid = parameterData.every(
@@ -822,6 +862,90 @@ function ActionForm({
               )}
             </div>
           ))}
+          {selectedAction?.name === "Booking appointment" && (
+            <>
+              <div className="flex items-center gap-2">
+                <label htmlFor="calendar" className="font-medium">
+                  Calendar
+                </label>
+                <select
+                  name="calendar"
+                  id="calendar"
+                  value={selectedCalenderValue}
+                  onChange={handleCalenderChange}
+                  className="mt-1 block flex-1 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm mx-5"
+                >
+                  <option value="Google Calendar">Google Calendar</option>
+                  <option value="Calendy">Calendy</option>
+                </select>
+              </div>
+
+              {selectedCalenderValue === "Calendy" ? (
+                <div className="mt-4 text-blue-600 font-medium">
+                  You have selected Calendy
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <div className="mt-4 flex flex-col items-center justify-center bg-gray-100 p-6 rounded-lg">
+                      <label className="cursor-pointer bg-[#702963] hover:bg-[#702963] text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-lg transition-all duration-200">
+                        Upload JSON File
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          ref={fileInputRef}
+                        />
+                      </label>
+
+                      {fileName && (
+                        <div className="mt-4  font-medium border p-2 bg-white rounded-lg flex gap-2 items-center">
+                          {fileName?.name.length < 35 ? (
+                            <span className="font-semibold text-sm">
+                              {fileName?.name}
+                            </span>
+                          ) : (
+                            <div className="group relative inline-block">
+                              <span className="absolute bg-gray-400 top-[-35px] left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block min-w-max z-10">
+                                {fileName?.name}
+                              </span>
+                              <span className="font-semibold text-sm block max-w-[200px] truncate">
+                                {fileName?.name.slice(0, 35)}...
+                              </span>
+                            </div>
+                          )}
+
+                          <button
+                            className="ml-[1vw] bg-red-500 text-white text-sm p-[.2vw] rounded"
+                            onClick={handleDeleteFile}
+                          >
+                            delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-2">
+                    <label
+                      htmlFor="calendarId"
+                      className=" font-medium text-sm mb-1"
+                    >
+                      Choose Calendar ID
+                    </label>
+                    <select
+                      name="id"
+                      id="calendarId"
+                      className=" w-4/6 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm mx-4"
+                    >
+                      <option value="id1">ID 1</option>
+                      <option value="id2">ID 2</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
         <div>
           <RequiredParam

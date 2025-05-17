@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,16 @@ import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { IoMailOutline } from "react-icons/io5";
 import { BsFillTelephoneForwardFill } from "react-icons/bs";
 
+import {
+  addMultiplePhoneActions,
+  upsertAction as upsertActionPhone,
+} from "@/store/reducers/phoneAgentSlice";
+import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentActions";
+
 import { MdOutlineWebhook } from "react-icons/md";
+
+import { LuCalendarClock } from "react-icons/lu";
+import { clearSelectedAgents, clearSelectedData } from "@/store/reducers/selectedDataSlice";
 
 const promptFields = [
   {
@@ -54,7 +63,7 @@ const promptFields = [
   },
 ];
 
-const Actions = () => {
+const Actions = ({ editPage }) => {
   const dispatch = useDispatch();
   const {
     phoneAgentType,
@@ -72,6 +81,9 @@ const Actions = () => {
     prompt,
     script,
   } = useSelector((state) => state.phoneAgent);
+
+  const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
+  const pathSegments = window.location.pathname.split("/").filter(Boolean);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -83,6 +95,42 @@ const Actions = () => {
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+  
+    console.log('====================================');
+    console.log(selectedWorkSpace);
+    console.log('====================================');
+  console.log(
+    "selectedPhoneAgent",
+    selectedPhoneAgent?.actions && JSON.parse(selectedPhoneAgent?.actions)
+  );
+  console.log("createdActions", createdActions);
+
+  useEffect(() => {
+      
+      if (!pathSegments.includes('phonesetting')) {
+        dispatch(clearSelectedAgents());
+      }
+    }, []);
+
+  const handleClear = () => {
+    dispatch(clearPhoneAgentState());
+  };
+
+  useEffect(() => {
+    handleClear();
+    try {
+      if (selectedPhoneAgent?.actions) {
+        const selectedData = JSON.parse(selectedPhoneAgent?.actions);
+        if (selectedData) {
+          dispatch(addMultiplePhoneActions(selectedData));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to parse actions:", error);
+    }
+  }, [selectedPhoneAgent]);
+
+  console.log("createdActions", createdActions);
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -167,38 +215,44 @@ const Actions = () => {
       }`}
     >
       <div className="h-full w-full flex flex-col justify-start items-start  px-[2vw] py-[2vw]">
-        <div
-          className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
-            theme === "dark" ? "bg-[#1A1C21] text-white" : "bg-white text-black"
-          }`}
-        >
-          <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-                <TickIcon />
+        {!editPage && (
+          <div
+            className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
+              theme === "dark"
+                ? "bg-[#1A1C21] text-white"
+                : "bg-white text-black"
+            }`}
+          >
+            <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
+              <div className="h-full flex items-center justify-start gap-[.5vw]">
+                <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
+                  <TickIcon />
+                </div>
+                <h2 className="capitalize font-medium Hmd">
+                  phonebot creation
+                </h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">phonebot creation</h2>
-            </div>
 
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+              <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-            <div className="h-full flex items-center justify-start gap-[.5vw]">
-              <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                2
+              <div className="h-full flex items-center justify-start gap-[.5vw]">
+                <div className="circle text-blue-400  w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
+                  2
+                </div>
+                <h2 className="capitalize font-medium Hmd">actions</h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">actions</h2>
-            </div>
 
-            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+              <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
-              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-                3
+              <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
+                <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
+                  3
+                </div>
+                <h2 className="capitalize font-medium Hmd">Preview</h2>
               </div>
-              <h2 className="capitalize font-medium Hmd">Preview</h2>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="flex w-full h-[100vh] pb-[2vw] overflow-hidden ">
           <div
@@ -258,8 +312,14 @@ const Actions = () => {
                           <div className="flex gap-1">
                             {action.action_type === "Send email" ? (
                               <IoMailOutline className="text-2xl" />
+                            ) : action.action_type === "Web hooks" ? (
+                              <MdOutlineWebhook className="text-2xl" />
+                            ) : action.action_type === "Booking appointment" ? (
+                              <LuCalendarClock className="text-2xl" />
+                            ) : action.action_type === "Call Forwarding" ? (
+                              <BsFillTelephoneForwardFill className="text-2xl" />
                             ) : (
-                              <BsFillTelephoneForwardFill  className="text-2xl" />
+                              <></>
                             )}
 
                             <p>

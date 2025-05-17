@@ -106,6 +106,9 @@ const PhoneAgent = () => {
   const formData = new FormData();
 
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+    console.log('====================================');
+    console.log(selectedWorkSpace);
+    console.log('====================================');
 
   formData.append("workspace_id", selectedWorkSpace);
   const languages = elevenlabsVoice?.map((item) => item.language_accent);

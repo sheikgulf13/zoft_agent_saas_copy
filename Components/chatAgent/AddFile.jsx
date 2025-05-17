@@ -206,7 +206,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
         handleFileChange={handleFileChange}
         removeFileHandler={removeFileHandler}
       />
-      <div className="mt-[2vh] w-full max-h-[40vh] overflow-y-auto">
+      <div className="w-full max-h-[40vh] overflow-y-auto pt-10">
         <FileList
           fileNames={fileNames}
           fileWordCounts={fileWordCounts}
@@ -226,9 +226,9 @@ const DropZone = ({
   handleFileChange,
   removeFileHandler,
 }) => (
-  <div className="h-full w-full flex justify-center items-center">
+  <div className="h-full w-full flex justify-center items-center ">
     <div
-      className={`flex flex-col h-[20vh] items-center justify-center w-full border-[0.104vw] border-dashed rounded-[0.417vw] ${
+      className={`flex flex-col h-[20vh] overflow-visible items-center justify-center w-full border-[0.104vw] border-dashed rounded-[0.417vw] ${
         dragActive ? "border-blue-500" : "border-gray-300"
       }`}
       onDragOver={onDragOver}
@@ -267,10 +267,9 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
         {name.length < 40 ? (
           <span>{name}</span>
         ) : (
-          <div className="group relative">
-            <span className="absolute bg-gray-400 text-white top-[-35px] left-0 w-full
-             rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {name}
+          <div className="group relative inline-block">
+          <span className="absolute bg-gray-400 top-[-35px] left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block min-w-max z-10">
+            {name}
             </span>
             <span className="cursor-pointer">{name.slice(0, 40)}.....</span>
           </div>

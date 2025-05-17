@@ -32,6 +32,10 @@ const Content = () => {
       href: `/workspace/agents/phone/phonesetting/connect?workspaceId=${workspaceId}`,
       label: "Connect",
     },
+    {
+      href: `/workspace/agents/phone/phonesetting/action`,
+      label: "Actions",
+    },
   ];
 
   useEffect(() => {
