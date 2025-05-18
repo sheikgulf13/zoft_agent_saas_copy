@@ -559,7 +559,7 @@ function ActionForm({
             value={editorContent}
             onChange={handleEditorChange}
             placeholder="Start typing..."
-            className={`mt-2 bg-white min-h-[200px] border-0 overflow-hidden shadow-sm ${
+            className={`mt-2 bg-white min-h-[200px] h-[200px] border-0 overflow-y-scroll shadow-sm ${
               errors[field.value] ? "border-red-500" : ""
             }`}
           />

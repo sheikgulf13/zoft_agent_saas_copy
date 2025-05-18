@@ -27,7 +27,7 @@ import { CookieManager } from "@/utility/cookie-manager";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 
 import { IoMailOutline } from "react-icons/io5";
-import { BsFillTelephoneForwardFill } from "react-icons/bs";
+import { BsFillTelephoneForwardFill, BsTelephoneForward } from "react-icons/bs";
 
 import {
   addMultiplePhoneActions,
@@ -113,6 +113,7 @@ const Actions = ({ editPage }) => {
     // Only clear selected agents if we're not in phonesetting and not in edit mode
     if (!pathSegments.includes("phonesetting") && !editPage) {
       dispatch(clearSelectedAgents());
+      dispatch({ type: 'phoneAgent/setCreatedActions', payload: [] });
     }
   }, []);
 
@@ -133,7 +134,7 @@ const Actions = ({ editPage }) => {
 
   useEffect(() => {
     // Only clear and reload if we're in edit mode and have a selected phone agent
-    if (editPage && selectedPhoneAgent?.actions) {
+    if (editPage && selectedPhoneAgent?.actions && !pathname.includes("/workspace/agents/phone/actions")) {
       try {
         const selectedData = JSON.parse(selectedPhoneAgent?.actions);
         if (selectedData && Array.isArray(selectedData)) {
@@ -183,7 +184,7 @@ const Actions = ({ editPage }) => {
     formdata.append("conversation_purpose", phoneAgentPurpose);
     formdata.append("language", language);
     formdata.append("voice_id", voice);
-    formdata.append("country_code", countryCode);
+    formdata.append("country_code", "");
     formdata.append("phone_number", phoneNumber);
     formdata.append("company_name", companyName);
     formdata.append("company_business", companyBusiness);
@@ -326,8 +327,8 @@ const Actions = ({ editPage }) => {
                               <MdOutlineWebhook className="text-2xl" />
                             ) : action.action_type === "booking_appointment" ? (
                               <LuCalendarClock className="text-2xl" />
-                            ) : action.action_type === "Call Forwarding" ? (
-                              <BsFillTelephoneForwardFill className="text-2xl" />
+                            ) : action.action_type === "call_forwarding" ? (
+                              <BsTelephoneForward className="text-2xl" />
                             ) : (
                               <></>
                             )}

@@ -149,6 +149,10 @@ const PhoneAgent = () => {
         console.log('twilio no', data);
 
         setPhoneData(data);
+        // Set initial phone number to first value if data exists
+        if (data && data.length > 0) {
+          dispatch(setPhoneNumber(data[0]));
+        }
       } catch (error) {
         console.log(error);
       }
@@ -511,23 +515,26 @@ const PhoneAgent = () => {
 
                         {/* Phone Number Field */}
                         <div className="space-y-2">
-                          <label
-                            htmlFor="phone"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Phone number <span className="text-red-500">*</span>
-                            {err && phoneNumber === "" && (
-                              <span className="text-red-900 capitalize Hsm font-medium ml-[1%]">
-                                Enter the data
-                              </span>
-                            )}
-                          </label>
-
-                          {phoneData.length && (
-                            <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
-                              <p className="text-sm text-yellow-700">Please add Twilio details</p>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <label
+                                htmlFor="phone"
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                Phone number <span className="text-red-500">*</span>
+                              </label>
+                              {/*err && phoneNumber === "" && (
+                                <span className="text-red-900 capitalize Hsm font-medium">
+                                  Enter the data
+                                </span>
+                              )} */}
                             </div>
-                          )}
+                            {phoneData.length === 0 && (
+                              <div className="p-2 bg-yellow-50 border border-yellow-200 rounded-md flex-1 ml-2">
+                                <p className="text-sm text-yellow-700">Please add Twilio details</p>
+                              </div>
+                            )}
+                          </div>
 
                           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                             {phoneData.length > 0 ? (

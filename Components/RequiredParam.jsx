@@ -19,12 +19,13 @@ import {
   Switch,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { usePathname } from "next/navigation";
 
 const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
   const [modal, setModal] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
-  const [isDynamicParam, setIsDynamicParam] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     setModal(true);
@@ -32,22 +33,30 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
 
   const addParameter = () => {
     console.log(parameterData);
+    const isSpecialRoute = pathname === "/workspace/agents/chats/createbot" || 
+                          pathname === "/workspace/agents/phone/actions";
 
     setParameterData([
       ...parameterData,
-      { key: "", value: "", description: "", dynamic: "true" },
+      { 
+        key: "", 
+        value: "", 
+        description: "", 
+        dynamic: isSpecialRoute ? "true" : "false" 
+      },
     ]);
   };
 
-  // Update any field
-  // const updateParameter = (index, field, value) => {
-  //   const updated = [...parameterData];
-  //   updated[index][field] = value;
-  //   setParameterData(updated);
-  // };
   const updateParameter = (index, field, value) => {
     const updated = parameterData.map((param, i) =>
       i === index ? { ...param, [field]: value } : param
+    );
+    setParameterData(updated);
+  };
+
+  const handleDynamicParamToggle = (index, checked) => {
+    const updated = parameterData.map((param, i) =>
+      i === index ? { ...param, dynamic: checked ? "true" : "false" } : param
     );
     setParameterData(updated);
   };
@@ -69,15 +78,6 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-  };
-
-  const handleDynamicParamToggle = (event) => {
-    setIsDynamicParam(event.target.checked);
-    const updated = parameterData.map(param => ({
-      ...param,
-      dynamic: event.target.checked ? "true" : "false"
-    }));
-    setParameterData(updated);
   };
 
   return (
@@ -125,8 +125,8 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
             <FormControlLabel
               control={
                 <Switch
-                  checked={isDynamicParam}
-                  onChange={handleDynamicParamToggle}
+                  checked={param.dynamic === "true"}
+                  onChange={(e) => handleDynamicParamToggle(index, e.target.checked)}
                   color="primary"
                   size="small"
                 />

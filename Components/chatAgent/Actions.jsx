@@ -30,6 +30,7 @@ import {
   clearSelectedAgents,
   clearSelectedData,
 } from "../../store/actions/selectedDataActions";
+import { BsTelephoneForward } from "react-icons/bs";
 
 const promptFields = [
   {
@@ -102,11 +103,12 @@ const Actions = () => {
   useEffect(() => {
     if (pathSegments.includes("createbot")) {
       dispatch(clearSelectedAgents());
+      dispatch({ type: 'actions/setCreatedActions', payload: [] });
     }
   }, []);
 
   useEffect(() => {
-    if (selectedChatAgent?.actions) {
+    if (selectedChatAgent?.actions && !pathSegments.includes("createbot")) {
       try {
         const selectedData = JSON.parse(selectedChatAgent?.actions);
         if (selectedData && Array.isArray(selectedData)) {
@@ -217,6 +219,8 @@ const Actions = () => {
                           <MdOutlineWebhook className="text-2xl" />
                         ) : action.action_type === "booking_appointment" ? (
                           <LuCalendarClock className="text-2xl" />
+                        ) : action.action_type === "call_forwarding" ? (
+                          <BsTelephoneForward className="text-2xl" />
                         ) : (
                           <></>
                         )}

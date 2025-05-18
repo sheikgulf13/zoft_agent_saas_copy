@@ -133,40 +133,34 @@ const Preview = () => {
         }`}
       >
         <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
-          <div className="h-full flex items-center justify-start gap-[.5vw]">
-            <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-              <TickIcon />
+            <div className="h-full flex items-center justify-start gap-[.5vw]">
+              <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
+                <TickIcon />
+              </div>
+              <h2 className="capitalize font-medium text-[.9vw]">
+                phonebot creation
+              </h2>
+              {/* <Chip label={phoneAgentType} color="primary" /> */}
             </div>
-            <h2 className="capitalize font-medium Hmd">phonebot creation</h2>
-          </div>
 
-          <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-          <div className="h-full flex items-center justify-start gap-[.5vw]">
-            <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-              <TickIcon />
+            <div className="h-full flex items-center justify-start gap-[.5vw]">
+              <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
+                <TickIcon />
+              </div>
+              <h2 className="capitalize font-medium text-[.9vw]">Actions</h2>
             </div>
-            <h2 className="capitalize font-medium Hmd">actions</h2>
-          </div>
 
-          <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
+            <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
 
-          <div className="h-full flex items-center justify-start gap-[.5vw] ">
-            <div className="circle bg-green-600  w-[2vw] h-[2vw] rounded-full flex justify-center items-center">
-              <TickIcon />
+            <div className="h-full flex items-center justify-start gap-[.5vw] opacity-[.4]">
+              <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
+                3
+              </div>
+              <h2 className="capitalize font-medium text-[.9vw]">Preview</h2>
             </div>
-            <h2 className="capitalize font-medium Hmd">voice setting</h2>
           </div>
-
-          <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
-
-          <div className="h-full flex items-center justify-start gap-[.5vw] ">
-            <div className="circle text-blue-400 w-[2vw] h-[2vw] rounded-full border-cyan-500 border-[.2vw] flex justify-center items-center">
-              4
-            </div>
-            <h2 className="capitalize font-medium Hmd">deployment</h2>
-          </div>
-        </div>
       </div>
 
       <div
@@ -276,7 +270,7 @@ const Preview = () => {
         <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
           <OutlinedButton
             onClick={() =>
-              navigate.push("/workspace/agents/phone/voicesetting")
+              navigate.push("/workspace/agents/phone/actions")
             }
           >
             Back
