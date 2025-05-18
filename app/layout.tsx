@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
   const router = usePathname();
-  const hideSidebarRoutes = ['/register','/auth/google/success'];
+  const hideSidebarRoutes = ['/register', '/login','/auth/google/success'];
   const shouldHideSidebar = hideSidebarRoutes.includes(router);
 
   //sidebar collapse on chatsetting

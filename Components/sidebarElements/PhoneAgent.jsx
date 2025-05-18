@@ -146,7 +146,7 @@ const PhoneAgent = () => {
           body: formData,
         });
         const data = await response.json();
-        console.log(data);
+        console.log('twilio no', data);
 
         setPhoneData(data);
       } catch (error) {
@@ -522,6 +522,12 @@ const PhoneAgent = () => {
                               </span>
                             )}
                           </label>
+
+                          {phoneData.length && (
+                            <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+                              <p className="text-sm text-yellow-700">Please add Twilio details</p>
+                            </div>
+                          )}
 
                           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                             {phoneData.length > 0 ? (

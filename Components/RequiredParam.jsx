@@ -35,7 +35,7 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
 
     setParameterData([
       ...parameterData,
-      { key: "", value: "", description: "" },
+      { key: "", value: "", description: "", dynamic: "true" },
     ]);
   };
 
@@ -73,6 +73,11 @@ const RequiredParam = ({ parameterData, setParameterData, formSubmitted }) => {
 
   const handleDynamicParamToggle = (event) => {
     setIsDynamicParam(event.target.checked);
+    const updated = parameterData.map(param => ({
+      ...param,
+      dynamic: event.target.checked ? "true" : "false"
+    }));
+    setParameterData(updated);
   };
 
   return (

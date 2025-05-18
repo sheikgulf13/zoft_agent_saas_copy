@@ -19,7 +19,7 @@ import {
   setShowLogin,
   setFadeIn,
 } from "../store/actions/registerUserActions";
-import Login from "./Login";
+import Login from "./LoginOld";
 import { useRouter } from "next/navigation";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { CookieManager } from "../utility/cookie-manager";
@@ -81,7 +81,11 @@ const Register = () => {
     }
 
     if (check && username && email && password) {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: username } } });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name: username } },
+      });
       if (error) {
         console.error("Sign up error:", error.message);
       } else {
@@ -180,11 +184,7 @@ const Register = () => {
   };
 
   const loginHandler = () => {
-    dispatch(setFadeIn(true));
-    setTimeout(() => {
-      dispatch(setShowLogin(true));
-      dispatch(setFadeIn(false));
-    }, 300);
+  navigate.replace("/login")
   };
   const handleKeyDown = (e) => {
     if (
@@ -219,159 +219,151 @@ const Register = () => {
                 transition={{ delay: 0.3, ease: "easeInOut", duration: 0.8 }}
                 className="w-[47vw] h-[85vh] relative z-[1] rounded-r-3xl flex flex-col items-center gap-[2vw] py-[2vw]"
               >
-                {showLogin ? (
-                  <Login />
-                ) : (
-                  <>
-                    <div className="logo w-full h-[3vh] flex items-center justify-center">
+          
+                  <div className="logo w-full h-[3vh] flex items-center justify-center">
+                    <img
+                      className="w-[4.2vw]"
+                      src="/images/ZOFT_LOGO2.png"
+                      alt="Zoft"
+                    />
+                    <h1 className="H4 uppercase font-semibold">Zoft</h1>
+                  </div>
+
+                  <div className="ml-[12.5vw flex flex-col items-center w-1/2 h-[16vh] gap-[2vw]">
+                    <h1 className="ml-[1vw] capitalize H4 font-medium">
+                      get started.
+                    </h1>
+                    <button
+                      className="capitalize font-semibold relative flex gap-[.5vw] px-[2vw] py-[.5vw] rounded-lg border border-zinc-300 "
+                      onClick={handleGoogleSignUp}
+                    >
                       <img
-                        className="w-[4.2vw]"
-                        src="/images/ZOFT_LOGO2.png"
-                        alt="Zoft"
+                        className="w-[1.5vw]  h-[1.5vw] object-cover"
+                        src="/images/google-removebg-preview.png"
+                        alt=""
+                      />{" "}
+                      sign up with google
+                    </button>
+                    <div className="w-full h-[2vw] flex items-center gap-[.8vw] ">
+                      <div className="w-1/2 h-[2px] bg-zinc-300 rounded-lg"></div>
+                      <h6 className="text-sm text-zinc-300 capitalize">or</h6>
+                      <div className="w-1/2 h-[2px] bg-zinc-300 rounded-lg"></div>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-[40vh]">
+                    <form
+                      onKeyDown={handleKeyDown}
+                      className="w-full h-full flex flex-col justify-start gap-[1.5vw]"
+                    >
+                      <FormInput
+                        label="Username"
+                        icon={<FaUser className="H5 absolute left-3" />}
+                        value={username}
+                        onChange={(e) => dispatch(setUsername(e.target.value))}
+                        type="text"
+                        placeholder="Enter Username"
+                        id="username"
+                        userNameError={userNameError}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                        }}
                       />
-                      <h1 className="H4 uppercase font-semibold">Zoft</h1>
-                    </div>
+                      <FormInput
+                        label="Email"
+                        icon={<MdEmail className="H5 absolute left-3" />}
+                        value={email}
+                        onChange={(e) => dispatch(setEmail(e.target.value))}
+                        type="email"
+                        placeholder="Enter Email"
+                        id="email"
+                        emailError={emailError}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                        }}
+                      />
+                      <FormInput
+                        label="Password"
+                        showPassword={showPassword}
+                        setShowPassword={setShowPassword}
+                        eyeIcon={true}
+                        icon={<FaLock className="H5 absolute left-3" />}
+                        value={password}
+                        onChange={(e) => dispatch(setPassword(e.target.value))}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter Password"
+                        id="password"
+                        passwordError={passwordError}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
+                        }}
+                      />
 
-                    <div className="ml-[12.5vw flex flex-col items-center w-1/2 h-[16vh] gap-[2vw]">
-                      <h1 className="ml-[1vw] capitalize H4 font-medium">
-                        get started.
-                      </h1>
-                      <button
-                        className="capitalize font-semibold relative flex gap-[.5vw] px-[2vw] py-[.5vw] rounded-lg border border-zinc-300 "
-                        onClick={handleGoogleSignUp}
-                      >
-                        <img
-                          className="w-[1.5vw]  h-[1.5vw] object-cover"
-                          src="/images/google-removebg-preview.png"
-                          alt=""
-                        />{" "}
-                        sign up with google
-                      </button>
-                      <div className="w-full h-[2vw] flex items-center gap-[.8vw] ">
-                        <div className="w-1/2 h-[2px] bg-zinc-300 rounded-lg"></div>
-                        <h6 className="text-sm text-zinc-300 capitalize">or</h6>
-                        <div className="w-1/2 h-[2px] bg-zinc-300 rounded-lg"></div>
-                      </div>
-                    </div>
-
-                    <div className="w-full h-[40vh]">
-                      <form
-                        onKeyDown={handleKeyDown}
-                        className="w-full h-full flex flex-col justify-start gap-[1.5vw]"
-                      >
-                        <FormInput
-                          label="Username"
-                          icon={<FaUser className="H5 absolute left-3" />}
-                          value={username}
-                          onChange={(e) =>
-                            dispatch(setUsername(e.target.value))
-                          }
-                          type="text"
-                          placeholder="Enter Username"
-                          id="username"
-                          userNameError={userNameError}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
-                          }}
-                        />
-                        <FormInput
-                          label="Email"
-                          icon={<MdEmail className="H5 absolute left-3" />}
-                          value={email}
-                          onChange={(e) => dispatch(setEmail(e.target.value))}
-                          type="email"
-                          placeholder="Enter Email"
-                          id="email"
-                          emailError={emailError}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
-                          }}
-                        />
-                        <FormInput
-                          label="Password"
-                          showPassword={showPassword}
-                          setShowPassword={setShowPassword}
-                          eyeIcon={true}
-                          icon={<FaLock className="H5 absolute left-3" />}
-                          value={password}
-                          onChange={(e) =>
-                            dispatch(setPassword(e.target.value))
-                          }
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Enter Password"
-                          id="password"
-                          passwordError={passwordError}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") e.preventDefault(); // Prevent Enter key submission
-                          }}
-                        />
-
-                        <div className="w-full flex flex-col items-center justify-center ">
-                          <div className="w-full flex items-center justify-center gap-[1vw]">
-                            <CheckBox
-                              checked={check}
-                              onChange={() => setCheck(!check)}
-                            />
-                            <div className="flex flex-col">
-                              {agreeError && (
-                                <span className="text-red-500 font-medium text-xs">
-                                  *{agreeError}
-                                </span>
-                              )}
-                              <h6 className="capitalize font-medium">
-                                I agree to the{" "}
-                                <button
-                                  className="text-[#630063]"
-                                  onClick={() =>
-                                    window.open(
-                                      "https://blogs.zoft.ai/termsandconditions"
-                                    )
-                                  }
-                                >
-                                  terms of service
-                                </button>{" "}
-                                and{" "}
-                                <button
-                                  className="text-[#630063]"
-                                  onClick={() =>
-                                    window.open(
-                                      "https://blogs.zoft.ai/privacy-policy"
-                                    )
-                                  }
-                                >
-                                  privacy policy
-                                </button>
-                              </h6>
-                            </div>
+                      <div className="w-full flex flex-col items-center justify-center ">
+                        <div className="w-full flex items-center justify-center gap-[1vw]">
+                          <CheckBox
+                            checked={check}
+                            onChange={() => setCheck(!check)}
+                          />
+                          <div className="flex flex-col">
+                            {agreeError && (
+                              <span className="text-red-500 font-medium text-xs">
+                                *{agreeError}
+                              </span>
+                            )}
+                            <h6 className="capitalize font-medium">
+                              I agree to the{" "}
+                              <button
+                                className="text-[#630063]"
+                                onClick={() =>
+                                  window.open(
+                                    "https://blogs.zoft.ai/termsandconditions"
+                                  )
+                                }
+                              >
+                                terms of service
+                              </button>{" "}
+                              and{" "}
+                              <button
+                                className="text-[#630063]"
+                                onClick={() =>
+                                  window.open(
+                                    "https://blogs.zoft.ai/privacy-policy"
+                                  )
+                                }
+                              >
+                                privacy policy
+                              </button>
+                            </h6>
                           </div>
                         </div>
+                      </div>
 
-                        <div className="w-full flex items-center justify-center">
-                          <GradientButton
-                            id="submit-btn"
-                            text="Continue"
-                            className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
-                            onClick={registerHandler}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                registerHandler();
-                              }
-                            }}
-                          />
-                        </div>
-                        <h6 className="ml-[15vw] capitalize font-semibold">
-                          already have an account ?{" "}
-                          <button
-                            className="text-[#630063]"
-                            onClick={loginHandler}
-                          >
-                            Log in
-                          </button>
-                        </h6>
-                      </form>
-                    </div>
-                  </>
-                )}
+                      <div className="w-full flex items-center justify-center">
+                        <GradientButton
+                          id="submit-btn"
+                          text="Continue"
+                          className="bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[6vw]"
+                          onClick={registerHandler}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              registerHandler();
+                            }
+                          }}
+                        />
+                      </div>
+                      <h6 className="ml-[15vw] capitalize font-semibold">
+                        already have an account ?{" "}
+                        <button
+                          className="text-[#630063]"
+                          onClick={loginHandler}
+                        >
+                          Log in
+                        </button>
+                      </h6>
+                    </form>
+                  </div>
+            
               </motion.div>
             </div>
           </div>
@@ -433,10 +425,12 @@ const FormInput = ({
           aria-label={label}
           required
         />
-        {eyeIcon && <IoEyeSharp
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xl text-gray-600 cursor-pointer"
-        />}
+        {eyeIcon && (
+          <IoEyeSharp
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xl text-gray-600 cursor-pointer"
+          />
+        )}
       </div>
     </div>
   </div>
