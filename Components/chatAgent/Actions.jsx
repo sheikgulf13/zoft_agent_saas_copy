@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTheme from "next-theme";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import GradientButton from "../buttons/GradientButton";
 import TickIcon from "../Icons/TickIcon";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -64,17 +64,12 @@ const actions = [
   { id: 3, name: "Webhook", fields: ["Name", "Webhook", "Instructions"] },
 ];
 
-const Actions = () => {
+const Actions = ({ editPage }) => {
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
   const dispatch = useDispatch();
   const { createdActions } = useSelector((state) => state.actions);
-
-  const pathSegments = window.location.pathname.split("/").filter(Boolean);
-
-  console.log(pathSegments);
-
-  // const workspaceId = searchParams.get("workspaceId") || "default";
+  const pathname = usePathname();
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -101,14 +96,16 @@ const Actions = () => {
   };
 
   useEffect(() => {
-    if (pathSegments.includes("createbot")) {
+    // Only clear selected agents if we're not in chatsetting and not in edit mode
+    if (!pathname.includes("chatsetting") && !editPage) {
       dispatch(clearSelectedAgents());
-      dispatch({ type: 'actions/setCreatedActions', payload: [] });
+      dispatch(clearState());
     }
-  }, []);
+  }, [editPage]);
 
   useEffect(() => {
-    if (selectedChatAgent?.actions && !pathSegments.includes("createbot")) {
+    // Only load actions if we're in edit mode and have a selected chat agent
+    if (editPage && selectedChatAgent?.actions && !pathname.includes("/workspace/agents/chats/createbot")) {
       try {
         const selectedData = JSON.parse(selectedChatAgent?.actions);
         if (selectedData && Array.isArray(selectedData)) {
@@ -118,7 +115,7 @@ const Actions = () => {
         console.error("Failed to parse actions:", error);
       }
     }
-  }, [selectedChatAgent]);
+  }, [selectedChatAgent, editPage]);
 
   console.log("createdActions", createdActions);
   const toggleForm = () => {

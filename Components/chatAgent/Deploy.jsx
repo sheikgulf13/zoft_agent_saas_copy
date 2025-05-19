@@ -19,14 +19,14 @@ const Deploy = () => {
   const { theme, setTheme } = useTheme();
   const navigate = useRouter();
   const [loading, setLoading] = useState(true);
+  const [embedLoading, setEmbedLoading] = useState(false);
   const [embedCode, setEmbedCode] = useState("");
   const [chatId, setChaId] = useState();
+  const [frame, setFrame] = useState("");
   const { botName, description, prompt } = useSelector((state) => state.bot);
   const { url, rawText, fileCount } = useSelector((state) => state.data);
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
-    const {
-      createdActions,
-    } = useSelector((state) => state.actions);
+  const { createdActions } = useSelector((state) => state.actions);
   const { file } = useSelector((state) => state.file);
   const [profileId, setProfileId] = useState("");
   const [chatAgent, setChatAgent] = useState("");
@@ -34,7 +34,6 @@ const Deploy = () => {
   const [progress, setprogress] = useState(false);
   const [currentSentence, setCurrentSentence] = useState(0);
   const [toast, setToast] = useState("");
-  const frame = `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${chatId}"></script>`
 
   const sentences = [
     "Heating up the oven...",
@@ -43,18 +42,19 @@ const Deploy = () => {
     "Almost done, just a sprinkle of AI magic...",
   ];
   const createChatBot = async () => {
+    setEmbedLoading(true);
     const dict = {};
     const formData = new FormData();
     const urls = [];
 
-    console.log('url', url);
+    console.log("url", url);
 
     url.forEach((url1, index) => {
       urls.push(url1.url);
       dict[url1.url] = url1.word_count;
     });
 
-    console.log(dict)
+    console.log(dict);
 
     file?.forEach((file, index) => {
       formData.append(`files`, file);
@@ -79,7 +79,15 @@ const Deploy = () => {
       }),
       body: formData,
     });
+
     const data = await response.json();
+    console.log("chat id check", data.chat_agent_id);
+    if (data.chat_agent_id) {
+      setFrame(`<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`);
+    } else {
+      setFrame(`<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`);
+    }
+    setEmbedLoading(false);
     setChatAgent(data);
     if (response.ok) {
       setToast("success");
@@ -278,16 +286,22 @@ const Deploy = () => {
               </div>
               <div className="flex flex-col w-[100%] h-[40vh] text-base">
                 {/* <MyCodeComponent /> */}
-                <label htmlFor="embed" className="capitalize text-base">
-                  Embed Code
-                </label>
-                <CopyBlock
-                  text={frame}
-                  language="html"
-                  showLineNumbers={true}
-                  theme={dracula}
-                  codeBlock
-                />
+                {embedLoading ? (
+                  <span>Loading Embed Code...</span>
+                ) : (
+                  <>
+                    <label htmlFor="embed" className="capitalize text-base">
+                      Embed Code
+                    </label>
+                    <CopyBlock
+                      text={frame}
+                      language="html"
+                      showLineNumbers={true}
+                      theme={dracula}
+                      codeBlock
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -296,7 +310,15 @@ const Deploy = () => {
           )}
           <div className="w-full absolute bottom-0 bg-white h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">
-              <ContainedButton onClick={() => {navigate.push(`/workspace/agents?workspaceId=${selectedWorkSpace}`)}}>Finish</ContainedButton>
+              <ContainedButton
+                onClick={() => {
+                  navigate.push(
+                    `/workspace/agents?workspaceId=${selectedWorkSpace}`
+                  );
+                }}
+              >
+                Finish
+              </ContainedButton>
             </div>
           </div>
         </div>

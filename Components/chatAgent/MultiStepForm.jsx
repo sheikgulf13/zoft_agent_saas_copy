@@ -205,7 +205,7 @@ const MultiStepForm = () => {
 
   const renderDataSourceForm = () => <Source />;
 
-  const renderActionsForm = () => <Actions />;
+  const renderActionsForm = () => <Actions editPage={false} />;
 
   {
     /*const renderDeployment = () => (

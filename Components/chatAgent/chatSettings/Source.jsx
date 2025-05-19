@@ -36,11 +36,12 @@ const Source = () => {
    const [rawCharCount, setRawCharCount] = useState(0);
   const [selectedSection, setSelectedSection] = useState(0);
   const [fileWordCounts, setFileWordCounts] = useState({});
+  const [urlWordCounts, setUrlWordCounts] = useState({});
   const file = useSelector((state) => state.fileUpdate.file);
   const urlFetch = process.env.url;
   const totalWordCount =
     Object?.values(fileWordCounts ?? {}).reduce((acc, item) => acc + item, 0) +
-    pastedUrl.reduce((total, item) => total + item.word_count, 0) +
+    urlWordCounts +
     rawWordCounts;
   const [existingFile, setExistingFile] = useState({});
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
@@ -50,7 +51,14 @@ const Source = () => {
     console.log("filwordscouns", fileWordCounts);
     console.log("selectedAgent", selectedChatAgent);
     console.log("totalwordscounts", totalWordCount);
-  }, [pastedUrl, rawWordCounts, fileWordCounts, totalWordCount]);
+    
+    if (selectedChatAgent?.url_word_count) {
+      const urlCount = Object.values(selectedChatAgent.url_word_count).reduce((total, count) => total + count, 0);
+      setUrlWordCounts(urlCount);
+    } else {
+      setUrlWordCounts(pastedUrl.reduce((total, item) => total + (item.url_word_count || 0), 0));
+    }
+  }, [pastedUrl, selectedChatAgent, rawWordCounts, fileWordCounts, totalWordCount]);
 
     useEffect(() => {
       setRawCharCount(rawText.replace(/\s+/g, "").length);
@@ -60,19 +68,17 @@ const Source = () => {
   useEffect(() => {
     setPastedUrl(selectedChatAgent?.urls || []);
     setRawText(selectedChatAgent?.raw_text || "");
-    setRawWordCounts(
-      selectedChatAgent?.raw_text
-        ? selectedChatAgent?.raw_text.split(/[\s,]+/).filter(Boolean).length
-        : 0
-    );
+    setRawWordCounts(selectedChatAgent?.raw_text_word_count || 0);
+    
+    // Set initial url word count from selectedChatAgent
+    if (selectedChatAgent?.url_word_count) {
+      const urlCount = Object.values(selectedChatAgent.url_word_count).reduce((total, count) => total + count, 0);
+      setUrlWordCounts(urlCount);
+    }
 
-    setRawCharCount(selectedChatAgent?.raw_text?.replace(/\s+/g, "").length);
-    const f = selectedChatAgent?.file_name?.reduce((acc, fi) => {
-      acc[fi] = { name: fi };
-      return acc;
-    }, {});
-    setFileWordCounts(selectedChatAgent?.file_word_count);
-    setExistingFile(selectedChatAgent?.file_word_count);
+    setRawCharCount(selectedChatAgent?.raw_text?.replace(/\s+/g, "").length || 0);
+    setFileWordCounts(selectedChatAgent?.file_word_count || {});
+    setExistingFile(selectedChatAgent?.file_word_count || {});
   }, [selectedChatAgent]);
 
   useEffect(() => {
@@ -325,19 +331,19 @@ const Source = () => {
                           className="h-[4vh] w-full border-[1px] border-zinc-300 px-[1vw] py-[.5vh] text-sm rounded-[.4vw] flex justify-between items-center"
                         >
                           <span className="text-black">
-                            {urlObj?.url?.length < 45 ? (
+                            {urlObj?.length < 45 ? (
                               <span> {urlObj} </span>
                             ) : (
                               <div className="relative">
                                 <div className="group">
                                   {/* Tooltip */}
                                   <span className="absolute bg-gray-500 text-white top-[-45px] w-full left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    {urlObj?.url}
+                                    {urlObj}
                                   </span>
 
                                   {/* Truncated URL */}
                                   <span className="cursor-pointer group-hover:underline">
-                                    {urlObj?.url?.slice(0, 40)}.....
+                                    {urlObj?.slice(0, 40)}.....
                                   </span>
                                 </div>
                               </div>
