@@ -616,15 +616,38 @@ function ActionForm({
 
       case "Content": {
         return (
-          <ReactQuill
-            name={field.label}
-            value={editorContent}
-            onChange={handleEditorChange}
-            placeholder="Start typing..."
-            className={`mt-2 bg-white min-h-[200px] h-[200px] border-0 overflow-hidden shadow-sm ${
-              errors[field.value] ? "border-red-500" : ""
-            }`}
-          />
+          <div className="mt-2 bg-white min-h-[200px] h-[200px] border-0 shadow-sm">
+            <style jsx global>{`
+              .ql-container {
+                height: calc(100% - 42px) !important;
+                overflow-y: auto !important;
+              }
+              .ql-toolbar {
+                border-top: none !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: 1px solid #ccc !important;
+              }
+              .ql-editor {
+                height: 100% !important;
+                overflow-y: auto !important;
+              }
+            `}</style>
+            <ReactQuill
+              name={field.label}
+              value={editorContent}
+              onChange={handleEditorChange}
+              placeholder="Start typing..."
+              className={`h-full ${errors[field.value] ? "border-red-500" : ""}`}
+              modules={{
+                toolbar: [
+                  ['bold', 'italic', 'underline'],
+                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  ['clean']
+                ]
+              }}
+            />
+          </div>
         );
       }
 

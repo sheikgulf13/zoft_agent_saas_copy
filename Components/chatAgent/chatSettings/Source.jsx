@@ -349,7 +349,7 @@ const Source = () => {
                               </div>
                             )}
                           </span>
-                          <span>{urlObj?.word_count} words</span>
+                          <span>{selectedChatAgent?.url_word_count?.[urlObj] || urlObj?.word_count} words</span>
                           <button onClick={() => removeUrl(index)} className="">
                             <DeleteIcon />
                           </button>
