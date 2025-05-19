@@ -3,7 +3,7 @@ import Actions from '../../../../../Components/phoneAgent/Actions';
 
 const page = () => {
   return (
-    <Actions />
+    <Actions editPage={false} />
   )
 }
 
