@@ -544,8 +544,6 @@ function ActionForm({
   };
 
   const handleSubmit = (e) => {
-    console.log("one");
-
     e.preventDefault();
     setFormSubmitted(true);
     const allValid = parameterData.every(
@@ -577,16 +575,8 @@ function ActionForm({
       };
     }
 
-    // const actionData = {
-    //   type: selectedAction.name,
-    //   ...formData
-    // };
-
-    console.log("filled form Data", formData);
-    console.log("form data to be dispatched", actionData);
-
     handleCreateAction(actionData);
-    toggle(); // Close the form after submission
+    toggle();
     setFormData({});
     setErrors({});
     setEditorContent("");
@@ -1080,9 +1070,9 @@ function ActionForm({
           disabled={initialData && !isFormChanged}
           className={`${
             initialData && !isFormChanged
-              ? 'bg-gray-400 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 text-gray-500 cursor-not-allowed opacity-60'
               : 'bg-[#702963] hover:bg-opacity-[0.85]'
-          } shadow-sm text-white px-4 py-2 rounded`}
+          } shadow-sm text-white px-4 py-2 rounded transition-all duration-300`}
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>

@@ -25,6 +25,8 @@ import { IoMailOutline } from "react-icons/io5";
 import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
+import { getApiConfig, getApiHeaders } from "@/utility/api-config";
+import {showSuccessToast, showErrorToast } from "../toast/success-toast";
 
 import {
   clearSelectedAgents,
@@ -79,8 +81,13 @@ const Actions = ({ editPage }) => {
   const [showForm, setShowForm] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [modal, setModal] = useState(false);
+  const [tempActions, setTempActions] = useState([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [initialActions, setInitialActions] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
+    const urlFetch = process.env.url;
   // console.log(createdActions);
 
   // console.log(JSON.parse(selectedChatAgent?.actions));
@@ -104,12 +111,19 @@ const Actions = ({ editPage }) => {
   }, [editPage]);
 
   useEffect(() => {
+    console.log('seclected agent', selectedChatAgent)
     // Only load actions if we're in edit mode and have a selected chat agent
-    if (editPage && selectedChatAgent?.actions && !pathname.includes("/workspace/agents/chats/createbot")) {
+    if (
+      editPage &&
+      selectedChatAgent?.actions &&
+      !pathname.includes("/workspace/agents/chats/createbot")
+    ) {
       try {
         const selectedData = JSON.parse(selectedChatAgent?.actions);
         if (selectedData && Array.isArray(selectedData)) {
           dispatch(addMultipleActions(selectedData));
+          setTempActions(selectedData);
+          setInitialActions(selectedData);
         }
       } catch (error) {
         console.error("Failed to parse actions:", error);
@@ -128,7 +142,9 @@ const Actions = ({ editPage }) => {
 
   const handleDelete = (actionId) => {
     console.log("Attempting to delete action with ID:", actionId);
-    dispatch(removeAction(actionId));
+    const updatedActions = tempActions.filter(action => action.id !== actionId);
+    setTempActions(updatedActions);
+    setHasUnsavedChanges(true);
   };
 
   function fromSnakeCase(input) {
@@ -140,13 +156,23 @@ const Actions = ({ editPage }) => {
 
   const handleCreateAction = (newAction) => {
     const actionWithId = { ...newAction, id: newAction.id || uuidv4() };
-    dispatch(upsertAction(actionWithId));
+    
+    // Update temporary actions
+    const updatedTempActions = tempActions.map((action) =>
+      action.id === actionWithId.id ? actionWithId : action
+    );
+    if (!tempActions.find((action) => action.id === actionWithId.id)) {
+      updatedTempActions.push(actionWithId);
+    }
+    setTempActions(updatedTempActions);
+    setHasUnsavedChanges(true);
+
     setShowForm(false);
     setSelectedAction(null);
   };
 
   const handleEditAction = (actionId) => {
-    const editAction = createdActions.find((act) => act.id === actionId);
+    const editAction = tempActions.find((act) => act.id === actionId);
     if (editAction) {
       setSelectedAction(editAction);
       setShowForm(true);
@@ -156,6 +182,63 @@ const Actions = ({ editPage }) => {
   const nextHandler = () => {
     navigate.push("/workspace/agents/chats/deploy");
     setprogress(true);
+  };
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    try {
+      const formData = new FormData();
+      formData.append("workspace_id", selectedChatAgent?.workspace_id);
+      formData.append("chat_agent_id", selectedChatAgent?.id);
+      formData.append("actions", JSON.stringify(tempActions) || []);
+      const response = await fetch(
+        `${urlFetch}/public/chat_agent/update_actions`,
+        {
+          ...getApiConfig(),
+          method: "POST",
+          headers: new Headers({
+            ...getApiHeaders(),
+          }),
+          body: formData,
+        }
+      );
+      
+      const data = await response.json();
+      console.log('data', response.status);
+      
+      if (response.status === 200) {
+        // First update Redux state
+        dispatch(addMultipleActions(tempActions));
+        // Then update local state
+        setInitialActions(tempActions);
+        setHasUnsavedChanges(false);
+        showSuccessToast("Actions updated successfully");
+      } else {
+        // First update Redux state
+        dispatch(addMultipleActions(initialActions));
+        // Then update local state
+        setTempActions(initialActions);
+        setHasUnsavedChanges(false);
+        showErrorToast(data.message || "Failed to update actions");
+        console.error("Failed to update actions:", data.message);
+      }
+    } catch (error) {
+      // First update Redux state
+      dispatch(addMultipleActions(initialActions));
+      // Then update local state
+      setTempActions(initialActions);
+      setHasUnsavedChanges(false);
+      showErrorToast("Failed to save changes");
+      console.error("Failed to save changes:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancelChanges = () => {
+    setTempActions(initialActions);
+    dispatch(addMultipleActions(initialActions));
+    setHasUnsavedChanges(false);
   };
 
   return (
@@ -189,6 +272,18 @@ const Actions = ({ editPage }) => {
               </p>
             </div>
 
+            {pathname === "/workspace/agents/phone/phonesetting/action" &&
+              hasUnsavedChanges && (
+                <div className="flex items-center gap-4 mt-4 justify-end w-full">
+                  <OutlinedButton onClick={handleCancelChanges} disabled={isSaving}>
+                    Cancel Changes
+                  </OutlinedButton>
+                  <ContainedButton onClick={handleSaveChanges} disabled={isSaving}>
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </ContainedButton>
+                </div>
+              )}
+
             {/* Render Created Actions */}
             <div className="flex flex-col items-center mt-[2%]">
               <div
@@ -196,16 +291,16 @@ const Actions = ({ editPage }) => {
                   theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
                 }`}
               >
-                {createdActions?.length === 0 || !createdActions ? (
+                {tempActions?.length === 0 || !tempActions ? (
                   <p className="text-[#9f9f9f] text-[.9vw] text-center font-semibold my-[3%]">
                     No actions created yet.
                   </p>
                 ) : (
-                  createdActions?.map((action, index) => (
+                  tempActions?.map((action, index) => (
                     <div
                       key={action.id || index}
                       className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${
-                        index !== createdActions?.length - 1 &&
+                        index !== tempActions?.length - 1 &&
                         "border-b-[1px] pb-[2.5%] border-gray-300"
                       } flex justify-between items-center`}
                     >

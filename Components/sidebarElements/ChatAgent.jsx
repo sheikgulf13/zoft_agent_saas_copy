@@ -37,7 +37,7 @@ const ChatAgent = (props) => {
   return (
     <div className="h-[50%] overflow-hidden">
       <div
-        className={`w-[88%] border-b-[.05vw] p-8 h-full border-zinc-300 mx-auto rounded-t-md relative  ${
+        className={`w-[88%] p-8 h-full mx-auto rounded-md relative  ${
           theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
         }`}
       >
@@ -51,13 +51,13 @@ const ChatAgent = (props) => {
 
         <div
           className={`flex justify-center w-full overflow-y-auto`}
-          style={{ height: "31vh" }}
+          style={{ height: "calc(31vh - 24px)" }}
         >
           <div
             ref={scrollRef}
             className={`flex flex-wrap justify-start w-full ${
               scrollHeight > 260 ? "scrollbar" : "scrollbar-none"
-            } mt-4 gap-[2.5vw] transition-all ${
+            } mt-4 pb-6 gap-[2.5vw] transition-all ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
             }`}
           >
