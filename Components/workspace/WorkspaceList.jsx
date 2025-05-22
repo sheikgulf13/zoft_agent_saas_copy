@@ -7,7 +7,7 @@ const WorkspaceList = (key,workspace) => {
     const {theme} = useTheme()
     const replaceHandler = () => {
         router.push(`/workspace/agents/?workspaceId=${workspace?.id}`)
-        console.log(workspace.workspace_name);
+        console.log(workspace);
         
     };
     return (

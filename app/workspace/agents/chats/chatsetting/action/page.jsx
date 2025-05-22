@@ -36,7 +36,7 @@ const page = () => {
         </div>
         <ChatSettingNav />
       </div>
-      <Actions />
+      <Actions editPage={true}/>
     </div>
   );
 };

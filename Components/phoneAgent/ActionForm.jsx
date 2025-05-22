@@ -155,6 +155,8 @@ function ActionForm({
   const [editorContent, setEditorContent] = useState(
     formData?.data?.content || ""
   ); // State for Quill editor
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const [initialFormState, setInitialFormState] = useState(null);
 
   const [isHTTPActive, setIsHTTPActive] = useState(false);
   const [selectedCalenderValue, setSelectedCalenderValue] = useState(null);
@@ -331,7 +333,7 @@ function ActionForm({
       }
 
       // Set form data with all fields
-      setFormData({
+      const initialFormData = {
         action_name: initialData.action_name || '',
         instructions: initialData.instructions || '',
         data: {
@@ -345,10 +347,16 @@ function ActionForm({
           request_data: initialData.data?.request_data || [],
           request_data_type: initialData.data?.request_data_type || ''
         }
-      });
+      };
 
-      // Set editor content
+      setFormData(initialFormData);
       setEditorContent(initialData.data?.content || '');
+      setInitialFormState({
+        formData: initialFormData,
+        editorContent: initialData.data?.content || '',
+        selectedAction: actionType,
+        parameterData: initialData.required_params || []
+      });
       
       // Set HTTP headers and request data states
       if (initialData.data?.http_headers?.length > 0) {
@@ -363,8 +371,62 @@ function ActionForm({
       setEditorContent('');
       setIsHTTPActive(false);
       setIsRequestDataActive(false);
+      setInitialFormState(null);
     }
   }, [initialData, forPhoneActions]);
+
+  // Add effect to track form changes
+  useEffect(() => {
+    if (!initialFormState) {
+      setIsFormChanged(true);
+      return;
+    }
+
+    const hasFormChanged = () => {
+      // Check if action type changed
+      if (selectedAction.name.toLowerCase() !== initialFormState.selectedAction.name.toLowerCase()) {
+        return true;
+      }
+
+      // Check if basic fields changed
+      if (formData.action_name !== initialFormState.formData.action_name ||
+          formData.instructions !== initialFormState.formData.instructions) {
+        return true;
+      }
+
+      // Check if data fields changed
+      const initialDataFields = initialFormState.formData.data || {};
+      const currentDataFields = formData.data || {};
+
+      // Check content
+      if (editorContent !== initialFormState.editorContent) {
+        return true;
+      }
+
+      // Check other fields
+      const fieldsToCheck = ['subject', 'forward_to', 'api_method', 'end_point', 'request_data_type'];
+      for (const field of fieldsToCheck) {
+        if (currentDataFields[field] !== initialDataFields[field]) {
+          return true;
+        }
+      }
+
+      // Check arrays
+      if (JSON.stringify(currentDataFields.http_headers) !== JSON.stringify(initialDataFields.http_headers) ||
+          JSON.stringify(currentDataFields.request_data) !== JSON.stringify(initialDataFields.request_data)) {
+        return true;
+      }
+
+      // Check parameters
+      if (JSON.stringify(parameterData) !== JSON.stringify(initialFormState.parameterData)) {
+        return true;
+      }
+
+      return false;
+    };
+
+    setIsFormChanged(hasFormChanged());
+  }, [formData, editorContent, selectedAction, parameterData, initialFormState]);
 
   useEffect(() => {
     console.log(formData);
@@ -482,8 +544,6 @@ function ActionForm({
   };
 
   const handleSubmit = (e) => {
-    console.log("one");
-
     e.preventDefault();
     setFormSubmitted(true);
     const allValid = parameterData.every(
@@ -515,16 +575,8 @@ function ActionForm({
       };
     }
 
-    // const actionData = {
-    //   type: selectedAction.name,
-    //   ...formData
-    // };
-
-    console.log("filled form Data", formData);
-    console.log("form data to be dispatched", actionData);
-
     handleCreateAction(actionData);
-    toggle(); // Close the form after submission
+    toggle();
     setFormData({});
     setErrors({});
     setEditorContent("");
@@ -554,15 +606,38 @@ function ActionForm({
 
       case "Content": {
         return (
-          <ReactQuill
-            name={field.label}
-            value={editorContent}
-            onChange={handleEditorChange}
-            placeholder="Start typing..."
-            className={`mt-2 bg-white min-h-[200px] h-[200px] border-0 overflow-y-scroll shadow-sm ${
-              errors[field.value] ? "border-red-500" : ""
-            }`}
-          />
+          <div className="mt-2 bg-white min-h-[200px] h-[200px] border-0 shadow-sm">
+            <style jsx global>{`
+              .ql-container {
+                height: calc(100% - 42px) !important;
+                overflow-y: auto !important;
+              }
+              .ql-toolbar {
+                border-top: none !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: 1px solid #ccc !important;
+              }
+              .ql-editor {
+                height: 100% !important;
+                overflow-y: auto !important;
+              }
+            `}</style>
+            <ReactQuill
+              name={field.label}
+              value={editorContent}
+              onChange={handleEditorChange}
+              placeholder="Start typing..."
+              className={`h-full ${errors[field.value] ? "border-red-500" : ""}`}
+              modules={{
+                toolbar: [
+                  ['bold', 'italic', 'underline'],
+                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  ['clean']
+                ]
+              }}
+            />
+          </div>
         );
       }
 
@@ -992,7 +1067,12 @@ function ActionForm({
         <button
           onClick={handleSubmit}
           type="submit"
-          className="bg-[#702963] hover:bg-opacity-[0.85] shadow-sm text-white px-4 py-2 rounded"
+          disabled={initialData && !isFormChanged}
+          className={`${
+            initialData && !isFormChanged
+              ? 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+              : 'bg-[#702963] hover:bg-opacity-[0.85]'
+          } shadow-sm text-white px-4 py-2 rounded transition-all duration-300`}
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>
