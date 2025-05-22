@@ -272,7 +272,7 @@ const Actions = ({ editPage }) => {
               </p>
             </div>
 
-            {pathname === "/workspace/agents/phone/phonesetting/action" &&
+            {pathname === "/workspace/agents/chats/chatsetting/action" &&
               hasUnsavedChanges && (
                 <div className="flex items-center gap-4 mt-4 justify-end w-full">
                   <OutlinedButton onClick={handleCancelChanges} disabled={isSaving}>
