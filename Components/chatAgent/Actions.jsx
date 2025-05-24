@@ -26,7 +26,7 @@ import { MdOutlineWebhook } from "react-icons/md";
 import { LuCalendarClock } from "react-icons/lu";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
-import {showSuccessToast, showErrorToast } from "../toast/success-toast";
+import { showSuccessToast, showErrorToast } from "../toast/success-toast";
 
 import {
   clearSelectedAgents,
@@ -87,7 +87,7 @@ const Actions = ({ editPage }) => {
   const [isSaving, setIsSaving] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
-    const urlFetch = process.env.url;
+  const urlFetch = process.env.url;
   // console.log(createdActions);
 
   // console.log(JSON.parse(selectedChatAgent?.actions));
@@ -111,7 +111,7 @@ const Actions = ({ editPage }) => {
   }, [editPage]);
 
   useEffect(() => {
-    console.log('seclected agent', selectedChatAgent)
+    console.log("seclected agent", selectedChatAgent);
     // Only load actions if we're in edit mode and have a selected chat agent
     if (
       editPage &&
@@ -142,7 +142,9 @@ const Actions = ({ editPage }) => {
 
   const handleDelete = (actionId) => {
     console.log("Attempting to delete action with ID:", actionId);
-    const updatedActions = tempActions.filter(action => action.id !== actionId);
+    const updatedActions = tempActions.filter(
+      (action) => action.id !== actionId
+    );
     setTempActions(updatedActions);
     setHasUnsavedChanges(true);
   };
@@ -156,7 +158,7 @@ const Actions = ({ editPage }) => {
 
   const handleCreateAction = (newAction) => {
     const actionWithId = { ...newAction, id: newAction.id || uuidv4() };
-    
+
     // Update temporary actions
     const updatedTempActions = tempActions.map((action) =>
       action.id === actionWithId.id ? actionWithId : action
@@ -202,10 +204,10 @@ const Actions = ({ editPage }) => {
           body: formData,
         }
       );
-      
+
       const data = await response.json();
-      console.log('data', response.status);
-      
+      console.log("data", response.status);
+
       if (response.status === 200) {
         // First update Redux state
         dispatch(addMultipleActions(tempActions));
@@ -275,10 +277,16 @@ const Actions = ({ editPage }) => {
             {pathname === "/workspace/agents/chats/chatsetting/action" &&
               hasUnsavedChanges && (
                 <div className="flex items-center gap-4 mt-4 justify-end w-full">
-                  <OutlinedButton onClick={handleCancelChanges} disabled={isSaving}>
+                  <OutlinedButton
+                    onClick={handleCancelChanges}
+                    disabled={isSaving}
+                  >
                     Cancel Changes
                   </OutlinedButton>
-                  <ContainedButton onClick={handleSaveChanges} disabled={isSaving}>
+                  <ContainedButton
+                    onClick={handleSaveChanges}
+                    disabled={isSaving}
+                  >
                     {isSaving ? "Saving..." : "Save Changes"}
                   </ContainedButton>
                 </div>
@@ -361,7 +369,7 @@ const Actions = ({ editPage }) => {
           >
             {showForm && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex justify-center items-center">
-                <div className="bg-white min-w-[40%] h-[65vh] rounded-lg shadow-lg">
+                <div className="bg-white min-w-[50%] max-w-[50%] h-[85vh] rounded-lg shadow-lg">
                   <ActionForm
                     show={showForm}
                     toggle={toggleForm}

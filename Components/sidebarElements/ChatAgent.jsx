@@ -26,7 +26,6 @@ const ChatAgent = (props) => {
   useEffect(() => {
     const scrollHeight = scrollRef?.current?.scrollHeight;
     setScrollHeight(scrollHeight);
-    console.log(scrollHeight);
   }, [scrollRef?.current?.scrollHeight]);
 
   const replaceHandler = () => {
@@ -35,33 +34,41 @@ const ChatAgent = (props) => {
   };
 
   return (
-    <div className="h-[50%] overflow-hidden">
+    <div className="h-[60%] overflow-hidden">
       <div
-        className={`w-[88%] p-8 h-full mx-auto rounded-md relative  ${
+        className={`w-[88%] p-8 pt-4 h-[95%] overflow-hidden mx-auto rounded-xl relative shadow-md ${
           theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
         }`}
       >
         <div
-          className={`flex items-center justify-between  w-full pb-[25px]  ${
-            theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+          className={`flex items-center justify-start gap-5 w-full pb-[5px] ${
+            theme === "dark" ? " text-[#9f9f9f]" : " text-black"
           }`}
         >
-          <h1 className="text-lg font-bold">Chat Agents</h1>
+          <h1 className="text-xl font-bold">Chat Agents</h1>
+          <span className="text-sm font-medium text-[#211C84] bg-gradient-to-r from-[#4D55CC]/10 to-[#211C84]/10 px-3 py-1.5 rounded-full border border-[#4D55CC]/20 shadow-sm">
+            {workSpaceAgentList?.chat_agents?.length || 0} Agents
+          </span>
         </div>
 
         <div
           className={`flex justify-center w-full overflow-y-auto`}
-          style={{ height: "calc(31vh - 24px)" }}
+          style={{ height: "calc(44vh - 5px)" }}
         >
           <div
             ref={scrollRef}
             className={`flex flex-wrap justify-start w-full ${
               scrollHeight > 260 ? "scrollbar" : "scrollbar-none"
-            } mt-4 pb-6 gap-[2.5vw] transition-all ${
+            } gap-[1.5vw] p-4 transition-all ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
-            }`}
+            } [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:bg-[#f2f0ef] [&::-webkit-scrollbar-track]:bg-[#f2f0ef] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/30 hover:[&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/50`}
           >
-            <CreateButton onClick={replaceHandler} Icon={FaPlus} text="" />
+            <CreateButton 
+              onClick={replaceHandler} 
+              Icon={FaPlus} 
+              text="Create a new Chat Agent" 
+              className="hover:scale-105 transition-transform duration-300"
+            />
             {isLoading ? (
               <SkeletonCard />
             ) : (
@@ -75,8 +82,8 @@ const ChatAgent = (props) => {
                 ) : (
                   <div
                     className={`${
-                      theme === "dark" ? " text-[#9f9f9f]" : " text-[#9f9f9f]"
-                    } font-bold text-[1.1vw] w-[12vw] h-[12vw] flex items-center justify-center`}
+                      theme === "dark" ? "text-[#9f9f9f]" : "text-[#9f9f9f]"
+                    } font-bold text-[1.1vw] w-[300px] h-[140px] flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-300`}
                   >
                     No agents created
                   </div>

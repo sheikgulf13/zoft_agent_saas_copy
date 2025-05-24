@@ -6,54 +6,80 @@ import PhoneAgentList from "../phoneAgent/PhoneAgentLists";
 
 const Agents = (props) => {
   const { isLoading } = props;
-  const [selectedAgent, setSelectedAgent] = useState("chat"); // Default to chat agents
+  const [selectedAgent, setSelectedAgent] = useState("chat");
 
   const templateCards = [
     {
       title: "Use Template",
       description: "Start with a pre-built template for your agent",
       icon: "📋",
-      action: "Create"
+      action: "Create",
     },
     {
       title: "Use Call Template",
       description: "Create an agent optimized for phone calls",
       icon: "📞",
-      action: "Create"
+      action: "Create",
     },
     {
       title: "Use Chat Template",
       description: "Create an agent optimized for chat conversations",
       icon: "💬",
-      action: "Create"
-    }
+      action: "Create",
+    },
   ];
 
   return (
-    <div className={`h-[100vh] py-[4%]`}>
+    <div className="h-[100vh] py-[2%]">
       {/* Navigation Bar */}
       <div className="mb-6 ml-20">
-        <div className="bg-gray-200 rounded-lg p-1 inline-block shadow-md">
-          <button
-            className={`px-4 py-2 rounded-md transition-colors duration-200 ${
-              selectedAgent === "chat"
-                ? "bg-[#702963] text-white shadow-sm"
-                : "text-gray-600 hover:bg-gray-300"
-            }`}
-            onClick={() => setSelectedAgent("chat")}
-          >
-            Chat Agents
-          </button>
-          <button
-            className={`px-4 py-2 rounded-md transition-colors duration-200 ${
-              selectedAgent === "phone"
-                ? "bg-[#702963] text-white shadow-sm"
-                : "text-gray-600 hover:bg-gray-300"
-            }`}
-            onClick={() => setSelectedAgent("phone")}
-          >
-            Phone Agents
-          </button>
+        <div className="inline-flex rounded-lg p-2 ">
+          {/* Chat Button Group */}
+          <div className="relative inline-block">
+            {/* White Button */}
+            <div className="relative z-10">
+              <button
+                className={`px-4 py-2 rounded-md transition-all duration-300  ${
+                  selectedAgent === "chat"
+                    ? "text-[#211C84] bg-white shadow-sm font-semibold"
+                    : "text-[#8b8b8b] hover:bg-[#7A73D1]/10"
+                }`}
+                onClick={() => setSelectedAgent("chat")}
+              >
+                Chat Agents
+              </button>
+            </div>
+
+            {/* Gradient Border Underneath */}
+            {selectedAgent === "chat" && (
+              <div className="absolute top-full left-0 w-full h-2 rounded-b-md z-0 mt-[-4px]">
+                <div className="w-full h-full rounded-b-md bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#211C84]/95 via-[#4D55CC]/90 via-[#2A1B5D]/85 via-[#3B2B8E]/80 to-[#211C84]/95" />
+              </div>
+            )}
+          </div>
+
+          {/* Phone Button Group */}
+          <div className="relative inline-block">
+            <div className="relative z-10">
+              <button
+                className={`px-4 py-2 rounded-md transition-all duration-300   ${
+                  selectedAgent === "phone"
+                    ? "text-[#211C84] bg-white shadow-sm font-semibold"
+                    : "text-[#8b8b8b] hover:bg-[#7A73D1]/10"
+                }`}
+                onClick={() => setSelectedAgent("phone")}
+              >
+                Phone Agents
+              </button>
+            </div>
+
+            {/* Gradient Border Underneath */}
+            {selectedAgent === "phone" && (
+              <div className="absolute top-full left-0 w-full h-2 rounded-b-md z-0 mt-[-4px]">
+                <div className="w-full h-full rounded-b-md bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#211C84]/95 via-[#4D55CC]/90 via-[#2A1B5D]/85 via-[#3B2B8E]/80 to-[#211C84]/95" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -67,18 +93,22 @@ const Agents = (props) => {
       </div>
 
       {/* Template Cards */}
-      <div className="mt-8 px-20">
+      <div className="mt-3 px-20">
         <div className="flex gap-6">
           {templateCards.map((card, index) => (
             <div
               key={index}
-              className="flex-1 bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+              className="flex-1 bg-white rounded-xl shadow-md p-2 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
               <div className="flex flex-col items-center text-center">
                 <span className="text-3xl mb-2">{card.icon}</span>
-                <h3 className="text-lg font-semibold text-gray-800 mb-1">{card.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{card.description}</p>
-                <button className="bg-[#702963] text-white px-5 py-1.5 rounded-md hover:bg-[#5a2250] transition-colors duration-200">
+                <h3 className="text-lg font-semibold text-[#211C84] mb-1">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-[#7A73D1] mb-3">
+                  {card.description}
+                </p>
+                <button className="bg-[#4D55CC] text-white px-5 py-1.5 rounded-md hover:bg-[#211C84] transition-colors duration-200">
                   {card.action}
                 </button>
               </div>

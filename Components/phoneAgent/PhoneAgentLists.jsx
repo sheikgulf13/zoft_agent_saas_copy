@@ -38,29 +38,32 @@ const PhoneAgentList = (props) => {
   };
 
   return (
-    <div className="h-[50%] overflow-hidden">
+    <div className="h-[60%] overflow-hidden">
       <div
-        className={`w-[88%] h-full mx-auto rounded-b-[.9vh]relative p-8  ${
+        className={`w-[88%] p-8 pt-4 h-[95%] overflow-hidden mx-auto rounded-xl relative shadow-md ${
           theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
         }`}
       >
         <div
-          className={`flex items-center justify-between  w-full pb-[25px] ${
+          className={`flex items-center justify-start gap-5  w-full pb-[5px] ${
             theme === "dark" ? " text-[#9f9f9f]" : " text-black"
           }`}
         >
           <h1 className="text-lg font-bold">Phone Agents</h1>
+           <span className="text-sm font-medium text-[#211C84] bg-gradient-to-r from-[#4D55CC]/10 to-[#211C84]/10 px-3 py-1.5 rounded-full border border-[#4D55CC]/20 shadow-sm">
+            {workSpaceAgentList?.phone_agents?.length || 0} Agents
+          </span>
         </div>
 
         <div
           className={`flex justify-center w-full overflow-y-auto`}
-          style={{ height: "28vh" }}
+          style={{ height: "calc(44vh - 5px)" }}
         >
           <div
             ref={scrollRef}
             className={`flex flex-wrap justify-start w-full ${
               scrollHeight > 260 ? "scrollbar" : "scrollbar-none"
-            } mt-4 gap-[2.5vw] ${
+            } gap-[1.5vw] p-4 ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
             }`}
           >
@@ -70,7 +73,8 @@ const PhoneAgentList = (props) => {
                 setModal(true);
               }}
               Icon={FaPlus}
-              text="Create a new Phonebot"
+              text="Create a new Phone Agent"
+              className="hover:scale-105 transition-transform duration-300"
             />
             {isLoading ? (
               <SkeletonCard />
@@ -83,12 +87,12 @@ const PhoneAgentList = (props) => {
                     ))}
                   </>
                 ) : (
-                  <div
+                   <div
                     className={`${
-                      theme === "dark" ? " text-[#9f9f9f]" : " text-[#9f9f9f]"
-                    } font-bold text-[1.1vw] w-[12vw] h-[12vw] flex items-center justify-center`}
+                      theme === "dark" ? "text-[#9f9f9f]" : "text-[#9f9f9f]"
+                    } font-bold text-[1.1vw] w-[300px] h-[140px] flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-300`}
                   >
-                    No Agents Created
+                    No agents created
                   </div>
                 )}
               </>

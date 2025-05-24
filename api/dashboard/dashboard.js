@@ -13,6 +13,8 @@ const getDashboardDataApi = async () => {
             }
         });
 
+        console.log('response', response)
+
         if(response.status === 401) {
             return window.location.href = "/register";
         }

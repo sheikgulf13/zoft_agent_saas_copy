@@ -1,15 +1,18 @@
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { IoSettingsSharp } from "react-icons/io5";
 import { deletePhoneAgentApi } from "@/api/agent";
 import { useDispatch, useSelector } from "react-redux";
 import { updateSelectedPhoneAgent } from "../../store/actions/selectedDataActions";
 import { Chip } from "@mui/material";
+import useTheme from "next-theme";
 
 const AgentList = ({ agent }) => {
   const router = useRouter();
+  const { theme } = useTheme();
   const dispatch = useDispatch();
+  const [isHovered, setIsHovered] = useState(false);
 
   const replaceHandler = () => {
     if (!agent) {
@@ -30,13 +33,66 @@ const AgentList = ({ agent }) => {
   return (
     <div
       key={agent?.id}
-      className="hover:shadow-2xl bg-[#FFFFFF] text-[#737791] relative cursor-pointer w-[140px] h-[140px] overflow-hidden border-[1px] border-gray-400 rounded-[15%]"
+      className={`w-[300px] h-[140px] cursor-pointer relative overflow-hidden rounded-xl transition-all duration-300 ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-[#1F222A] to-[#2A2E37] border border-gray-700 hover:border-[#4D55CC]"
+          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:border-[#4D55CC]"
+      } ${isHovered ? "shadow-md scale-[1.02]" : "shadow-md"}`}
       onClick={replaceHandler}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="w-full overflow-hidden h-[140px] flex flex-col justify-center items-center p-4">
-        <h4 className="font-bold text-base text-[#737791] w-[80%] overflow-hidden text-ellipsis">
+       <div className="w-full h-full flex flex-col p-4 relative group">
+        <h3 className={`font-bold text-base w-full text-left overflow-hidden text-ellipsis ${
+          theme === "dark" ? "text-gray-200" : "text-[#211C84]"
+        }`}>
           {agent?.phone_agent_name}
-        </h4>
+        </h3>
+
+        {/* Action Buttons 
+        <div
+          className={`absolute bottom-0 left-0 right-0 flex justify-end gap-2 p-2 rounded-xl backdrop-blur-sm transition-all duration-300 ${
+            isHovered
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-full"
+          } ${theme === "dark" ? "bg-[#1F222A]/90" : "bg-white/90"}`}
+        >
+          <button
+            className={`p-2 rounded-full transition-all duration-200 ${
+              theme === "dark"
+                ? "hover:bg-[#2A2E37] hover:text-[#4D55CC]"
+                : "hover:bg-gray-100 hover:text-[#4D55CC]"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(
+                `/workspace/agents/chats/phonesetting/ai?workspaceId=${key?.agent?.workspace_id}`
+              );
+            }}
+          >
+            <IoSettingsSharp
+              size={20}
+              className="text-[#7A73D1] hover:scale-110 transition-transform duration-200"
+            />
+          </button>
+          <button
+            className={`p-2 rounded-full transition-all duration-200 ${
+              theme === "dark"
+                ? "hover:bg-[#2A2E37] hover:text-red-400"
+                : "hover:bg-gray-100 hover:text-red-500"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteAgent(key?.agent?.id);
+            }}
+          >
+            <RiDeleteBin6Fill
+              size={20}
+              className="text-red-500 hover:scale-110 transition-transform duration-200"
+            />
+          </button>
+        </div>*/}
+
         {/* <span className='Hsm font-normal'>{agent?.conversation_purpose}</span> */}
 
         {/* <div className={`w-full flex justify-between`}>

@@ -42,6 +42,7 @@ import {
   clearSelectedAgents,
   clearSelectedData,
 } from "@/store/reducers/selectedDataSlice";
+import { showErrorToast, showSuccessToast } from "../toast/success-toast";
 
 const promptFields = [
   {
@@ -86,8 +87,8 @@ const Actions = ({ editPage }) => {
   } = useSelector((state) => state.phoneAgent);
 
   const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
-   const pathname = usePathname();
-  const pathSegments = pathname.split('/').filter(Boolean);
+  const pathname = usePathname();
+  const pathSegments = pathname.split("/").filter(Boolean);
   const navigate = useRouter();
   const { theme, setTheme } = useTheme();
   //const [progress, setprogress] = useState(false)
@@ -99,10 +100,13 @@ const Actions = ({ editPage }) => {
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+  const [tempActions, setTempActions] = useState([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [initialActions, setInitialActions] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+    const urlFetch = process.env.url;
 
-  console.log("====================================");
   console.log(selectedWorkSpace);
-  console.log("====================================");
   console.log(
     "selectedPhoneAgent",
     selectedPhoneAgent?.actions && JSON.parse(selectedPhoneAgent?.actions)
@@ -113,13 +117,13 @@ const Actions = ({ editPage }) => {
     // Only clear selected agents if we're not in phonesetting and not in edit mode
     if (!pathSegments.includes("phonesetting") && !editPage) {
       dispatch(clearSelectedAgents());
-      dispatch({ type: 'phoneAgent/setCreatedActions', payload: [] });
+      dispatch({ type: "phoneAgent/setCreatedActions", payload: [] });
     }
   }, []);
 
   useEffect(() => {
-    console.log('phone agent', phoneAgentName, phoneAgentPurpose)
-  }, [phoneAgentName, phoneAgentPurpose])
+    console.log("phone agent", phoneAgentName, phoneAgentPurpose);
+  }, [phoneAgentName, phoneAgentPurpose]);
 
   const handleClear = () => {
     //dispatch(clearPhoneAgentState());
@@ -133,12 +137,18 @@ const Actions = ({ editPage }) => {
   }
 
   useEffect(() => {
-    // Only clear and reload if we're in edit mode and have a selected phone agent
-    if (editPage && selectedPhoneAgent?.actions && !pathname.includes("/workspace/agents/phone/actions")) {
+    // Only load actions if we're in edit mode and have a selected phone agent
+    if (
+      editPage &&
+      selectedPhoneAgent?.actions &&
+      !pathname.includes("/workspace/agents/phone/actions")
+    ) {
       try {
         const selectedData = JSON.parse(selectedPhoneAgent?.actions);
         if (selectedData && Array.isArray(selectedData)) {
           dispatch(addMultiplePhoneActions(selectedData));
+          setTempActions(selectedData);
+          setInitialActions(selectedData);
         }
       } catch (error) {
         console.error("Failed to parse actions:", error);
@@ -158,11 +168,15 @@ const Actions = ({ editPage }) => {
 
   const handleDelete = (actionId) => {
     console.log("Attempting to delete action with ID:", actionId);
-    dispatch(removeAction(actionId));
+    const updatedActions = tempActions.filter(
+      (action) => action.id !== actionId
+    );
+    setTempActions(updatedActions);
+    setHasUnsavedChanges(true);
   };
 
   const handleEditAction = (actionId) => {
-    const editAction = createdActions.find((act) => act.id === actionId);
+    const editAction = tempActions.find((act) => act.id === actionId);
     if (editAction) {
       setSelectedAction(editAction);
       setShowForm(true);
@@ -171,7 +185,20 @@ const Actions = ({ editPage }) => {
 
   const handleCreateAction = (newAction) => {
     const actionWithId = { ...newAction, id: newAction.id || uuidv4() };
-    dispatch(upsertAction(actionWithId));
+
+    // Update temporary actions
+    const updatedTempActions = tempActions.map((action) =>
+      action.id === actionWithId.id ? actionWithId : action
+    );
+    if (!tempActions.find((action) => action.id === actionWithId.id)) {
+      updatedTempActions.push(actionWithId);
+    }
+    setTempActions(updatedTempActions);
+    setHasUnsavedChanges(true);
+
+    // Update Redux state
+    dispatch(addMultiplePhoneActions(updatedTempActions));
+
     setShowForm(false);
     setSelectedAction(null);
   };
@@ -218,6 +245,63 @@ const Actions = ({ editPage }) => {
       navigate.push("/workspace/agents/phone/preview");
     }
   };
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    try {
+      const formData = new FormData();
+      formData.append("workspace_id", selectedWorkSpace);
+      formData.append("phone_agent_id", selectedPhoneAgent.id);
+      formData.append("actions", JSON.stringify(tempActions) || []);
+      const response = await fetch(
+        `${urlFetch}/public/phone_agent/update_actions`,
+        {
+          ...getApiConfig(),
+          method: "POST",
+          headers: new Headers({
+            ...getApiHeaders(),
+          }),
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      console.log("data", response.status);
+
+      if (response.status === 200) {
+        // First update Redux state
+        dispatch(addMultiplePhoneActions(tempActions));
+        // Then update local state
+        setInitialActions(tempActions);
+        setHasUnsavedChanges(false);
+        showSuccessToast("Actions updated successfully");
+      } else {
+        // First update Redux state
+        dispatch(addMultiplePhoneActions(initialActions));
+        // Then update local state
+        setTempActions(initialActions);
+        setHasUnsavedChanges(false);
+        showErrorToast(data.message || "Failed to update actions");
+        console.error("Failed to update actions:", data.message);
+      }
+    } catch (error) {
+      // First update Redux state
+      dispatch(addMultiplePhoneActions(initialActions));
+      // Then update local state
+      setTempActions(initialActions);
+      setHasUnsavedChanges(false);
+      showErrorToast("Failed to save changes");
+      console.error("Failed to save changes:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+   const handleCancelChanges = () => {
+      setTempActions(initialActions);
+      dispatch(addMultiplePhoneActions(initialActions));
+      setHasUnsavedChanges(false);
+    };
 
   return (
     <div
@@ -300,6 +384,24 @@ const Actions = ({ editPage }) => {
                   </p>
                 </div>
 
+                {pathname === "/workspace/agents/phone/phonesetting/action" &&
+                  hasUnsavedChanges && (
+                    <div className="flex items-center gap-4 mt-4 justify-end w-full">
+                      <OutlinedButton
+                        onClick={handleCancelChanges}
+                        disabled={isSaving}
+                      >
+                        Cancel Changes
+                      </OutlinedButton>
+                      <ContainedButton
+                        onClick={handleSaveChanges}
+                        disabled={isSaving}
+                      >
+                        {isSaving ? "Saving..." : "Save Changes"}
+                      </ContainedButton>
+                    </div>
+                  )}
+
                 {/* Render Created Actions */}
                 <div className="flex flex-col items-center mt-[2%]">
                   <div
@@ -307,16 +409,16 @@ const Actions = ({ editPage }) => {
                       theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
                     }`}
                   >
-                    {createdActions?.length === 0 ? (
+                    {tempActions?.length === 0 ? (
                       <p className="text-[#9f9f9f] text-[.9vw] text-center font-semibold my-[3%]">
                         No actions created yet.
                       </p>
                     ) : (
-                      createdActions?.map((action, index) => (
+                      tempActions?.map((action, index) => (
                         <div
                           key={action.id}
                           className={`rounded-lg p-[1%] mb-[1.5%] bg-white ${
-                            index !== createdActions?.length - 1 &&
+                            index !== tempActions?.length - 1 &&
                             "border-b-[1px] pb-[2.5%] border-gray-300"
                           } flex justify-between items-center`}
                         >
@@ -379,7 +481,7 @@ const Actions = ({ editPage }) => {
               >
                 {showForm && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex justify-center items-center">
-                    <div className="bg-white min-w-[40%] rounded-lg shadow-lg">
+                    <div className="bg-white min-w-[50%] max-w-[50%] h-[85vh] rounded-lg shadow-lg">
                       <ActionForm
                         show={showForm}
                         toggle={toggleForm}

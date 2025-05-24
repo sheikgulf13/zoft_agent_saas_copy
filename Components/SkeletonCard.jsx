@@ -6,7 +6,7 @@ const Skeleton = (props) => {
     const {isWorkSpace} = props;
 
   return (
-    <div className={`${isWorkSpace ? "w-[180px] h-[180px]" : "w-[140px] h-[140px]"} overflow-hidden rounded-[15%] skeleton ${theme === "dark" ? 'skeleton-dark before:opacity-[0.2]' : 'skeleton-light before:opacity-[0.25]'}`}>
+    <div className={`${isWorkSpace ? "w-[180px] h-[180px]" : "w-[300px] h-[140px]"} overflow-hidden rounded-xl skeleton ${theme === "dark" ? 'skeleton-dark before:opacity-[0.2]' : 'skeleton-light before:opacity-[0.25]'}`}>
         <div className='h-[85%] w-full pl-[1vw] pr-[4vw] pt-[6vh] overflow-hidden'>
             <div className={`${theme === "dark" ? 'skeleton-dark' : 'skeleton-light before:opacity-[0.7]'} mb-[1vw] skeleton w-full h-[2vh]`}/>
             <div className={`${theme === "dark" ? 'skeleton-dark' : 'skeleton-light before:opacity-[0.7]'} skeleton w-full h-[2vh]`}/>

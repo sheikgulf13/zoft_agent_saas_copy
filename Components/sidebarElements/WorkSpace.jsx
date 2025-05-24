@@ -23,7 +23,7 @@ import {} from "../../store/actions/workSpaceListAction";
 import { updateSelectedWorkSpace } from "@/store/reducers/selectedDataSlice";
 import { resetWorkSpace } from "../../store/actions/workspaceActions";
 import { showConfirmationModal } from "../modals/ConfirmationModal";
-import { CookieManager } from "../../utility/cookie-manager"
+import { CookieManager } from "../../utility/cookie-manager";
 
 const WorkSpace = () => {
   const { theme } = useTheme();
@@ -52,6 +52,9 @@ const WorkSpace = () => {
   }, [url]);
 
   const replaceHandler = () => {
+    if(workspacename?.length === 0){
+      return;
+    }
     router.push("/workspace/createworkspace");
   };
 
@@ -141,7 +144,11 @@ const WorkSpace = () => {
                       >
                         <div className={`w-[50%]`}>
                           <button
-                            className={`w-full flex justify-center text-xl p-4 text-[#702963] text-center font-semibold`}
+                            className={`w-full flex justify-center text-xl p-4 ${
+                              theme === "dark"
+                                ? "hover:bg-[#2A2E37] hover:text-[#4D55CC]"
+                                : "hover:bg-gray-100 hover:text-[#4D55CC]"
+                            } text-center font-semibold`}
                           >
                             <IoSettingsSharp
                               size={24}
@@ -151,17 +158,21 @@ const WorkSpace = () => {
                                   `/workspace/settings?workspaceId=${workspace.id}`
                                 );
                               }}
-                              className="hover:scale-[1.3] transition-all duration-300"
+                              className="text-[#7A73D1] hover:scale-110 transition-transform duration-200"
                             />
                           </button>
                         </div>
                         <div className={`w-[50%]`}>
                           <button
-                            className={`w-full flex justify-center text-xl p-4 text-[#702963] text-center font-semibold`}
+                            className={`w-full flex justify-center text-xl p-4 ${
+                              theme === "dark"
+                                ? "hover:bg-[#2A2E37] hover:text-red-400"
+                                : "hover:bg-gray-100 hover:text-red-500"
+                            } text-center font-semibold`}
                           >
                             <RiDeleteBin6Fill
                               size={24}
-                              className="hover:scale-[1.3] transition-all duration-300"
+                              className="text-red-500 hover:scale-110 transition-transform duration-200"
                               onClick={(event) =>
                                 deleteWorkSpace(event, workspace.id)
                               }

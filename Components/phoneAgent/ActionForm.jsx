@@ -12,6 +12,7 @@ import { cloneDeep } from "lodash";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import RequiredParam from "@/Components/RequiredParam";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const name = {
   label: "Name",
@@ -84,8 +85,8 @@ const chatActions = [
       apiMethod,
       endPoint,
       httpHeaders,
-      requestData,
       requestDataType,
+      requestData,
     ],
   },
   {
@@ -114,8 +115,8 @@ const phoneActions = [
       apiMethod,
       endPoint,
       httpHeaders,
-      requestData,
       requestDataType,
+      requestData,
     ],
   },
   {
@@ -341,11 +342,11 @@ function ActionForm({
           content: initialData.data?.content || '',
           subject: initialData.data?.subject || '',
           forward_to: initialData.data?.forward_to || '',
-          api_method: initialData.data?.api_method || '',
+          api_method: initialData.data?.api_method || 'GET',
           end_point: initialData.data?.end_point || '',
           http_headers: initialData.data?.http_headers || [],
           request_data: initialData.data?.request_data || [],
-          request_data_type: initialData.data?.request_data_type || ''
+          request_data_type: initialData.data?.request_data_type || 'JSON'
         }
       };
 
@@ -367,7 +368,12 @@ function ActionForm({
       }
     } else {
       setSelectedAction(forPhoneActions ? phoneActions[0] : chatActions[0]);
-      setFormData({});
+      setFormData({
+        data: {
+          api_method: 'GET',
+          request_data_type: 'JSON'
+        }
+      });
       setEditorContent('');
       setIsHTTPActive(false);
       setIsRequestDataActive(false);
@@ -582,12 +588,64 @@ function ActionForm({
     setEditorContent("");
   };
 
+  // Add this useEffect after the other useEffects
+  useEffect(() => {
+    // Handle initial state and API method changes
+    if (formData?.data?.api_method === "GET" || formData?.data?.api_method === "DELETE") {
+      // Disable request data for GET and DELETE
+      setIsRequestDataActive(false);
+      // Clear request data
+      setFormData(prev => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          request_data: [],
+          request_data_json: ""
+        }
+      }));
+    } else {
+      // For POST, PUT, PATCH, set default request data type to JSON if not set
+      if (!formData?.data?.request_data_type) {
+        setFormData(prev => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            request_data_type: "JSON"
+          }
+        }));
+      }
+    }
+  }, [formData?.data?.api_method]);
+
+  // Add this useEffect to handle request data type changes
+  useEffect(() => {
+    if (formData?.data?.request_data_type === "JSON") {
+      // Clear form data when switching to JSON
+      setFormData(prev => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          request_data: [],
+          request_data_json: ""
+        }
+      }));
+    } else if (formData?.data?.request_data_type === "Form") {
+      // Clear JSON data when switching to Form
+      setFormData(prev => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          request_data_json: ""
+        }
+      }));
+    }
+  }, [formData?.data?.request_data_type]);
+
   if (typeof window === "undefined") {
     return <></>;
   }
 
   const GetField = (field) => {
-    // console.log(field);
     switch (field.label) {
       case "Instructions": {
         return (
@@ -596,7 +654,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.instructions || ""}
-            className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white px-[.5vw] py-[.5vw] ${
+            className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-[.5vw] py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -606,7 +664,7 @@ function ActionForm({
 
       case "Content": {
         return (
-          <div className="mt-2 bg-white min-h-[200px] h-[200px] border-0 shadow-sm">
+          <div className="mt-2 bg-white dark:bg-gray-700 min-h-[200px] h-[200px] border border-gray-200 dark:border-gray-600 rounded-md shadow-sm">
             <style jsx global>{`
               .ql-container {
                 height: calc(100% - 42px) !important;
@@ -616,11 +674,20 @@ function ActionForm({
                 border-top: none !important;
                 border-left: none !important;
                 border-right: none !important;
-                border-bottom: 1px solid #ccc !important;
+                border-bottom: 1px solid #E5E7EB !important;
+                background: #F9FAFB !important;
+              }
+              .dark .ql-toolbar {
+                border-bottom: 1px solid #374151 !important;
+                background: #1F2937 !important;
               }
               .ql-editor {
                 height: 100% !important;
                 overflow-y: auto !important;
+                color: #111827 !important;
+              }
+              .dark .ql-editor {
+                color: #F9FAFB !important;
               }
             `}</style>
             <ReactQuill
@@ -649,7 +716,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.data?.subject || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -665,7 +732,7 @@ function ActionForm({
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
               defaultCountry="US"
-              className="w-full flex px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full flex px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4D55CC]"
             />
           </div>
         );
@@ -676,15 +743,15 @@ function ActionForm({
           <select
             name={field.label}
             id={field.value}
-            value={formData?.data?.api_method || ""}
+            value={formData?.data?.api_method || "GET"}
             onChange={handleChange}
-            className={`mt-1 block flex-1 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm`}
+            className="mt-1 block flex-1 py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600"
           >
-            <option value="" disabled hidden>
-              Select Method
-            </option>
             <option value="GET">GET</option>
             <option value="POST">POST</option>
+            <option value="PATCH">PATCH</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
           </select>
         );
       }
@@ -697,7 +764,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.data?.end_point || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -709,7 +776,7 @@ function ActionForm({
         return (
           <>
             {isHTTPActive && (
-              <div className="flex flex-col gap-2 bg-white rounded-md p-5">
+              <div className="flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-md p-5 border border-gray-200 dark:border-gray-600">
                 {formData?.data?.http_headers?.map((pair, index) => (
                   <div
                     key={index}
@@ -721,7 +788,7 @@ function ActionForm({
                       placeholder="Header Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
+                      className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
                     />
                     <input
                       type="text"
@@ -729,12 +796,12 @@ function ActionForm({
                       placeholder="Header Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
+                      className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemovePair(index, "http_headers")}
-                      className=" text-black"
+                      className="text-gray-400 hover:text-red-500 transition-colors duration-200"
                     >
                       X
                     </button>
@@ -752,7 +819,7 @@ function ActionForm({
                         "http_headers"
                       )
                     }
-                    className="text-[#702963] w-full text-start text-sm mr-5"
+                    className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm mr-5 transition-colors duration-200"
                   >
                     + Add Key
                   </button>
@@ -767,53 +834,111 @@ function ActionForm({
         return (
           <>
             {isRequestDataActive && (
-              <div className="flex flex-col gap-2 w-full justify-start bg-white rounded-md p-5">
-                {formData?.data?.request_data?.map((pair, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-2 items-center justify-between w-full overflow-hidden"
-                  >
-                    <input
-                      type="text"
-                      name="key"
-                      placeholder="Key"
-                      value={pair.key}
-                      onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
-                    />
-                    <input
-                      type="text"
-                      name="value"
-                      placeholder="Value"
-                      value={pair.value}
-                      onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePair(index, "request_data")}
-                      className=" text-black cursor-pointer"
-                    >
-                      x
-                    </button>
+              <div className="flex flex-col gap-2 w-full justify-start bg-white dark:bg-gray-800 rounded-md p-5 border border-gray-200 dark:border-gray-600">
+                {formData?.data?.api_method === "GET" || formData?.data?.api_method === "DELETE" ? (
+                  // Key-Value pairs for GET and DELETE (disabled)
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Request data is not applicable for GET and DELETE methods
                   </div>
-                ))}
+                ) : formData?.data?.request_data_type === "JSON" ? (
+                  // JSON input for POST, PATCH, PUT with JSON type
+                  <div className="w-full">
+                    <textarea
+                      value={formData?.data?.request_data_json || ""}
+                      onChange={(e) => {
+                        try {
+                          // Try to parse the JSON to validate it
+                          const jsonValue = e.target.value ? JSON.parse(e.target.value) : {};
+                          // If valid JSON, update the form data
+                          setFormData(prev => ({
+                            ...prev,
+                            data: {
+                              ...prev.data,
+                              request_data_json: e.target.value,
+                              request_data: Object.entries(jsonValue).map(([key, value]) => ({ key, value: JSON.stringify(value) }))
+                            }
+                          }));
+                        } catch (error) {
+                          // If invalid JSON, just update the text value
+                          setFormData(prev => ({
+                            ...prev,
+                            data: {
+                              ...prev.data,
+                              request_data_json: e.target.value
+                            }
+                          }));
+                        }
+                      }}
+                      placeholder="Enter JSON data..."
+                      className="w-full h-[200px] border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent font-mono"
+                    />
+                    {formData?.data?.request_data_json && (
+                      <div className="mt-2 text-sm flex items-center gap-1">
+                        {(() => {
+                          try {
+                            JSON.parse(formData.data.request_data_json);
+                            return (
+                              <span className="text-green-500 flex items-center gap-1">
+                                <FaCheckCircle className="text-lg" />
+                                Valid JSON
+                              </span>
+                            );
+                          } catch (error) {
+                            return (
+                              <span className="text-red-500 flex items-center gap-1">
+                                <FaTimesCircle className="text-lg" />
+                                Invalid JSON
+                              </span>
+                            );
+                          }
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // Key-Value pairs for POST, PATCH, PUT with Form type
+                  <>
+                    {formData?.data?.request_data?.map((pair, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 items-center justify-between w-full overflow-hidden"
+                      >
+                        <input
+                          type="text"
+                          name="key"
+                          placeholder="Key"
+                          value={pair.key}
+                          onChange={handleInputChange(index, "request_data")}
+                          className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          name="value"
+                          placeholder="Value"
+                          value={pair.value}
+                          onChange={handleInputChange(index, "request_data")}
+                          className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePair(index, "request_data")}
+                          className="text-gray-400 hover:text-red-500 transition-colors duration-200"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
 
-                {(formData?.data?.request_data ?? []).length <
-                  maxRequestDataPairs && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleAddPair(
-                        maxRequestDataPairs,
-                        isRequestDataActive,
-                        "request_data"
-                      )
-                    }
-                    className="text-[#702963] w-full text-start text-sm"
-                  >
-                    + Add Key
-                  </button>
+                    {(formData?.data?.request_data ?? []).length < maxRequestDataPairs && (
+                      <button
+                        type="button"
+                        onClick={() => handleAddPair(maxRequestDataPairs, isRequestDataActive, "request_data")}
+                        className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm transition-colors duration-200"
+                      >
+                        + Add Key
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -825,13 +950,23 @@ function ActionForm({
           <select
             name={field.label}
             id={field.value}
-            value={formData?.data?.request_data_type || ""}
-            onChange={handleChange}
-            className="mt-1 block w-full py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+            value={formData?.data?.request_data_type || "JSON"}
+            onChange={(e) => {
+              const newType = e.target.value;
+              handleChange(e);
+              
+              // Reset request data when switching types
+              setFormData(prev => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  request_data: [],
+                  request_data_json: ""
+                }
+              }));
+            }}
+            className="mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600"
           >
-            <option value="" disabled hidden>
-              Select Type
-            </option>
             <option value="JSON">JSON</option>
             <option value="Form">Form</option>
           </select>
@@ -847,7 +982,7 @@ function ActionForm({
             placeholder={field.placeholder}
             maxLength={30}
             value={formData?.action_name || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -858,18 +993,18 @@ function ActionForm({
   };
 
   return (
-    <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
+    <div className="h-[85vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
       <h2 className="text-xl font-semibold mb-[1vw]">Action Form</h2>
       <form
         onSubmit={handleSubmit}
         className="overflow-y-auto pr-2"
-        style={{ height: "calc(70vh - 160px)" }}
+        style={{ height: "calc(90vh - 160px)" }}
       >
-        <div className="bg-gray-100 rounded-lg p-5 mb-8">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 mb-8 shadow-sm">
           <div>
             <label
               htmlFor="action-type"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-200"
             >
               Action Type
             </label>
@@ -877,7 +1012,7 @@ function ActionForm({
               id="action-type"
               value={selectedAction?.id}
               onChange={handleActionChange}
-              className="mt-1 block w-full py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+              className="mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600"
             >
               {forPhoneActions
                 ? phoneActions.map((action) => (
@@ -894,26 +1029,26 @@ function ActionForm({
           </div>
 
           {selectedAction?.fields.slice(0, 2).map((field, index) => (
-            <div key={index} className="mt-4">
+            <div key={index} className="mt-4 ">
               <label
                 htmlFor={field.label}
-                className="block mt-[1vw] text-sm font-medium text-gray-700"
+                className="block mt-[1vw] text-sm font-medium text-gray-700 dark:text-gray-200"
               >
                 {field.label}
               </label>
               {GetField(field)}
               {errors[field.value] && (
-                <p className="text-red-500 text-xs">{errors[field.value]}</p>
+                <p className="text-red-500 text-xs mt-1">{errors[field.value]}</p>
               )}
             </div>
           ))}
         </div>
 
         <div className="w-full flex justify-center">
-          <div className="bg-gray-300 h-[1px] w-[80%]" />
+          <div className="bg-gray-200 dark:bg-gray-700 h-[1px] w-[90%]" />
         </div>
 
-        <div className="bg-gray-100 rounded-lg p-5 mt-8">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 mt-8 shadow-sm">
           {selectedAction?.fields.slice(2).map((field, index) => (
             <div
               key={index}
@@ -933,7 +1068,7 @@ function ActionForm({
                   htmlFor={field.label}
                   className={`${
                     field.label === "API Method" ? "flex" : "block mt-1"
-                  } text-sm font-medium text-gray-700`}
+                  } text-sm font-medium text-gray-700 dark:text-gray-200`}
                 >
                   {field.label}
                 </label>
@@ -945,7 +1080,7 @@ function ActionForm({
                       onChange={() => setIsHTTPActive(!isHTTPActive)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-[#702963] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#702963]"></div>
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC]"></div>
                   </label>
                 )}
                 {field.label === "Request Data" && (
@@ -956,16 +1091,17 @@ function ActionForm({
                       onChange={() =>
                         setIsRequestDataActive(!isRequestDataActive)
                       }
+                      disabled={formData?.data?.api_method === "GET" || formData?.data?.api_method === "DELETE"}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-[#702963] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#702963]"></div>
+                    <div className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC] ${(formData?.data?.api_method === "GET" || formData?.data?.api_method === "DELETE") ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
                   </label>
                 )}
               </div>
 
               {GetField(field)}
               {errors[field.value] && (
-                <p className="text-red-500 text-xs">{errors[field.value]}</p>
+                <p className="text-red-500 text-xs mt-1">{errors[field.value]}</p>
               )}
             </div>
           ))}
@@ -1059,20 +1195,27 @@ function ActionForm({
             parameterData={parameterData}
             setParameterData={setParameterData}
             formSubmitted={formSubmitted}
+            actionType={selectedAction?.name}
           />
         </div>
       </form>
-      <div className="flex items-center justify-between mt-[15px]">
-        <OutlinedButton onClick={toggle}>Cancel</OutlinedButton>
+      <div className="flex items-center justify-between mt-[15px] gap-4">
+        <button
+          onClick={toggle}
+          type="button"
+          className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC] transition-all duration-200 font-medium shadow-sm"
+        >
+          Cancel
+        </button>
         <button
           onClick={handleSubmit}
           type="submit"
           disabled={initialData && !isFormChanged}
           className={`${
             initialData && !isFormChanged
-              ? 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 text-gray-500 cursor-not-allowed opacity-60'
-              : 'bg-[#702963] hover:bg-opacity-[0.85]'
-          } shadow-sm text-white px-4 py-2 rounded transition-all duration-300`}
+              ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-[#4D55CC] to-[#211C84] hover:opacity-90 text-white'
+          } px-6 py-2.5 rounded-lg shadow-sm transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC]`}
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>
