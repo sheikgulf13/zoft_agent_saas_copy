@@ -27,6 +27,10 @@ const MultiStepForm = () => {
   );
   const [err, setErr] = useState("");
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
+  const searchParams = new URLSearchParams(window.location.search);
+  const templateData = JSON.parse(
+    decodeURIComponent(searchParams.get("template"))
+  );
   console.log('====================================');
   console.log(selectedWorkSpace);
   console.log('====================================');
@@ -109,7 +113,7 @@ const MultiStepForm = () => {
         {
           label: "Bot Name*",
           type: "text",
-          value: botName,
+          value: templateData ? templateData?.agent_name : botName,
           onChange: handleChange(setBotName),
           placeholder: "Enter A Name",
           Component: "input",
@@ -118,7 +122,7 @@ const MultiStepForm = () => {
         {
           label: "Description*",
           type: "textarea",
-          value: description,
+          value: templateData ? templateData?.agent_description : description,
           onChange: handleChange(setDescription),
           placeholder: "",
           Component: "textarea",
@@ -128,7 +132,7 @@ const MultiStepForm = () => {
         {
           label: "Prompt*",
           type: "text",
-          value: prompt,
+          value: templateData ? templateData?.agent_prompt : prompt,
           onChange: handleChange(setPrompt),
           placeholder:
             "Example: you are a sales agent, talk persuasively and respond to the answers politely.",
