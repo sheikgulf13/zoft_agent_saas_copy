@@ -20,12 +20,14 @@ const AgentList = (key, agent) => {
     dispatch(updateSelectedChatAgent(key.agent));
     router.push(`/workspace/agents/chats/chatsetting/ai?workspaceId=${key?.agent?.workspace_id}`);
   };
-
+  
   const deleteAgent = (agentId) => {
     if (!agentId) {
       return;
     }
-    deleteChatAgentApi(agentId);
+    //deleteChatAgentApi(agentId);
+    //router.push(agentId);
+     router.push(`/workspace/agents/chats/chatsetting/ai?workspaceId=${key?.agent?.workspace_id}`);
   };
 
   return (
@@ -33,8 +35,8 @@ const AgentList = (key, agent) => {
       key={key?.agent?.id}
       className={`w-[300px] h-[140px] cursor-pointer relative overflow-hidden rounded-xl transition-all duration-300 ${
         theme === "dark" 
-          ? "bg-gradient-to-br from-[#1F222A] to-[#2A2E37] border border-gray-700 hover:border-[#4D55CC]" 
-          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:border-[#4D55CC]"
+          ? "bg-gradient-to-br from-[#1F222A] to-[#2A2E37] border border-gray-700 hover:border-[#2D3377]/90" 
+          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:border-[#2D3377]/90"
       } ${isHovered ? "shadow-md scale-[1.02]" : "shadow-md"}`}
       onClick={replaceHandler}
       onMouseEnter={() => setIsHovered(true)}
@@ -42,7 +44,7 @@ const AgentList = (key, agent) => {
     >
       <div className="w-full h-full flex flex-col p-4 relative group">
         <h3 className={`font-bold text-base w-full text-left overflow-hidden text-ellipsis ${
-          theme === "dark" ? "text-gray-200" : "text-[#211C84]"
+          theme === "dark" ? "text-gray-200" : "text-[#333333]"
         }`}>
           {key?.agent?.bot_name}
         </h3>
@@ -64,7 +66,7 @@ const AgentList = (key, agent) => {
           >
             <IoSettingsSharp
               size={20}
-              className="text-[#7A73D1] hover:scale-110 transition-transform duration-200"
+              className="text-[#13104A]/95 hover:scale-110 transition-transform duration-200"
             />
           </button>
           <button
@@ -75,7 +77,8 @@ const AgentList = (key, agent) => {
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              deleteAgent(key?.agent?.id);
+              //deleteAgent(key?.agent?.id);
+              router.push(`/workspace/agents/chats/chatsetting/ai?workspaceId=${key?.agent?.workspace_id}`);
             }}
           >
             <RiDeleteBin6Fill

@@ -148,9 +148,10 @@ const Ai = () => {
                 `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
               )
             }
+            borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}
           >
-            <FaArrowLeftLong />
-            <span className="ml-2">Back to workspace</span>
+            <FaArrowLeftLong className="text-sm"/>
+            <span className="text-sm">Back to workspace</span>
           </OutlinedButton>
         </div>
         <ChatSettingNav />
@@ -170,7 +171,7 @@ const Ai = () => {
               <h6 className={`font-bold text-base pb-[.5vw] `}>AI</h6>
               <ContainedButton
                 onClick={handleDeleteClick}
-                backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"}
+                bgColor={'bg-red-500 hover:bg-red-600'}
               >
                 Delete
               </ContainedButton>
@@ -178,11 +179,11 @@ const Ai = () => {
             <form
               className="flex flex-col gap-8 overflow-y-auto p-4"
               onSubmit={handleFormSubmit}
-              style={{ height: "calc(104vh - 450px)" }}
+              style={{ height: "calc(114vh - 450px)" }}
             >
               <div className={`flex flex-col gap-[.3vw] pb-[2vw]`}>
                 <div className={`flex items-center gap-[.5vw]`}>
-                  <label htmlFor="rawText" className="text-base font-semibold">
+                  <label htmlFor="rawText" className="text-base text-[#333333] font-semibold">
                     Model
                   </label>
                   <span
@@ -209,7 +210,7 @@ const Ai = () => {
                   </option>
                 </select>
               </div>
-              <div className={`flex gap-[1vw]`}>
+              <div className={`flex items-center gap-[2vw]`}>
                 <div className={`flex flex-col w-[40%]`}>
                   <label
                     htmlFor="botname"
@@ -217,7 +218,7 @@ const Ai = () => {
                   >
                     Bot Name
                   </label>
-                  <span className={`text-sm font-normal text-zinc-300`}>
+                  <span className={`text-xs font-normal text-[#b8b8b8]`}>
                     Enter yout Chatbot's name here <br /> eg: (Alex, Maya)
                   </span>
                 </div>
@@ -229,15 +230,15 @@ const Ai = () => {
                   id="url"
                   value={botName}
                   onChange={(e) => setBotName(e.target.value)}
-                  className={`text-base border-[0.052vw] w-[80%] border-zinc-300 px-[1vw] rounded-[.4vw] ${
+                  className={`text-base border-[0.052vw] w-[80%] border-zinc-300 px-[1vw] py-2 rounded-[.4vw] ${
                     theme === "dark"
                       ? "bg-[#1F222A] text-white"
-                      : "bg-white text-black"
+                      : "bg-white text-[#333333]"
                   }`}
                   placeholder="Enter a name"
                 />
               </div>
-              <div className="flex gap-[1vw]">
+              <div className="flex gap-[2vw]">
                 <div className="flex flex-col w-[40%]">
                   <label
                     htmlFor="description"
@@ -247,7 +248,7 @@ const Ai = () => {
                   </label>
                   {/*err && <span className='text-red-800 capitalize text-[.7vw] font-medium '>*{err}</span>*/}
                   <span
-                    className={`text-sm break-words font-normal text-zinc-300`}
+                    className={`text-xs break-words font-normal text-[#b8b8b8]`}
                   >
                     Enter your chatbot's description, including it main purpose
                     and tasks <br /> (eg: A customer support assistant that
@@ -264,16 +265,16 @@ const Ai = () => {
                   className={`text-base resize-none overflow-hidden border-[0.052vw] w-[80%] border-zinc-300 px-[1vw] pt-[1.8vh] pb-[8vh] rounded-[.4vw] ${
                     theme === "dark"
                       ? "bg-[#1F222A] text-white"
-                      : "bg-white text-black"
+                      : "bg-white text-[#333333]"
                   }`}
                 />
               </div>
-              <div className="flex gap-[1vw]">
+              <div className="flex gap-[2vw]">
                 <div className={`flex flex-col w-[40%]`}>
                   <label htmlFor="prompt" className="text-base font-semibold">
                     Prompt
                   </label>
-                  <span className={`text-sm font-normal text-zinc-300`}>
+                  <span className={`text-xs font-normal text-[#b8b8b8]`}>
                     Enter a sample prompt for your chatbot, which is a typical
                     question or request it will handle. This helps define how
                     the chatbot should respond. <br /> For example, if your
@@ -291,7 +292,7 @@ const Ai = () => {
                   className={`text-base overflow-hidden border-[0.052vw] w-[80%] border-zinc-300 px-[1vw] pb-[8vh] pt-[1.8vh] rounded-[.5vw] resize-none ${
                     theme === "dark"
                       ? "bg-[#1F222A] text-white"
-                      : "bg-white text-black"
+                      : "bg-white text-[#333333]"
                   }`}
                   placeholder="Example: you are a sales agent, talk pursuasively and respond to the asnwers politely"
                 ></textarea>
@@ -306,7 +307,7 @@ const Ai = () => {
               >
                 <button
                   type="submit"
-                  className={`text-sm text-white bg-[#702963] hover:bg-opacity-[0.8] cursor-pointer px-[4vw] py-[.5vw] rounded-sm ${
+                  className={`text-sm text-white bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm rounded-lg px-[4vw] py-[10px] hover:opacity-[0.9] ${
                     selectedChatAgent?.bot_name === botName &&
                     selectedChatAgent?.description === des &&
                     selectedChatAgent?.prompts === promt &&

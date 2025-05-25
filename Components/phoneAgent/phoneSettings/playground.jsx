@@ -97,76 +97,78 @@ const Content = () => {
         <PhoneSettingNav />
       </div>
 
-      <div className={`flex w-full h-full relative`}>
-        <div
-          className={`absolute flex flex-col top-[2vw] right-[2vw] ${
-            theme === "dark" ? "bg-black text-white" : "bg-white text-black"
-          } p-[1.5vw] rounded-lg gap-[.8vw]`}
-        >
-          <div
-            className={`${
-              theme === "dark" ? "text-white" : "text-black"
-            } flex items-center gap-[1vw]`}
-          >
-            <h6 className="font-semibold text-lg">kayzen</h6>
+      <div className="flex w-full h-full relative">
+        <div className={`absolute flex flex-col top-8 right-8 ${
+          theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+        } p-6 rounded-xl shadow-lg gap-4`}>
+          <div className={`${
+            theme === "dark" ? "text-white" : "text-black"
+          } flex items-center gap-3`}>
+            <h6 className="text-xl font-semibold text-[#2D3377]/90">Zoft</h6>
           </div>
 
-          <div className="flex justify-between w-full">
-            <label className="text-base py-[1.5vh] px-[1vw] rounded-[0.417vw] ">
-              Name
-            </label>
-            <input
-              className=" text-base border-[0.052vw] bg-transparent border-zinc-400 w-[18vw] py-[1.5vh] px-[1vw] rounded-[0.417vw] "
-              type="text"
-              placeholder="Name"
-              onChange={(e) => setCus_Name(e.target.value)}
-            />
-          </div>
-          <div className="flex justify-between w-full">
-            <label
-              className={`${
-                theme === "dark" ? "text-white" : "text-black"
-              } text-base py-[1.5vh] px-[1vw] rounded-[0.417vw] `}
-            >
-              Phone
-            </label>
-            <div className="select-container flex w-[18vw] gap-[.5vw] items-center justify-center">
-              <select
-                value={countryCode}
-                onChange={(e) => dispatch(setCountryCode(e.target.value))}
-                className={`${
-                  theme === "dark"
-                    ? "bg-[#1A1C22] text-white"
-                    : "bg-zinc-200 text-black"
-                } Hmd py-[1.5vh] w-[4vw] !px-[.5vw] rounded-[0.417vw] select cursor-pointer`}
-                name="countryCode"
-                id="countryCode"
-              >
-                <option value="+91">+91</option>
-                <option value="+92">+92</option>
-                <option value="+93">+93</option>
-              </select>
+          <div className="flex flex-col w-full space-y-4">
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium text-gray-700">Name</label>
               <input
-                className="Hmd border-[0.052vw] bg-transparent border-zinc-400 w-[13.5vw] px-[1vw] py-[1.5vh] rounded-[0.417vw] "
-                type="number"
-                placeholder={countryCode}
-                onChange={(e) => setCus_Number(e.target.value)}
+                className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
+                type="text"
+                placeholder="Enter your name"
+                onChange={(e) => setCus_Name(e.target.value)}
               />
             </div>
-          </div>
-          <div className="flex justify-between w-full">
-            <label className="text-base py-[1.5vh] px-[1vw] rounded-[0.417vw] ">
-              Purpose
-            </label>
-            <input
-              className="text-base border-[0.052vw] bg-transparent border-zinc-400 w-[18vw] py-[1.5vh] px-[1vw] rounded-[0.417vw] "
-              type="text"
-              placeholder="Purpose"
-              onChange={(e) => setCus_Pur(e.target.value)}
-            />
-          </div>
-          <div className="mt-[1.5vw] flex w-full justify-end">
-            <ContainedButton onClick={makeCall}>Call me now</ContainedButton>
+
+            <div className="flex flex-col space-y-2">
+              <label className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-200" : "text-gray-700"
+              }`}>
+                Phone
+              </label>
+              <div className="flex gap-3">
+                <select
+                  value={countryCode}
+                  onChange={(e) => dispatch(setCountryCode(e.target.value))}
+                  className={`${
+                    theme === "dark"
+                      ? "bg-[#1A1C22] text-white border-gray-600"
+                      : "bg-gray-50 text-black border-gray-300"
+                  } w-24 px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
+                  name="countryCode"
+                  id="countryCode"
+                >
+                  <option value="+91">+91</option>
+                  <option value="+92">+92</option>
+                  <option value="+93">+93</option>
+                </select>
+                <input
+                  className={`flex-1 text-base border ${
+                    theme === "dark" ? "border-gray-600" : "border-gray-300"
+                  } rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
+                  type="number"
+                  placeholder="Enter phone number"
+                  onChange={(e) => setCus_Number(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium text-gray-700">Purpose</label>
+              <input
+                className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
+                type="text"
+                placeholder="Enter your purpose"
+                onChange={(e) => setCus_Pur(e.target.value)}
+              />
+            </div>
+
+            <div className="mt-6 flex w-full justify-end">
+              <ContainedButton 
+                onClick={makeCall}
+                className="bg-[#2D3377] hover:bg-[#2D3377]/90 transition-colors"
+              >
+                Call me now
+              </ContainedButton>
+            </div>
           </div>
         </div>
       </div>

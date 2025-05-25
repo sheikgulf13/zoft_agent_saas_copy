@@ -37,143 +37,136 @@ const connect = () => {
   }, []);
 
   return (
-    <div
-      className={`flex flex-col justify-start items-start w-full h-[100vh]`}
-    >
-      <div
-        className={`border-b-[.1vw] flex justify-center px-8 mt-8 mb-8 relative w-full text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
-        }`}
-      >
+    <div className="flex flex-col justify-start items-start px-8 w-full h-screen">
+      <div className={`border-b-[.1vw] flex justify-center px-8 mt-8 relative w-full text-base border-zinc-300 ${
+        theme === "dark" ? "text-[#9f9f9f]" : "text-black"
+      }`}>
         <PhoneSettingNav />
       </div>
 
-      <div className="flex flex-col w-full h-full items-center justify-start">
-        <div
-          className={`flex flex-col mt-[1vw] w-[50%] text-[#9f9f9f] ${
-            theme === "dark" ? "bg-black" : "bg-white"
-          } p-[1.5vw] rounded-lg shadow-lg gap-[.3vw]`}
-        >
-          <div className="flex flex-col">
-            <h5
-              className={`${
-                theme === "dark" ? "text-white" : "text-black"
-              } font-semibold text-lg`}
-              >
+      <div className="flex flex-col w-full h-[calc(100vh-140px)] mt-1 items-center justify-start">
+        <div className={`flex flex-col w-[50%] ${
+          theme === "dark" ? "bg-[#1A1C22]" : "bg-white"
+        } p-6 rounded-xl shadow-lg gap-4`}>
+          {/* Webhook Section */}
+          <div className="flex flex-col space-y-1">
+            <h5 className={`text-lg font-semibold ${
+              theme === "dark" ? "text-white" : "text-[#2D3377]/90"
+            }`}>
               Webhook endpoint
             </h5>
-            <p className="font-medium text-base">
+            <p className="text-sm text-gray-600">
               Send data to your agent through webhook integration
             </p>
           </div>
           
-          <div className={`flex justify-between items-center rounded-md px-[1vw] py-[.5vw] ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F3F4F7] text-black'}`}>
-            <input type="text" value={webhook} disabled className="bg-transparent w-full" />
-            <button onClick={handleCopy_webhook}>
+          <div className={`flex justify-between items-center rounded-lg px-3 py-2 ${
+            theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-gray-50 text-black'
+          }`}>
+            <input 
+              type="text" 
+              value={webhook} 
+              disabled 
+              className="bg-transparent w-full text-sm focus:outline-none" 
+            />
+            <button 
+              onClick={handleCopy_webhook}
+              className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
               {copied ? (
-                <FaClipboardCheck />
+                <FaClipboardCheck className="text-[#2D3377]" />
               ) : (
-                <FaClipboardList />
+                <FaClipboardList className="text-[#2D3377]" />
               )}
             </button>
           </div>
 
-          <div className="flex flex-col">
-            <h5
-                className={`${
-                theme === "dark" ? "text-white" : "text-black"
-                } font-semibold text-lg mt-[1vw]`}
-            >
-                Required fields
+          {/* Required Fields Section */}
+          <div className="flex flex-col space-y-1">
+            <h5 className={`text-lg font-semibold ${
+              theme === "dark" ? "text-white" : "text-[#2D3377]/90"
+            }`}>
+              Required fields
             </h5>
-            <p className="font-medium text-base">
-                Webhook required fields mapping
+            <p className="text-sm text-gray-600">
+              Webhook required fields mapping
             </p>
           </div>
-          <div className="flex font-medium items-center gap-[.5vw] text-base">
-            <SiTicktick
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            />
-            <span
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            >
-              name
-            </span>
-            <p>required field, field name: name, type: text</p>
-          </div>
-          <div className="flex font-medium items-center gap-[.5vw] text-base">
-            <SiTicktick
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            />
-            <span
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            >
-              phone_number
-            </span>
-            <p>required field, field name: phone_number, type: phone number</p>
-          </div>
-          <h6
-            className={`${
-              theme === "dark" ? "text-white" : "text-black"
-            } text-lg font-semibold mt-[1vw]`}
-          >
-            Optional
-          </h6>
-          <div className="flex items-center font-medium gap-[.5vw] text-base">
-            <SiTicktick
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            />
-            <span
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            >
-              email
-            </span>
-            <p>Optional field, field name: email, type: email</p>
-          </div>
-          <div className="flex items-center font-medium gap-[.5vw] text-base">
-            <SiTicktick
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            />
-            <span
-              className={`${theme === "dark" ? "text-white" : "text-black"}`}
-            >
-              Reason
-            </span>
-            <p>Optional field, field name: reason, type: text</p>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-[#1F222A]">
+              <SiTicktick className="text-[#2D3377] text-base" />
+              <span className="font-medium text-sm text-gray-800 dark:text-white">name</span>
+              <p className="text-sm text-gray-600 dark:text-gray-300">required field, field name: name, type: text</p>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-[#1F222A]">
+              <SiTicktick className="text-[#2D3377] text-base" />
+              <span className="font-medium text-sm text-gray-800 dark:text-white">phone_number</span>
+              <p className="text-sm text-gray-600 dark:text-gray-300">required field, field name: phone_number, type: phone number</p>
+            </div>
           </div>
 
+          {/* Optional Fields Section */}
+          <div className="flex flex-col space-y-1">
+            <h6 className={`text-base font-semibold ${
+              theme === "dark" ? "text-white" : "text-[#2D3377]/90"
+            }`}>
+              Optional
+            </h6>
+          </div>
 
-          {/* Separator line */}
-          <div className="border-t border-gray-300 my-8"></div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-[#1F222A]">
+              <SiTicktick className="text-[#2D3377] text-base" />
+              <span className="font-medium text-sm text-gray-800 dark:text-white">email</span>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Optional field, field name: email, type: email</p>
+            </div>
 
-          {/* EMbed code Options */}
-          <div className="flex flex-col">
-            <h5
-              className={`${
-                theme === "dark" ? "text-white" : "text-black"
-              } font-semibold text-lg`}
-              >
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 dark:bg-[#1F222A]">
+              <SiTicktick className="text-[#2D3377] text-base" />
+              <span className="font-medium text-sm text-gray-800 dark:text-white">Reason</span>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Optional field, field name: reason, type: text</p>
+            </div>
+          </div>
+
+          {/* Separator */}
+          <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+
+          {/* Embed Code Section */}
+          <div className="flex flex-col space-y-1">
+            <h5 className={`text-lg font-semibold ${
+              theme === "dark" ? "text-white" : "text-[#2D3377]/90"
+            }`}>
               Embed Code
             </h5>
-            <p className="font-medium text-base">
+            <p className="text-sm text-gray-600">
               Embed your agent website on your website
             </p>
           </div>
-          <div className={`flex justify-between items-center rounded-md px-[20px] py-[45px] ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F3F4F7] text-black'}`}>
-            <input type="text" value={embedcode} disabled className="bg-transparent" />
-            <button onClick={handleCopy_embedcode}>
+
+          <div className={`flex justify-between items-center rounded-lg px-3 py-2 ${
+            theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-gray-50 text-black'
+          }`}>
+            <input 
+              type="text" 
+              value={embedcode} 
+              disabled 
+              className="bg-transparent w-full text-sm focus:outline-none" 
+            />
+            <button 
+              onClick={handleCopy_embedcode}
+              className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
               {copied ? (
-                <FaClipboardCheck />
+                <FaClipboardCheck className="text-[#2D3377]" />
               ) : (
-                <FaClipboardList />
+                <FaClipboardList className="text-[#2D3377]" />
               )}
             </button>
           </div>
-
-
         </div>
       </div>
-
     </div>
   );
 };

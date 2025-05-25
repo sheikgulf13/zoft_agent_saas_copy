@@ -91,31 +91,6 @@ const Agents = (props) => {
           <PhoneAgentList isLoading={isLoading} />
         )}
       </div>
-
-      {/* Template Cards */}
-      <div className="mt-3 px-20">
-        <div className="flex gap-6">
-          {templateCards.map((card, index) => (
-            <div
-              key={index}
-              className="flex-1 bg-white rounded-xl shadow-md p-2 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-            >
-              <div className="flex flex-col items-center text-center">
-                <span className="text-3xl mb-2">{card.icon}</span>
-                <h3 className="text-lg font-semibold text-[#211C84] mb-1">
-                  {card.title}
-                </h3>
-                <p className="text-sm text-[#7A73D1] mb-3">
-                  {card.description}
-                </p>
-                <button className="bg-[#4D55CC] text-white px-5 py-1.5 rounded-md hover:bg-[#211C84] transition-colors duration-200">
-                  {card.action}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

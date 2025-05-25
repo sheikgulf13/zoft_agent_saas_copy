@@ -377,7 +377,7 @@ body {
 }
 
 .scrollbar-light::-webkit-scrollbar-thumb {
-  background: #4D55CC;
+  background: #2D3377/90;;
   border-radius: 8px;
   border: 1px solid #F3F4F7;
   min-height: 40px;
@@ -395,7 +395,7 @@ body {
 }
 
 .scrollbar-dark::-webkit-scrollbar-thumb {
-  background: #4D55CC;
+  background: #2D3377/90;
   border-radius: 8px;
   border: 1px solid #2A2D3E;
   min-height: 40px;

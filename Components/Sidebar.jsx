@@ -199,7 +199,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                   text={button.text}
                   isActive={isActive}
                   onClick={() => handleButtonClick(index, button)}
-                  className={`w-full ${button.padding}
+                  className={`w-full text-md ${button.padding}
                 ${isActive ? "" : button.color}
                 ${button.width}
                 ${isActive ? `${button.className}` : ``}
@@ -243,11 +243,11 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                 text={button.text}
                 isActive={activeButton === button.text}
                 onClick={() => handleButtonClick(index, button)}
-                className={` w-full ${button.padding}
+                className={` w-full text-md ${button.padding}
                 ${activeButton === button.text ? "" : button.color}
                 ${activeButton === button.text ? `${button.className}` : ``}
                 ${button.text === "logout" ? "H3" : ""}
-                ${isOpen ? "inline-block" : "hidden"} Hmd`}
+                ${isOpen ? "inline-block" : "hidden"} text-md`}
               />
               <div>
                 <GradientButton
@@ -286,7 +286,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
             Icon={theme === "dark" ? IoMoonOutline : IoSunny}
             text={isOpen ? (theme === "dark" ? "dark" : "light") : ""}
             className={`toggle-mode primary w-[5.3vw] sidebar-button rounded-[0.417vw] py-[.46vw] px-[.3vw] text-[#4D55CC] hover:scale-105 transition-all duration-300 ${
-              isOpen ? "Hmd" : "flex justify-center items-center w-[5vw] Hmd"
+              isOpen ? "text-md" : "flex justify-center items-center w-[5vw] Hmd"
             }`}
             onClick={() =>
               theme === "dark" ? setTheme("light") : setTheme("dark")

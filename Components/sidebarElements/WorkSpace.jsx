@@ -80,7 +80,8 @@ const WorkSpace = () => {
         if (result) {
           getWorkspaceList();
         }
-      }
+      },
+      "delete"
     );
   };
 
@@ -158,7 +159,7 @@ const WorkSpace = () => {
                                   `/workspace/settings?workspaceId=${workspace.id}`
                                 );
                               }}
-                              className="text-[#7A73D1] hover:scale-110 transition-transform duration-200"
+                              className="text-[#13104A]/95 hover:scale-110 transition-transform duration-200"
                             />
                           </button>
                         </div>

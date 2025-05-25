@@ -293,13 +293,21 @@ const Deploy = () => {
                     <label htmlFor="embed" className="capitalize text-base">
                       Embed Code
                     </label>
-                    <CopyBlock
-                      text={frame}
-                      language="html"
-                      showLineNumbers={true}
-                      theme={dracula}
-                      codeBlock
-                    />
+                    <div className="custom-scrollbar">
+                      <CopyBlock
+                        text={frame}
+                        language="html"
+                        showLineNumbers={true}
+                        theme={dracula}
+                        codeBlock
+                        customStyle={{
+                          maxHeight: '35vh',
+                          overflowY: 'auto',
+                          scrollbarWidth: 'thin',
+                          scrollbarColor: theme === 'dark' ? '#2D3377 #0A0929' : '#2D3377 #000000',
+                        }}
+                      />
+                    </div>
                   </>
                 )}
               </div>
@@ -324,6 +332,34 @@ const Deploy = () => {
         </div>
       </div>
       {/* ); */}
+
+      <style jsx global>{`
+        /* Custom Scrollbar Styles */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #2D3377;
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #211A55;
+        }
+
+        /* For Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #2D3377 ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+        }
+      `}</style>
     </>
   );
 };

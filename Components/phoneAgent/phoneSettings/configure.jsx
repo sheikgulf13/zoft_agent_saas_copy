@@ -184,36 +184,37 @@ const Configure = () => {
   // console.log(" PRINTING ")
   // console.log(phoneAgentID);
   return (
-    <div className="flex flex-col h-screen w-full">
+    <div className="flex flex-col px-8 h-screen w-full">
       {/* Header */}
       <div
-        className={`border-b-[1px] flex justify-center px-8 mt-8 mb-8 w-full text-base border-zinc-300 ${
+        className={`border-b-[1px] flex justify-center px-8 mt-8 mb-5 w-full text-base border-zinc-300 ${
           theme === "dark" ? "text-[#9f9f9f]" : "text-black"
         }`}
       >
         <PhoneSettingNav />
       </div>
 
-      <div className="h-full flex-1 px-8  overflow-hidden scrollbar scrollbar-light">
-        <div className="w-[70%] flex flex-col justify-center gap-4 mx-auto p-5 bg-white text-gray-800 rounded-lg">
+      <div className="h-full flex-1 px-8 overflow-hidden scrollbar scrollbar-light">
+        <div className="w-[80%] flex flex-col justify-center gap-6 mx-auto p-8 bg-white text-gray-800 rounded-xl shadow-lg">
           <div className="flex justify-end">
             <ContainedButton
-              backgroundColor={"rgb(239 68 68 / var(--tw-bg-opacity))"}
+              bgColor="bg-red-500 hover:bg-red-600 transition-colors"
               onClick={handleDeleteClick}
             >
               Delete
             </ContainedButton>
           </div>
+          
           <div
-            className="overflow-y-auto"
+            className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
             style={{ height: "calc(100vh - 340px)" }}
           >
             {/* AI Assistant Configuration Form */}
-            <div className="bg-gray-100 rounded-lg p-6  !transition-all !duration-1000">
-              <h1 className="text-2xl font-bold mb-4">
+            <div className="bg-gray-50 rounded-xl p-8 shadow-sm">
+              <h1 className="text-2xl font-bold text-[#2D3377]/90 mb-6">
                 AI Assistant Configuration
               </h1>
-              <form className="flex flex-wrap md:flex-nowrap gap-6">
+              <form className="flex flex-wrap md:flex-nowrap gap-8">
                 {/* Left Column */}
                 <div className="space-y-6 flex-1">
                   {/* Name Field */}
@@ -230,7 +231,7 @@ const Configure = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="What name will your assistant go by"
-                      className="w-full text-base border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                     />
                     <p className="text-xs text-gray-500">
                       What name will your assistant go by
@@ -238,7 +239,7 @@ const Configure = () => {
                   </div>
 
                   {/* Purpose Field */}
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     <label
                       htmlFor="purpose"
                       className="block text-sm font-medium text-gray-700"
@@ -249,10 +250,9 @@ const Configure = () => {
                       id="purpose"
                       value={purpose}
                       onChange={(e) => purposeHandler(e)}
-                      // Call autoResize on input
                       placeholder="Describe the purpose or goal of your AI assistant"
-                      rows={1} // Start with 1 row
-                      className="w-full border min-h-[19.3vh] text-base border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden !transition-all !duration-300"
+                      rows={1}
+                      className="w-full border min-h-[19.3vh] text-base border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent resize-none overflow-hidden transition-all duration-300"
                     />
                     <p className="text-xs text-gray-500">
                       Describe the main purpose or goal of your AI assistant
@@ -262,8 +262,8 @@ const Configure = () => {
 
                 {/* Right Column */}
                 <div className="space-y-6 flex-1">
-                  <div className="flex gap-2">
-                    <div className="space-y-2">
+                  <div className="flex gap-4">
+                    <div className="space-y-2 flex-1">
                       <label
                         htmlFor="gender"
                         className="block text-sm font-medium text-gray-700"
@@ -274,7 +274,7 @@ const Configure = () => {
                         id="gender"
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
-                        className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 appearance-none focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                       >
                         <option value="">Select Gender</option>
                         <option value="female">Female</option>
@@ -285,7 +285,7 @@ const Configure = () => {
                       </p>
                     </div>
                     {/* Language Field */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex-1">
                       <label
                         htmlFor="language"
                         className="block text-sm font-medium text-gray-700"
@@ -296,7 +296,7 @@ const Configure = () => {
                         id="language"
                         value={language}
                         onChange={(e) => setLanguage(e.target.value)}
-                        className="w-full text-base border border-gray-300 rounded-md px-3 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 appearance-none focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                       >
                         <option value="">Select Language</option>
                         {uniqueLanguages.map((data) => (
@@ -317,7 +317,7 @@ const Configure = () => {
                     >
                       Voice <span className="text-red-500">*</span>
                     </label>
-                    <div className="flex bg-white border border-gray-300 rounded-md p-1 justify-between">
+                    <div className="flex bg-white border border-gray-300 rounded-lg p-2 justify-between items-center">
                       <select
                         id="voice"
                         value={voice}
@@ -325,14 +325,13 @@ const Configure = () => {
                           setVoice(e.target.value);
                           handleVoiceChange(e);
                         }}
-                        className="w-[50%] text-base rounded-md px-3 py-2 appearance-none"
+                        className="w-[50%] text-base rounded-lg px-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                       >
                         {filteredVoiceNames.map((data) => (
                           <option value={data.voice_id}>{data.name}</option>
                         ))}
                       </select>
-                      {/* <AudioPlayer voiceUrl={voiceUrl} /> */}
-                      <audio ref={audioRef} controls>
+                      <audio ref={audioRef} controls className="w-[45%]">
                         <source src={voiceUrl} type="audio/mpeg" />
                         Your browser does not support the audio element.
                       </audio>
@@ -350,36 +349,21 @@ const Configure = () => {
                     >
                       Phone number <span className="text-red-500">*</span>
                     </label>
-
                     <div className="w-full">
-                      {/* Country Code Select */}
-                      {/* <select
-                        name="country code"
-                        id="countryCode"
-                        className="border-0 text-base bg-transparent focus:ring-0 focus:outline-none py-2 px-3"
-                        onChange={(e) => setcountryCode(e.target.value)}
-                      >
-                        <option value="+91">+91</option>
-                        <option value="+92">+92</option>
-                        <option value="+93">+93</option>
-                      </select> */}
-
-                      {/* Phone Number Input */}
                       <select
-                        className="w-full appearance-none px-2 py-1 border border-gray-300 rounded"
+                        className="w-full appearance-none px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       >
                         <option
                           id="phone"
-                          className="w-full text-base focus:ring-0 focus:outline-none px-3 py-2"
+                          className="w-full text-base"
                           value={phoneNumber}
                         >
                           {phoneNumber}
                         </option>
                       </select>
                     </div>
-
-                    <p className="text-xs text-gray-500 mt-[1px]">
+                    <p className="text-xs text-gray-500">
                       Select your Twilio phone number
                     </p>
                   </div>
@@ -388,12 +372,12 @@ const Configure = () => {
             </div>
 
             {/* Separator */}
-            <div className="border-t border-gray-300 my-8"></div>
+            <div className="border-t border-gray-200 my-8"></div>
 
             {/* Company Configuration Form */}
-            <div className="bg-gray-100 rounded-lg p-6">
-              <h1 className="text-2xl font-bold mb-6">Company Configuration</h1>
-              <form className="flex flex-wrap md:flex-nowrap gap-6">
+            <div className="bg-gray-50 rounded-xl p-8 shadow-sm">
+              <h1 className="text-2xl font-bold text-[#2D3377]/90 mb-6">Company Configuration</h1>
+              <form className="flex flex-wrap md:flex-nowrap gap-8">
                 {/* Left Column */}
                 <div className="space-y-6 flex-1">
                   {/* Company Name Field */}
@@ -410,7 +394,7 @@ const Configure = () => {
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="Enter your company name"
-                      className="w-full border text-base border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full border text-base border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
                     />
                     <p className="text-xs text-gray-500">
                       The official name of your company
@@ -429,10 +413,10 @@ const Configure = () => {
                       id="companyBusiness"
                       value={companyBusiness}
                       onChange={(e) => businessHandler(e)}
-                      onInput={autoResize} // Call autoResize on input
+                      onInput={autoResize}
                       placeholder="Describe your company business"
-                      rows={1} // Start with 1 row
-                      className="w-full text-base border min-h-[10vh] border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden transition-all duration-200 ease-in-out"
+                      rows={1}
+                      className="w-full text-base border min-h-[10vh] border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent resize-none overflow-hidden transition-all duration-300"
                     />
                     <p className="text-xs text-gray-500">
                       Describe what your company does
@@ -454,10 +438,10 @@ const Configure = () => {
                       id="companyProducts"
                       value={companyServices}
                       onChange={(e) => productsHandler(e)}
-                      onInput={autoResize} // Call autoResize on input
+                      onInput={autoResize}
                       placeholder="List your company products"
-                      rows={1} // Start with 1 row
-                      className="w-full text-base border min-h-[22vh] border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden transition-all duration-200 ease-in-out"
+                      rows={1}
+                      className="w-full text-base border min-h-[22vh] border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent resize-none overflow-hidden transition-all duration-300"
                     />
                     <p className="text-xs text-gray-500">
                       List the products your company offers
@@ -468,7 +452,10 @@ const Configure = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <ContainedButton onClick={updatePhoneAgent}>
+            <ContainedButton 
+              onClick={updatePhoneAgent}
+              className="bg-[#2D3377] hover:bg-[#2D3377]/90 transition-colors"
+            >
               Save Changes
             </ContainedButton>
           </div>

@@ -15,133 +15,163 @@ const Playground = () => {
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
 
   return (
-    <div
-      className={`flex  flex-col justify-between items-center px-8  w-full h-[100vh]`}
-    >
-      <div
-        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
-        }`}
-      >
+    <div className={`flex flex-col justify-between items-center px-8 w-full h-[100vh]`}>
+      <div className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] text-base border-zinc-300 ${
+        theme === "dark" ? "text-[#9f9f9f]" : "text-black"
+      }`}>
         <div className="absolute left-[2vw] top-[-.6vw]">
           <OutlinedButton
-            onClick={() =>
-              router.push(
-                `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
-              )
-            }
+            onClick={() => router.push(`/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`)}
+            borderColor="border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]"
           >
-            <FaArrowLeftLong />
-            <span className="ml-2">Back to workspace</span>
+            <FaArrowLeftLong className="text-sm" />
+            <span className="text-sm">Back to workspace</span>
           </OutlinedButton>
         </div>
         <ChatSettingNav />
       </div>
-      <div
-        className={`flex  items-center justify-center p-8 w-[80%] h-full`}
-      >
-        <div
-          className={`flex rounded-xl  justify-between min-h-full w-full py-8 px-8  ${
-            theme === "dark" ? "bg-[#1A1C22]" : "bg-white"
-          }`}
-        >
-          <div
-            className={`${
-              theme === "dark" ? "text-zinc-100" : "text-black"
-            } flex flex-col gap-[.9vw] w-[45%] h-full border-[.15vw] rounded-xl border-zinc-300 px-[.7vw] pb-[2.5vw] pt-[.3vw] mt-[2vw] font-semibold text-base`}
-          >
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+      
+      <div className="flex items-center justify-center p-8 w-[80%] h-[calc(100vh-110px)]">
+        <div className={`flex rounded-xl justify-between min-h-full w-full py-8 px-8 shadow-lg ${
+          theme === "dark" ? "bg-[#1A1C22]" : "bg-white"
+        }`}>
+          <div className={`${
+            theme === "dark" ? "text-zinc-100" : "text-black"
+          } flex flex-col w-[45%] h-full border border-zinc-300 rounded-xl p-6`}>
+            
+            {/* Bot Name */}
+            <div className="flex flex-col space-y-1 mb-4">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Chatbot Name
               </span>
-              <h6 className={`font-bold text-base pb-[.5vw] `}>
+              <h6 className="text-xl font-bold text-[#2D3377]/90">
                 {selectedChatAgent?.bot_name}
               </h6>
             </div>
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+
+            {/* Bot ID */}
+            <div className="flex flex-col space-y-1 mb-4">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Chatbot ID
               </span>
-              {selectedChatAgent?.id}
+              <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md">
+                {selectedChatAgent?.id}
+              </span>
             </div>
-            <div className={`flex gap-[6vw]`}>
-              <div className={`flex flex-col`}>
-                <span
-                  className={`${
-                    theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                  }`}
-                >
+
+            {/* Status and Model */}
+            <div className="flex gap-12 mb-4">
+              <div className="flex flex-col space-y-1">
+                <span className={`text-sm font-medium ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}>
                   Status
                 </span>
-                Trained
+                <span className="flex items-center">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  Trained
+                </span>
               </div>
-              <div className={`flex flex-col`}>
-                <span
-                  className={`${
-                    theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                  }`}
-                >
+              <div className="flex flex-col space-y-1">
+                <span className={`text-sm font-medium ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}>
                   Model
                 </span>
-                gpt-4o
+                <span className="text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 px-3 py-1 rounded-md">
+                  gpt-4o
+                </span>
               </div>
             </div>
 
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+            {/* Visibility */}
+            <div className="flex flex-col space-y-1 mb-4">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Visibility
               </span>
-              Private
+              <span className="text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-md w-fit">
+                Private
+              </span>
             </div>
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+
+            {/* Number of Tokens */}
+            <div className="flex flex-col space-y-1 mb-4">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Number of Tokens
               </span>
-              {selectedChatAgent?.total_tokens}
+              <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md">
+                {selectedChatAgent?.total_tokens}
+              </span>
             </div>
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+
+            {/* Temperature */}
+            <div className="flex flex-col space-y-1 mb-4">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Temperature
               </span>
-              0
+              <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md">
+                0
+              </span>
             </div>
-            <div className={`flex flex-col`}>
-              <span
-                className={`${
-                  theme === "dark" ? "text-[#9f9f9f]" : " text-zinc-400"
-                }`}
-              >
+
+            {/* Last Trained */}
+            <div className="flex flex-col space-y-1">
+              <span className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-400" : "text-gray-500"
+              }`}>
                 Last trained at
               </span>
-              {selectedChatAgent?.created_at?.substring(0, 10)}
+              <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md">
+                {selectedChatAgent?.created_at?.substring(0, 10)}
+              </span>
             </div>
           </div>
 
-          <div className={`w-[45%]`}>
-            <Chatbot height={"70vh"} width="100%" chatAgent={selectedChatAgent} />
+          <div className="w-[45%] rounded-xl overflow-hidden shadow-lg">
+            <Chatbot
+              height={"70vh"}
+              width="100%"
+              chatAgent={selectedChatAgent}
+            />
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #2D3377;
+          border-radius: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #211A55;
+        }
+
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #2D3377 ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+        }
+      `}</style>
     </div>
   );
 };

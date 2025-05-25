@@ -245,7 +245,7 @@ const Source = () => {
       className={`flex flex-col justify-start items-center px-8  w-full h-[100vh]`}
     >
       <div
-        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
+        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] text-base border-zinc-300 ${
           theme === "dark" ? "text-[#9f9f9f]" : " text-black"
         }`}
       >
@@ -256,42 +256,37 @@ const Source = () => {
                 `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
               )
             }
-          >
-            <FaArrowLeftLong />
-            <span className="ml-2">Back to workspace</span>
+              borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}
+                    >
+                      <FaArrowLeftLong className="text-sm"/>
+                      <span className="text-sm">Back to workspace</span>
           </OutlinedButton>
         </div>
         <ChatSettingNav />
       </div>
-      <div
-        className={`flex items-start justify-start py-[2vw] gap-[2vw] pl-[8vw] pr-[3vw] w-[80%] h-full`}
-      >
-        <div
-          className={`flex flex-col justify-start min-h-full w-[80%] py-[2vw] px-[1vw] rounded-lg ${
-            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-          }`}
-        >
-          <h1 className="px-[2.5vw] text-lg font-semibold pb-[1vh]">
+
+      <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-[80%] h-full">
+        <div className={`flex flex-col justify-start min-h-full w-[80%] py-8 px-4 rounded-xl shadow-lg ${
+          theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+        }`}>
+          <h1 className="px-10 text-xl font-semibold pb-4 text-[#2D3377]/90">
             Data Source
           </h1>
-          <form
-            className="flex flex-col gap-[1vw] px-[4vw]"
-            onSubmit={handleFormSubmit}
-          >
-            <div className="flex justify-between">
-              <div className={`flex flex-col w-[15%] text-base`}>
+          <form className="flex flex-col gap-6 px-10" onSubmit={handleFormSubmit}>
+            <div className="flex justify-between gap-12">
+              <div className="flex flex-col w-[25%] text-base">
                 {links.map((link, index) => (
                   <React.Fragment key={index}>
                     {index > 0 && (
-                      <div className={`bg-zinc-200 min-w-full min-h-[.1vw]`} />
+                      <div className="bg-zinc-200 min-w-full min-h-[1px]" />
                     )}
                     <button
                       onClick={() => handleSectionClick(index)}
                       className={`${
                         index === selectedSection
-                          ? "bg-zinc-300 text-black"
-                          : ""
-                      } px-[.5vw] py-[.5vh] my-[.4vw] rounded-[0.25vw]`}
+                          ? "bg-[#2D3377]/10 text-[#2D3377] font-medium"
+                          : "text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      } px-6 py-2.5 my-0.5 rounded-lg transition-all duration-200 w-full text-left text-base`}
                     >
                       {link.label}
                     </button>
@@ -300,7 +295,7 @@ const Source = () => {
               </div>
 
               {selectedSection === 0 ? (
-                <div className="w-[80%]">
+                <div className="w-[70%]">
                   <AddFile
                     existingFile={existingFile}
                     setExistingFile={setExistingFile}
@@ -316,41 +311,43 @@ const Source = () => {
                     value={inputUrl}
                     type="url"
                     id="url"
-                    className={`text-base border-[0.052vw] w-full border-zinc-300 px-[1.3vw] py-[.5vh] rounded-[.4vw] ${
+                    className={`text-base border w-full border-zinc-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none transition-all duration-200 ${
                       theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
                     }`}
                     placeholder="Enter URLs"
                   />
-                  <div className="flex flex-col gap-[.5vw] text-base mt-[2vh] w-[100%]">
+                  <div className="flex flex-col gap-3 text-base mt-6 w-full">
                     {pastedUrl.length > 0 &&
                       pastedUrl.map((urlObj, index) => (
                         <div
                           key={index}
-                          className="h-[4vh] w-full border-[1px] border-zinc-300 px-[1vw] py-[.5vh] text-sm rounded-[.4vw] flex justify-between items-center"
+                          className="h-14 w-full border border-zinc-300 px-4 py-2 text-sm rounded-lg flex justify-between items-center bg-white dark:bg-[#1F222A] shadow-sm hover:shadow-md transition-all duration-200"
                         >
-                          <span className="text-black">
+                          <span className="text-gray-800 dark:text-gray-200">
                             {urlObj?.length < 45 ? (
-                              <span> {urlObj} </span>
+                              <span>{urlObj}</span>
                             ) : (
                               <div className="relative">
                                 <div className="group">
-                                  {/* Tooltip */}
-                                  <span className="absolute bg-gray-500 text-white top-[-45px] w-full left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  <span className="absolute bg-gray-800 text-white top-[-45px] w-full left-0 rounded-lg px-3 py-2 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                                     {urlObj}
                                   </span>
-
-                                  {/* Truncated URL */}
-                                  <span className="cursor-pointer group-hover:underline">
+                                  <span className="cursor-pointer group-hover:text-[#2D3377] transition-colors duration-200">
                                     {urlObj?.slice(0, 40)}.....
                                   </span>
                                 </div>
                               </div>
                             )}
                           </span>
-                          <span>{selectedChatAgent?.url_word_count?.[urlObj] || urlObj?.word_count} words</span>
-                          <button onClick={() => removeUrl(index)} className="">
+                          <span className="text-gray-600 dark:text-gray-400 font-medium">
+                            {selectedChatAgent?.url_word_count?.[urlObj] || urlObj?.word_count} words
+                          </span>
+                          <button 
+                            onClick={() => removeUrl(index)} 
+                            className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                          >
                             <DeleteIcon />
                           </button>
                         </div>
@@ -360,13 +357,13 @@ const Source = () => {
               ) : (
                 <div className="w-[80%]">
                   <div className="mb-4 text-base">
-                    <p>Words count: {rawWordCounts}</p>
+                    <p className="text-gray-600 dark:text-gray-400">Words count: <span className="font-medium text-[#2D3377]">{rawWordCounts}</span></p>
                   </div>
                   <textarea
                     onChange={rawTextHandler}
                     value={rawText}
                     id="rawText"
-                    className={`w-full text-base border-[0.052vw] p-2 border-zinc-300 rounded-[.5vw] overflow-hidden ${
+                    className={`w-full text-base border p-4 border-zinc-300 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none transition-all duration-200 ${
                       theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
@@ -379,27 +376,30 @@ const Source = () => {
             </div>
           </form>
         </div>
-        <div
-          className={`flex flex-col gap-[1vw] justify-center items-center w-[20%] py-[4vh] px-[1vw] rounded-[.5vw] ${
-            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-          }`}
-        >
-          <h5 className={`font-semibold text-base`}>Sources</h5>
-          <h6 className={`font-semibold text-base pt-[.7vw]`}>
-            Total words detected
-          </h6>
-          <p className={`text-sm pb-[.7vw]`}>
-            <span className={`font-semibold`}>{totalWordCount}</span> /10,000
-            limit
-          </p>
-          <h6 className={`font-semibold text-base pt-[.7vw]`}>
-            Approx character
-          </h6>
-          <p className={`text-sm pb-[.7vw]`}>{charCount}</p>
-          <span className="absolute top-[43vh] text-red-900 text-sm">
-            *{err}
-          </span>
-          <ContainedButton onClick={handleUpdate}>
+        <div className={`flex flex-col gap-6 justify-center items-center w-[20%] py-16 px-4 rounded-xl shadow-lg ${
+          theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+        }`}>
+          <h5 className="font-semibold text-lg text-[#2D3377]">Sources</h5>
+          <div className="w-full space-y-6">
+            <div className="text-center">
+              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">Total words detected</h6>
+              <p className="text-sm mt-2">
+                <span className="font-bold text-[#2D3377]">{totalWordCount}</span>
+                <span className="text-gray-500"> /10,000 limit</span>
+              </p>
+            </div>
+            <div className="text-center">
+              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">Approx character</h6>
+              <p className="text-sm mt-2 font-medium text-[#2D3377]">{charCount}</p>
+            </div>
+          </div>
+          {err && (
+            <span className="text-red-500 text-sm font-medium">{err}</span>
+          )}
+          <ContainedButton 
+            onClick={handleUpdate}
+            className="w-full mt-4 bg-[#2D3377] hover:bg-[#211A55] text-white font-medium py-3 px-6 rounded-lg transition-all duration-200"
+          >
             Retrain Chatbot
           </ContainedButton>
         </div>

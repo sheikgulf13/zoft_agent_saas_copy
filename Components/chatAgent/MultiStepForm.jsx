@@ -78,11 +78,15 @@ const MultiStepForm = () => {
           <div
             className={`circle ${
               index < currentStep
-                ? "bg-green-600"
+                ? "bg-[#22c55e]"
                 : "border-blue-400 border-[2px] opacity-[.4]"
             } w-[2vw] h-[2vw] rounded-full flex justify-center items-center`}
           >
-            {index < currentStep ? <TickIcon /> : index + 1}
+            {index < currentStep ? (
+              <TickIcon className="w-[1vw] h-[1vw] text-white" />
+            ) : (
+              index + 1
+            )}
           </div>
           <h2
             className={`capitalize font-medium ${
@@ -165,7 +169,7 @@ const MultiStepForm = () => {
               </span>
             </div>
             {err && value === "" && label !== "Prompt" && (
-              <span className="text-red-900 capitalize Hsm font-medium absolute top-[-2vh] left-[39%] ">
+              <span className="text-red-600 capitalize Hsm font-medium absolute top-[-2vh] left-[39%] ">
                 *Enter the data
               </span>
             )}
@@ -228,7 +232,7 @@ const MultiStepForm = () => {
     >
       <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg relative">
         {renderStepIndicator()}
-        <div className="w-[90%] mx-auto my-[20px] h-[90%] overflow-hidden bg-[#F2F4F7]">
+        <div className="w-[90%] mx-auto my-[20px] h-[90%] overflow-hidden bg-gray-50">
           <div className="w-full mx-auto h-[90%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
             {renderContent()}
           </div>

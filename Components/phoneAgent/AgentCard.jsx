@@ -25,7 +25,12 @@ const AgentList = ({ agent }) => {
   };
 
   const deleteAgent = (agentId) => {
-    deletePhoneAgentApi(agentId);
+    if(!agentId) return;
+    //deletePhoneAgentApi(agentId);
+    //router.push(agentId);
+     router.push(
+      `/workspace/agents/phone/phonesetting/configure?workspaceId=${agent?.workspace_id}`
+    );
   };
 
   // console.log(agent);
@@ -35,8 +40,8 @@ const AgentList = ({ agent }) => {
       key={agent?.id}
       className={`w-[300px] h-[140px] cursor-pointer relative overflow-hidden rounded-xl transition-all duration-300 ${
         theme === "dark"
-          ? "bg-gradient-to-br from-[#1F222A] to-[#2A2E37] border border-gray-700 hover:border-[#4D55CC]"
-          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:border-[#4D55CC]"
+          ? "bg-gradient-to-br from-[#1F222A] to-[#2A2E37] border border-gray-700 hover:border-[#2D3377]/90"
+          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200 hover:border-[#2D3377]/90"
       } ${isHovered ? "shadow-md scale-[1.02]" : "shadow-md"}`}
       onClick={replaceHandler}
       onMouseEnter={() => setIsHovered(true)}
@@ -44,12 +49,12 @@ const AgentList = ({ agent }) => {
     >
        <div className="w-full h-full flex flex-col p-4 relative group">
         <h3 className={`font-bold text-base w-full text-left overflow-hidden text-ellipsis ${
-          theme === "dark" ? "text-gray-200" : "text-[#211C84]"
+          theme === "dark" ? "text-gray-200" : "text-[#333333]"
         }`}>
           {agent?.phone_agent_name}
         </h3>
 
-        {/* Action Buttons 
+        {/* Action Buttons */}
         <div
           className={`absolute bottom-0 left-0 right-0 flex justify-end gap-2 p-2 rounded-xl backdrop-blur-sm transition-all duration-300 ${
             isHovered
@@ -66,13 +71,13 @@ const AgentList = ({ agent }) => {
             onClick={(e) => {
               e.stopPropagation();
               router.push(
-                `/workspace/agents/chats/phonesetting/ai?workspaceId=${key?.agent?.workspace_id}`
+                `/workspace/agents/chats/phonesetting/ai?workspaceId=${agent?.workspace_id}`
               );
             }}
           >
             <IoSettingsSharp
               size={20}
-              className="text-[#7A73D1] hover:scale-110 transition-transform duration-200"
+              className="text-[#13104A]/95 hover:scale-110 transition-transform duration-200"
             />
           </button>
           <button
@@ -83,7 +88,10 @@ const AgentList = ({ agent }) => {
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              deleteAgent(key?.agent?.id);
+              //deleteAgent(agent?.id);
+                router.push(
+                `/workspace/agents/chats/phonesetting/ai?workspaceId=${agent?.workspace_id}`
+              );
             }}
           >
             <RiDeleteBin6Fill
@@ -91,7 +99,7 @@ const AgentList = ({ agent }) => {
               className="text-red-500 hover:scale-110 transition-transform duration-200"
             />
           </button>
-        </div>*/}
+        </div>
 
         {/* <span className='Hsm font-normal'>{agent?.conversation_purpose}</span> */}
 

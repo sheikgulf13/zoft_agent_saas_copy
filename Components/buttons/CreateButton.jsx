@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import useTheme from 'next-theme';
 import Link from 'next/link';
 
-const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace }) => {
+const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, height }) => {
     const { theme } = useTheme();
 
     return (
@@ -11,9 +11,9 @@ const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={`
-                ${isWorkSpace ? "w-[180px] h-[180px]" : "w-[300px] h-[140px]"} 
+                ${isWorkSpace ? "w-[180px] h-[180px]" : `w-[${width ? width : '300px'}] h-[${height ? height : '140px'}]`} 
                 text-base capitalize flex flex-col items-center justify-center 
-                border-2 rounded-2xl text-center cursor-pointer font-bold 
+                border-[1px] rounded-2xl text-center cursor-pointer font-bold 
                 transition-all duration-200 ease-in-out
                 ${theme === "dark" 
                     ? 'border-[#4D55CC]  hover:bg-[#4D55CC]/20 text-gray-200' 
@@ -40,7 +40,7 @@ const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace }) => {
                         whileHover={{ scale: 1.1 }}
                         className={`
                             mb-2
-                            ${theme === "dark" ? 'text-[#7A73D1]' : 'text-[#4D55CC]'}
+                            ${theme === "dark" ? 'text-[#7A73D1]' : 'text-[#2D3377]/90'}
                         `}
                     >
                         <Icon 
@@ -55,7 +55,7 @@ const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace }) => {
                 <motion.span
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-sm mt-2"
+                    className="text-sm mt-2 [#2D3377]/90"
                 >
                     {text}
                 </motion.span>
