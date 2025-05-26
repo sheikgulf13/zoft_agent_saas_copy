@@ -508,6 +508,25 @@ function ActionForm({
   ]);
 
   useEffect(() => {
+    if (initialData || formData) {
+      const timeout = setTimeout(() => {
+        const requestDataType = initialData?.data?.request_data_type || formData?.data?.request_data_type;
+        if (requestDataType) {
+          setFormData(prev => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              request_data_type: requestDataType
+            }
+          }));
+        }
+      }, 200); 
+
+      return () => clearTimeout(timeout);
+    }
+  }, []);
+
+  useEffect(() => {
     console.log(formData);
 
     setFormData((prev) => ({

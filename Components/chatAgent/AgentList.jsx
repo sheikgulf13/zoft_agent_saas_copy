@@ -78,7 +78,7 @@ const AgentList = (key, agent) => {
             onClick={(e) => {
               e.stopPropagation();
               //deleteAgent(key?.agent?.id);
-              router.push(`/workspace/agents/chats/chatsetting/ai?workspaceId=${key?.agent?.workspace_id}`);
+              router.push(`/workspace/agents/chats/chatsetting/ai?workspaceId=${key?.agent?.workspace_id}&isDelete=true`);
             }}
           >
             <RiDeleteBin6Fill

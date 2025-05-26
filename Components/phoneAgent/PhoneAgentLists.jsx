@@ -105,7 +105,7 @@ const PhoneAgentList = (props) => {
         {showModal && (
         <Modal open={showModal} onClose={() => setShowModal(false)}>
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center animate-fadeIn">
-            <div className="w-[75vw] max-w-[1200px] bg-white rounded-xl p-8 animate-slideIn">
+            <div className="max-w-[75vw] bg-white rounded-xl p-10 animate-slideIn">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Create New Phone Agent</h2>
                 <button
@@ -127,7 +127,7 @@ const PhoneAgentList = (props) => {
                   </svg>
                 </button>
               </div>
-              <div className="flex gap-4 justify-between">
+              <div className="flex gap-10 justify-between">
                 <CreateButton
                   onClick={() => {
                     dispatch(clearState());
@@ -141,7 +141,7 @@ const PhoneAgentList = (props) => {
                   height='200px'
                 />
 
-                <div className="flex-1 bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
+                <div className="w-[280px] bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
                   <div className="h-full flex flex-col justify-between">
                     <div>
                       <h3 className="text-xl font-semibold mb-3">
@@ -159,48 +159,6 @@ const PhoneAgentList = (props) => {
                       className="w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-[1.02]"
                     >
                       Use Template
-                    </button>
-                  </div>
-                </div>
-                <div className="flex-1 bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
-                  <div className="h-full flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">
-                        Clone Existing
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        Create a copy of an existing chat agent
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setShowModal(false);
-                        router.push('/')
-                      }}
-                      className="w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-[1.02]"
-                    >
-                      Clone Existing
-                    </button>
-                  </div>
-                </div>
-                <div className="flex-1 bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
-                  <div className="h-full flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">
-                        Import from File
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        Import a chat agent configuration from a file
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setShowModal(false);
-                        router.push('/')
-                      }}
-                      className="w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-[1.02]"
-                    >
-                      Import from File
                     </button>
                   </div>
                 </div>

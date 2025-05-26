@@ -90,7 +90,7 @@ const AgentList = ({ agent }) => {
               e.stopPropagation();
               //deleteAgent(agent?.id);
                 router.push(
-                `/workspace/agents/chats/phonesetting/ai?workspaceId=${agent?.workspace_id}`
+                `/workspace/agents/phone/phonesetting/configure?workspaceId=${agent?.workspace_id}&isDelete=true`
               );
             }}
           >

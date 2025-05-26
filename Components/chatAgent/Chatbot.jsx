@@ -79,7 +79,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
         setMessages((prevMessages) => [
           ...prevMessages,
           {
-            message: "Thanks for your message! We’ll get back to you shortly.",
+            message: "Thanks for your message! We'll get back to you shortly.",
             type: "bot",
           },
         ]);
@@ -89,46 +89,49 @@ const Chatbot = ({ width, height, chatAgent }) => {
 
   return (
     <div
-      className={`border-[1px] border-zinc-300  rounded-xl overflow-hidden flex flex-col  shadow-xl ${
+      className={`border border-zinc-300 rounded-xl overflow-hidden flex flex-col shadow-lg ${
         theme === "dark"
-          ? "text-[#9f9f9f] bg-[#1F222A]"
-          : " text-black bg-white"
+          ? "text-gray-400 bg-[#1F222A]"
+          : "text-gray-800 bg-white"
       }`}
       style={{ height, width }}
     >
       {/* Header */}
-      <div className="w-full border-b border-zinc-300 flex items-center justify-between p-2">
-        <div className="flex items-center gap-2">
-          <div className="w-[50px] h-[50px] flex items-center justify-center rounded-full overflow-hidden">
-            <BsRobot className="text-lg" />
+      <div className="w-full border-b border-zinc-300 flex items-center justify-between p-4 bg-white dark:bg-[#1A1C22]">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 flex items-center justify-center rounded-full overflow-hidden bg-[#2D3377]/10">
+            <BsRobot className="text-xl text-[#2D3377]" />
           </div>
           <h6
             className={`text-xl font-semibold ${
-              theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+              theme === "dark" ? "text-white" : "text-gray-800"
             }`}
           >
             {chatAgent?.bot_name}
           </h6>
         </div>
-        <button className="cursor-pointer w-10" onClick={clearMessages}>
+        <button 
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200" 
+          onClick={clearMessages}
+        >
           <lord-icon
             src="https://cdn.lordicon.com/ogkflacg.json"
             trigger="hover"
-            colors={` ${theme === "dark" ? "#fff" : "#000"}`}
-            style={{ height: "20px", width: "20px" }}
+            colors={`${theme === "dark" ? "#fff" : "#000"}`}
+            style={{ height: "24px", width: "24px" }}
           ></lord-icon>
         </button>
       </div>
 
       {/* Messages Section */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`p-3 rounded-lg text-base max-w-[15vw] w-fit chat-item ${
+            className={`p-4 rounded-xl text-base max-w-[15vw] w-fit shadow-sm ${
               message.type === "user"
-                ? "bg-gray-200 text-gray-800 ml-auto chat-item2"
-                : "bg-[#702963] text-white mr-auto chat-item1"
+                ? "bg-gray-100 text-gray-800 ml-auto hover:bg-gray-200 transition-colors duration-200"
+                : "bg-[#2D3377] text-white mr-auto hover:bg-[#2D3377]/90 transition-colors duration-200"
             }`}
           >
             {message.message}
@@ -139,12 +142,14 @@ const Chatbot = ({ width, height, chatAgent }) => {
       </div>
 
       {/* Input Section */}
-      <div className="w-full flex items-center border-t border-zinc-300 p-4">
+      <div className="w-full flex items-center gap-3 border-t border-zinc-300 p-4 bg-white dark:bg-[#1A1C22]">
         <input
           type="text"
           placeholder="Type a message..."
-          className={`flex-1 h-[40px] p-2 text-base border rounded-lg focus:outline-none focus:ring focus:border-blue-300 mr-2 ${
-            theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+          className={`flex-1 h-12 px-4 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
+            theme === "dark" 
+              ? "bg-[#1F222A] text-white border-gray-600" 
+              : "bg-gray-50 text-gray-800 border-gray-300"
           }`}
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -152,7 +157,7 @@ const Chatbot = ({ width, height, chatAgent }) => {
         />
         <ContainedButton
           onClick={handleSubmit}
-          className={`ml-2 h-[40px]`}
+          className="h-12 px-6 bg-[#2D3377] hover:bg-[#2D3377]/90 transition-all duration-200"
         >
           Send
         </ContainedButton>

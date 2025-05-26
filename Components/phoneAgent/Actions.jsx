@@ -312,13 +312,13 @@ const Actions = ({ editPage }) => {
       <div className="h-full w-full flex flex-col justify-start items-start px-8 pb-8">
         {!editPage && (
           <div
-            className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b border-zinc-300 p-6 h-[72px] flex justify-center items-center ${
+            className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
               theme === "dark"
                 ? "bg-[#1A1C21] text-white"
                 : "bg-white text-black"
             }`}
           >
-            <div className="w-[75%] h-full flex items-center justify-center gap-4">
+            <div className="w-[75%] h-full flex items-center justify-center gap-[1vw]">
               <div className="h-full flex items-center justify-start gap-2">
                 <div className="w-8 h-8 rounded-full bg-green-600 flex justify-center items-center">
                   <TickIcon />
@@ -349,14 +349,14 @@ const Actions = ({ editPage }) => {
           </div>
         )}
 
-        <div className="flex w-full h-[calc(100vh-85px)] pb-8 overflow-hidden">
+        <div className="flex w-full h-[calc(100vh-50px)] overflow-hidden">
           <div
             className={`flex flex-col w-full items-center justify-start gap-6 mx-12 p-8 pt-4 mt-12 overflow-y-auto scrollbar ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
             }`}
           >
             <div
-              className={`flex flex-col min-w-[90%] max-w-[90%] shadow-xl rounded-lg p-8 ${
+              className={`flex flex-col min-w-[90%] max-w-[90%] shadow-md rounded-lg p-8 ${
                 theme === "dark" ? "bg-black" : "bg-white"
               }`}
             >
@@ -364,12 +364,14 @@ const Actions = ({ editPage }) => {
                 className={`flex flex-col justify-center rounded-lg p-8 ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-gray-50 text-black"
                 }`}
               >
                 <div className="flex flex-col items-start justify-center">
-                  <h1 className="font-bold text-2xl mb-2">Actions</h1>
-                  <p className="text-[#9f9f9f] text-base font-semibold">
+                  <h1 className="text-2xl font-bold text-[#2D3377]/90">
+                    Actions
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
                     Instruct your agent to perform different actions during
                     calls.
                   </p>
@@ -403,7 +405,7 @@ const Actions = ({ editPage }) => {
                     }`}
                   >
                     {tempActions?.length === 0 ? (
-                      <p className="text-[#9f9f9f] text-base text-center font-semibold my-8">
+                      <p className="text-gray-600 dark:text-gray-400 text-base text-center font-medium my-6">
                         No actions created yet.
                       </p>
                     ) : (
@@ -429,7 +431,7 @@ const Actions = ({ editPage }) => {
                             )}
 
                             <p className="text-base">
-                              <span className="font-bold">
+                              <span className="font-semibold text-[#2D3377]">
                                 {fromSnakeCase(action.action_type)}
                               </span>{" "}
                               : {action.action_name}
@@ -456,7 +458,7 @@ const Actions = ({ editPage }) => {
 
                   <button
                     onClick={toggleForm}
-                    className="bg-white hover:bg-gray-100 border-2 w-[450px] mt-6 h-[65px] border-dashed border-gray-400 font-bold py-2 px-4 rounded-lg transition-colors text-base"
+                    className="w-[400px] h-[60px] mt-4 border-2 border-dashed bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-white rounded-xl font-medium text-gray-600 transition-all"
                   >
                     {showForm ? "Cancel" : "Add a new action"}
                   </button>
@@ -467,7 +469,7 @@ const Actions = ({ editPage }) => {
                 className={`w-full flex flex-col gap-6 items-start justify-center rounded-lg p-8 mt-6 ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-gray-50 text-black"
                 }`}
               >
                 {showForm && (
@@ -491,12 +493,12 @@ const Actions = ({ editPage }) => {
                 className={`flex flex-col gap-6 items-start justify-center rounded-lg p-8 ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-gray-50 text-black"
                 }`}
               >
                 <div className="w-full">
                   <div className="flex justify-between items-center cursor-pointer">
-                    <h5 className="font-bold text-2xl mb-2">
+                    <h5 className="text-2xl font-bold text-[#2D3377]/90">
                       Prompt or Instruction
                     </h5>
                     <span title="Please do not remove the content inside the curly braces, as it serves as a marker">
@@ -506,7 +508,7 @@ const Actions = ({ editPage }) => {
                       />
                     </span>
                   </div>
-                  <p className="text-[#9f9f9f] text-base font-semibold">
+                  <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
                     Give the instructions for your agent
                   </p>
                 </div>
@@ -534,6 +536,7 @@ const Actions = ({ editPage }) => {
                           dispatch(setPrompt(newPrompt));
                           promptRef.current.focus();
                         }}
+                        className="text-gray-600 dark:text-gray-400 text-md font-medium mt-1"
                       >
                         {field.label}
                       </OutlinedButton>
@@ -548,12 +551,12 @@ const Actions = ({ editPage }) => {
                 className={`flex flex-col gap-6 items-start justify-center rounded-lg p-8 ${
                   theme === "dark"
                     ? "bg-[#1F222A] text-white"
-                    : "bg-[#F2F4F7] text-black"
+                    : "bg-gray-50 text-black"
                 }`}
               >
                 <div>
-                  <h5 className="font-bold text-2xl mb-2">Script</h5>
-                  <p className="text-[#9f9f9f] text-base font-semibold">
+                  <h5 className="text-2xl font-bold text-[#2D3377]/90">Script</h5>
+                  <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
                     Add script for your agent
                   </p>
                 </div>
@@ -608,19 +611,22 @@ const Actions = ({ editPage }) => {
 
       {!editPage && (
         <div
-          className={`w-full absolute bottom-0 h-[78px] ${
+          className={`w-full absolute bottom-0 h-[6.5vh] py-[2vw] ${
             theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
           }`}
         >
-          <div className="w-full h-full flex justify-end items-center gap-8 px-12">
+          <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
             <OutlinedButton
               onClick={() =>
                 navigate.push("/workspace/agents/phone/createagent")
               }
+              borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]"
             >
               Back
             </OutlinedButton>
-            <ContainedButton onClick={createPhoneAgent}>Create</ContainedButton>
+            <ContainedButton onClick={createPhoneAgent} className="py-[0.35vw]">
+              Create
+            </ContainedButton>
           </div>
         </div>
       )}

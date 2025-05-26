@@ -31,9 +31,9 @@ const MultiStepForm = () => {
   const templateData = JSON.parse(
     decodeURIComponent(searchParams.get("template"))
   );
-  console.log('====================================');
+  console.log("====================================");
   console.log(selectedWorkSpace);
-  console.log('====================================');
+  console.log("====================================");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -234,20 +234,32 @@ const MultiStepForm = () => {
         theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#F2F4F7] text-black"
       }`}
     >
-      <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg relative">
+      <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg overflow-hidden relative">
         {renderStepIndicator()}
-        <div className="w-[90%] mx-auto my-[20px] h-[90%] overflow-hidden bg-gray-50">
-          <div className="w-full mx-auto h-[90%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
+        <div className="w-full mx-auto h-[100%] overflow-hidden bg-gray-50">
+          <div className="w-full mx-auto h-[100%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
             {renderContent()}
           </div>
         </div>
-        <div className="w-full absolute bottom-0 bg-white h-[7.5vh] py-[10px]">
-          <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] pr-[10%]">
-            {currentStep === 1 && (<OutlinedButton onClick={handleGoBack}>Back</OutlinedButton>)}
-            {currentStep > 1 && (
-              <OutlinedButton onClick={prev}>Back</OutlinedButton>
+        <div className="w-full bg-white h-[7.5vh] py-[10px]">
+          <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] pr-[10%] py-[1vw]">
+            {currentStep === 1 && (
+              <OutlinedButton
+                onClick={handleGoBack}
+                borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]"
+              >
+                Back
+              </OutlinedButton>
             )}
-            <ContainedButton onClick={nextStep}>
+            {currentStep > 1 && (
+              <OutlinedButton
+                onClick={prev}
+                 borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]"
+              >
+                Back
+              </OutlinedButton>
+            )}
+            <ContainedButton onClick={nextStep} className="py-[0.35vw]">
               {currentStep === 3 ? "Create" : "Continue"}
             </ContainedButton>
           </div>

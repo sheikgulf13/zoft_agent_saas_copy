@@ -24,10 +24,12 @@ const Embeds = () => {
       <div className={`border-b flex justify-center relative w-full mt-8 pt-6 text-base border-zinc-300 ${
         theme === "dark" ? "text-[#9f9f9f]" : "text-black"
       }`}>
-        <div className="absolute left-8 top-[-1.5rem]">
+        <div className="absolute left-8 top-[-.6vw]">
           <OutlinedButton
             onClick={() => router.push(`/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`)}
-            borderColor="border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]"
+             borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
           >
             <FaArrowLeftLong className="text-sm" />
             <span className="text-sm">Back to workspace</span>

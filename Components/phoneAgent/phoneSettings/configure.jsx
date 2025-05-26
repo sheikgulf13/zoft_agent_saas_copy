@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import PhoneSettingNav from "./PhoneSettingNav";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useTheme from "next-theme";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { useSelector } from "react-redux";
@@ -28,9 +28,19 @@ const Configure = () => {
   const [filteredVoiceNames, setFilteredVoiceNames] = useState([]);
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
+  const searchParams = useSearchParams();
+  const isDelete = searchParams.get('isDelete') === 'true';
   const [gender, setGender] = useState(
     selectedPhoneAgent?.voice_gender?.toLowerCase()
   );
+
+
+  useEffect(() => {
+    if(isDelete) {
+      handleDeleteClick();
+    }
+  }, [isDelete])
+
   useEffect(() => {
     console.log(selectedPhoneAgent);
     
@@ -117,6 +127,29 @@ const Configure = () => {
   );
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const changes = DetectChanges();
+    setHasChanges(changes > 0);
+  }, [name, purpose, voice, phoneNumber, companyName, companyBusiness, companyServices, language, gender]);
+
+  const DetectChanges = () => {
+    let change = 0;
+    
+    if (name !== selectedPhoneAgent?.phone_agent_name) change += 1;
+    if (purpose !== selectedPhoneAgent?.conversation_purpose) change += 1;
+    if (voice !== selectedPhoneAgent?.voice_id) change += 1;
+    if (phoneNumber !== selectedPhoneAgent?.phone_number) change += 1;
+    if (companyName !== selectedPhoneAgent?.company_name) change += 1;
+    if (companyBusiness !== selectedPhoneAgent?.company_business) change += 1;
+    if (companyServices !== selectedPhoneAgent?.company_products_services) change += 1;
+    if (language !== selectedPhoneAgent?.language) change += 1;
+    if (gender?.toLowerCase() !== selectedPhoneAgent?.voice_gender?.toLowerCase()) change += 1;
+
+    return change;
+  };
 
   const handleDeleteClick = () => {
     setIsDialogOpen(true);
@@ -454,7 +487,12 @@ const Configure = () => {
           <div className="flex justify-end">
             <ContainedButton 
               onClick={updatePhoneAgent}
-              className="bg-[#2D3377] hover:bg-[#2D3377]/90 transition-colors"
+              disabled={!hasChanges}
+              className={`transition-colors ${
+                hasChanges 
+                  ? "hover:opacity-[0.85] cursor-pointer" 
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
+              }`}
             >
               Save Changes
             </ContainedButton>

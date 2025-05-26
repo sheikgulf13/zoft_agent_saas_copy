@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   //sidebar collapse on chatsetting
   useEffect(() => {
-    router.includes('chatsetting') ? setIsSidebarCollapsed(true) : setIsSidebarCollapsed(false)
+    router.includes('chatsetting') || router.includes('templates') ? setIsSidebarCollapsed(true) : setIsSidebarCollapsed(false)
   }, [router])
 
   return (

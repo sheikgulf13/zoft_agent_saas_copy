@@ -256,23 +256,25 @@ const Actions = ({ editPage }) => {
           <div className={`flex flex-col justify-center rounded-t-xl p-6 ${
             theme === "dark" ? "bg-[#1F222A] text-white" : "text-black"
           }`}>
-            <div className="flex flex-col items-start justify-center">
-              <h1 className="text-2xl font-bold text-[#2D3377]/90">Actions</h1>
-              <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
-                Instruct your agent to perform different actions during calls.
-              </p>
-            </div>
-
-            {pathname === "/workspace/agents/chats/chatsetting/action" && hasUnsavedChanges && (
-              <div className="flex items-center gap-4 mt-4 justify-end w-full">
-                <OutlinedButton onClick={handleCancelChanges} disabled={isSaving} borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}>
-                  Cancel Changes
-                </OutlinedButton>
-                <ContainedButton onClick={handleSaveChanges} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </ContainedButton>
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col items-start justify-center">
+                <h1 className="text-2xl font-bold text-[#2D3377]/90">Actions</h1>
+                <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
+                  Instruct your agent to perform different actions during calls.
+                </p>
               </div>
-            )}
+
+              {pathname === "/workspace/agents/chats/chatsetting/action" && hasUnsavedChanges && (
+                <div className="flex items-center gap-4 mt-4 justify-end w-full">
+                  <OutlinedButton onClick={handleCancelChanges} disabled={isSaving} borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}>
+                    Cancel Changes
+                  </OutlinedButton>
+                  <ContainedButton onClick={handleSaveChanges} disabled={isSaving}>
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </ContainedButton>
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col items-center mt-2">
               <div className={`mt-2 mb-4 w-full max-h-[calc(100vh-400px)] overflow-y-auto bg-white p-6 rounded-lg shadow-sm ${
@@ -332,7 +334,7 @@ const Actions = ({ editPage }) => {
 
               <button
                 onClick={toggleForm}
-                className="w-[400px] h-[60px] mt-4 border-2 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50 rounded-xl font-medium text-gray-600 transition-all"
+                className="w-[400px] h-[60px] mt-4 border-2 border-dashed bg-gray-200 border-gray-300 hover:border-gray-400 hover:bg-white rounded-xl font-medium text-gray-600 transition-all"
               >
                 {showForm ? "Cancel" : "Add a new action"}
               </button>

@@ -357,7 +357,7 @@ const PhoneAgent = () => {
                       : "h-[53vh] overflow-y-scroll scrollBar pt-[1.5vw]"
                   }`}
                 >
-                  <div className="bg-gray-100 rounded-lg p-6 mb-8">
+                  <div className="bg-gray-50 rounded-lg p-6 mb-8">
                     <h1 className="text-2xl font-bold mb-3">
                       AI Assistant Configuration
                     </h1>
@@ -632,7 +632,7 @@ const PhoneAgent = () => {
                       : "h-[53vh] overflow-y-scroll scrollBar pt-[2vw]"
                   }`}
                 >
-                  <div className="bg-gray-100 rounded-lg p-6 mb-8">
+                  <div className="bg-gray-50 rounded-lg p-6 mb-8">
                     <h1 className="text-2xl font-bold mb-6">
                       Company Configuration
                     </h1>
@@ -718,13 +718,13 @@ const PhoneAgent = () => {
         </div>
 
         <div
-          className={`w-full absolute bottom-0 h-[6.5vh] ${
+          className={`w-full absolute bottom-0 h-[6.5vh] py-[2vw] ${
             theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
           }`}
         >
           <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
-            <OutlinedButton onClick={prevHandler}>Cancel</OutlinedButton>
-            <ContainedButton onClick={nextHandler}>Continue</ContainedButton>
+            <OutlinedButton onClick={prevHandler} borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]">Cancel</OutlinedButton>
+            <ContainedButton onClick={nextHandler} className="py-[0.35vw]">Continue</ContainedButton>
           </div>
         </div>
       </div>

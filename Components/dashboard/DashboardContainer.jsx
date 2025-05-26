@@ -137,13 +137,13 @@ const DashboardContainer = () => {
 
   return (
     <div
-      className={`w-[90%] overflow-y-auto h-[90vh]  rounded-[.9vh] shadow-xl py-[2%] px-[2%] relative  ${
+      className={`w-[90%] overflow-y-auto h-[90vh]  rounded-lg shadow-md py-[2%] px-[2%] relative  ${
         theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
       }`}
     >
-      <h3 className="text-xl font-bold">Dashboard</h3>
+      <h3 className="text-2xl font-bold text-[#2D3377]">Dashboard</h3>
       <div className="flex items-center justify-between my-4 gap-4">
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-md border-gray-200 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">Total Phone Agents</h4>
           <p className="text-2xl font-semibold">{data?.Total_phone_agents}</p>
           <p className="text-xs font-medium text-green-500">
@@ -151,7 +151,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-md border-gray-200 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">Total Calls</h4>
           <p className="text-2xl font-semibold">{data?.Total_calls}</p>
           <p className="text-xs font-medium text-green-500">
@@ -159,7 +159,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-md border-gray-200 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">
             Total Call Duration (mins)
           </h4>
@@ -171,7 +171,7 @@ const DashboardContainer = () => {
           </p>
           <p className="text-xs font-normal text-gray-400">from last month</p>
         </div>
-        <div className="shadow-sm border-gray-300 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
+        <div className="shadow-md border-gray-200 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">
           <h4 className="text-sm font-medium mb-2">
             Average Call Duration (mins)
           </h4>
@@ -188,7 +188,7 @@ const DashboardContainer = () => {
       <div className="flex w-full gap-10 my-10">
       <div
           className={`flex flex-1 flex-col gap-5 items-center justify-center  p-5 rounded-xl ${
-            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-100 text-black"
+            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-50 text-black"
           }`}
         >
           <h6 className="text-lg font-semibold w-full text-start">
@@ -199,7 +199,7 @@ const DashboardContainer = () => {
             className={`w-[70%]  ${
               theme === "dark"
                 ? "bg-[#1F222A] text-white"
-                : "bg-gray-100 text-black"
+                : "bg-gray-50 text-black"
             }`}
           >
             <Pie data={callDirectionData} className="my-5" />
@@ -207,7 +207,7 @@ const DashboardContainer = () => {
         </div>
         <div
           className={`flex flex-1 flex-col gap-5 items-center justify-center  p-5 rounded-xl ${
-            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-100 text-black"
+            theme === "dark" ? "bg-[#1F222A] text-white border border-white" : "bg-gray-50 text-black"
           }`}
         >
           <h6 className="text-lg font-semibold w-full text-start">
@@ -218,7 +218,7 @@ const DashboardContainer = () => {
             className={`w-[70%]  ${
               theme === "dark"
                 ? "bg-[#1F222A] text-white"
-                : "bg-gray-100 text-black"
+                : "bg-gray-50 text-black"
             }`}
           >
             <Pie data={callStatusData} className="my-5" />

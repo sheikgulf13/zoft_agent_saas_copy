@@ -40,11 +40,11 @@ const Source = () => {
   const file = useSelector((state) => state.fileUpdate.file);
   const urlFetch = process.env.url;
   const totalWordCount =
-    Object?.values(fileWordCounts ?? {}).reduce((acc, item) => acc + item, 0) +
-    urlWordCounts +
+    Object.values(fileWordCounts).reduce((acc, count) => acc + count.wordCount, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
     rawWordCounts;
   const [existingFile, setExistingFile] = useState({});
   const { selectedChatAgent } = useSelector((state) => state.selectedData);
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     console.log("rawwordscounts", rawWordCounts);
@@ -85,17 +85,35 @@ const Source = () => {
     console.log('raw char cout', rawCharCount)
   }, [rawText])
 
+  useEffect(() => {
+    const changes = DetectChanges(pastedUrl);
+    setHasChanges(changes > 0);
+  }, [pastedUrl, existingFile, rawText]);
+
   const DetectChanges = (urls) => {
     let change = 0;
-    if (urls != selectedChatAgent.urls) {
+    
+    // Compare URLs
+    const currentUrls = urls.map(url => url.url || url);
+    const originalUrls = selectedChatAgent?.urls || [];
+    if (JSON.stringify(currentUrls) !== JSON.stringify(originalUrls)) {
       change += 1;
     }
-    if (existingFile != selectedChatAgent.file_word_count) {
+
+    // Compare files - only check if files were added or removed
+    const currentFiles = Object.keys(existingFile);
+    const originalFiles = Object.keys(selectedChatAgent?.file_word_count || {});
+    
+    // Simple check if files changed
+    if (JSON.stringify(currentFiles) !== JSON.stringify(originalFiles)) {
       change += 1;
     }
-    if (rawText != selectedChatAgent.raw_text) {
+
+    // Compare raw text
+    if (rawText !== (selectedChatAgent?.raw_text || "")) {
       change += 1;
     }
+
     return change;
   };
 
@@ -242,7 +260,7 @@ const Source = () => {
 
   return (
     <div
-      className={`flex flex-col justify-start items-center px-8  w-full h-[100vh]`}
+      className={`flex flex-col justify-start items-center px-8  w-full h-[100vh] overflow-hidden`}
     >
       <div
         className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] text-base border-zinc-300 ${
@@ -256,7 +274,9 @@ const Source = () => {
                 `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
               )
             }
-              borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}
+               borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
                     >
                       <FaArrowLeftLong className="text-sm"/>
                       <span className="text-sm">Back to workspace</span>
@@ -265,15 +285,15 @@ const Source = () => {
         <ChatSettingNav />
       </div>
 
-      <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-[80%] h-full">
-        <div className={`flex flex-col justify-start min-h-full w-[80%] py-8 px-4 rounded-xl shadow-lg ${
+      <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-[80%] h-[85%] max-h-[85%]">
+        <div className={`flex flex-col justify-start min-h-full max-h-full w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${
           theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
         }`}>
           <h1 className="px-10 text-xl font-semibold pb-4 text-[#2D3377]/90">
             Data Source
           </h1>
-          <form className="flex flex-col gap-6 px-10" onSubmit={handleFormSubmit}>
-            <div className="flex justify-between gap-12">
+          <form className="flex flex-col gap-6 px-10 h-full overflow-hidden" onSubmit={handleFormSubmit}>
+            <div className="flex justify-between gap-12 h-full overflow-hidden">
               <div className="flex flex-col w-[25%] text-base">
                 {links.map((link, index) => (
                   <React.Fragment key={index}>
@@ -321,21 +341,21 @@ const Source = () => {
                   <div className="flex flex-col gap-3 text-base mt-6 w-full">
                     {pastedUrl.length > 0 &&
                       pastedUrl.map((urlObj, index) => (
-                        <div
+                       <div
                           key={index}
                           className="h-14 w-full border border-zinc-300 px-4 py-2 text-sm rounded-lg flex justify-between items-center bg-white dark:bg-[#1F222A] shadow-sm hover:shadow-md transition-all duration-200"
                         >
                           <span className="text-gray-800 dark:text-gray-200">
                             {urlObj?.length < 45 ? (
-                              <span>{urlObj}</span>
+                              <span>{urlObj?.url}</span>
                             ) : (
                               <div className="relative">
                                 <div className="group">
                                   <span className="absolute bg-gray-800 text-white top-[-45px] w-full left-0 rounded-lg px-3 py-2 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                                    {urlObj}
+                                    {urlObj?.url}
                                   </span>
                                   <span className="cursor-pointer group-hover:text-[#2D3377] transition-colors duration-200">
-                                    {urlObj?.slice(0, 40)}.....
+                                    {urlObj?.url?.slice(0, 40)}.....
                                   </span>
                                 </div>
                               </div>
@@ -363,7 +383,7 @@ const Source = () => {
                     onChange={rawTextHandler}
                     value={rawText}
                     id="rawText"
-                    className={`w-full text-base border p-4 border-zinc-300 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none transition-all duration-200 ${
+                    className={`w-full text-base border p-4 border-zinc-300 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none max-h-[70%] overflow-y-scroll transition-all duration-200 ${
                       theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
@@ -396,12 +416,19 @@ const Source = () => {
           {err && (
             <span className="text-red-500 text-sm font-medium">{err}</span>
           )}
-          <ContainedButton 
-            onClick={handleUpdate}
-            className="w-full mt-4 bg-[#2D3377] hover:bg-[#211A55] text-white font-medium py-3 px-6 rounded-lg transition-all duration-200"
-          >
-            Retrain Chatbot
-          </ContainedButton>
+          <div className={`${!hasChanges ? 'cursor-not-allowed' : ''}`}>
+            <ContainedButton 
+              onClick={handleUpdate}
+              disabled={!hasChanges}
+              className={`w-full mt-4 font-medium py-3 px-6 rounded-lg transition-all duration-200 ${
+                hasChanges 
+                  ? "bg-[#2D3377] hover:bg-[#211A55] text-white cursor-pointer" 
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
+              }`}
+            >
+              Retrain Chatbot
+            </ContainedButton>
+          </div>
         </div>
       </div>
     </div>

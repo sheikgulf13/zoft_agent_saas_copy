@@ -41,71 +41,124 @@ const PersonalDetails = () => {
   }, []);
 
   return (
-    <div className={` Hmd p-[1.3vw] rounded-[0.417vw] shadow-md h-[55vh] w-[35vw] relative ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
-      <form className={`flex flex-col justify-evenly items-start px-[2vw] gap-[1.5vw] ${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`}>
-        <div className='flex w-full justify-between items-center'>
-          <h1 className='text-lg font-bold'>Profile Settings</h1>
-          <div className="text-white px-[2.3vw] py-[0.8vh] rounded-[0.417vw]">
-            <ContainedButton>Edit</ContainedButton>
+    <div className={`p-4 rounded-xl h-full overflow-y-auto w-full relative overflow-hidden ${
+      theme === "dark" 
+        ? 'bg-gradient-to-br from-[#1A1C22] to-[#1F222A] text-white' 
+        : 'bg-transparent text-gray-800'
+    }`}>
+      <form className="flex flex-col h-full">
+        <div className="flex w-full justify-between items-center mb-5">
+          <h1 className="text-2xl font-bold text-[#2D3377]">
+            Profile Settings
+          </h1>
+          <div className="text-white">
+            <ContainedButton className="bg-[#2D3377] hover:bg-[#2D3377]/90 transition-colors">
+              Edit
+            </ContainedButton>
           </div>
         </div>
-        <div className="mb-[1.6vh]">
-          <label htmlFor="displayName" className="block text-lg text-gray-700 font-semibold mb-[.8vh]">Display Name</label>
-          <input
-            type="text"
-            id="displayName"
-            name="displayName"
-            value={formData.username}
-            onChange={changeHandler}
-            disabled={!isEditing}
-            className={`w-full text-zinc-400 pl-2 pr-[3.5vw] py-[0.8vh]  ${isEditing ? 'border-[1.5px]' : 'border-0' } rounded-[0.417vw] focus:outline-none focus:ring-2 focus:ring-purple-500 ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-50 text-black'}`}
-          />
-        </div>
-        <div className="mb-[1.6vh]">
-          <label htmlFor="email" className="block text-gray-700 text-lg font-semibold mb-[.8vh]">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={changeHandler}
-            disabled={!isEditing}
-            className={`w-full text-zinc-400 pl-2 pr-[3.5vw] py-[0.8vh]  ${isEditing ? 'border-[1.5px]' : 'border-0' } rounded-[0.417vw] focus:outline-none focus:ring-2 focus:ring-purple-500 ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-50 text-black'}`}
-          />
-        </div>
-        <div className="mb-[1.6vh]">
-          <label htmlFor="phoneNumber" className="block text-lg font-semibold text-gray-700  mb-[.8vh]">Phone Number</label>
-          <div className="flex">
-            <select
-              name="countryCode"
-              id="countryCode"
-              value={formData.countryCode}
-              onChange={changeHandler}
-              disabled={!isEditing}
-              className={` ${isEditing ? 'border-[1.5px]' : 'border-0' } rounded-l-[.4vw] pr-[0.833vw] py-[0.8vh] ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-100 text-black'}`}
-            >
-              <option className={`${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`} value="+91">+91</option>
-              <option className={`${theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-white text-black'}`} value='+92'>+92</option>
-              {/* Add more country codes as needed */}
-            </select>
+
+        <div className="flex-1 overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          <div className="space-y-2">
+            <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Display Name
+            </label>
             <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phone_number}
+              type="text"
+              id="displayName"
+              name="displayName"
+              value={formData.username}
               onChange={changeHandler}
               disabled={!isEditing}
-              className={`w-full pl-2 text-zinc-400 py-[0.8vh] ${isEditing ? 'border-[1.5px]' : 'border-0' }  rounded-r-[.4vw] focus:outline-none focus:ring-2 focus:ring-purple-500 ${theme === "dark" ? 'bg-[#2f323f] text-white' : 'bg-slate-50 text-black'}`}
+              className={`w-full px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                isEditing 
+                  ? 'border-2 border-gray-200 dark:border-gray-700 focus:border-[#2D3377] dark:focus:border-[#4D55CC]' 
+                  : 'border-0'
+              } focus:outline-none focus:ring-2 focus:ring-[#2D3377]/20 ${
+                theme === "dark" 
+                  ? 'bg-[#2A2E37] text-white placeholder-gray-500' 
+                  : 'bg-gray-50 text-gray-800 placeholder-gray-400'
+              }`}
             />
           </div>
+
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={changeHandler}
+              disabled={!isEditing}
+              className={`w-full px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                isEditing 
+                  ? 'border-2 border-gray-200 dark:border-gray-700 focus:border-[#2D3377] dark:focus:border-[#4D55CC]' 
+                  : 'border-0'
+              } focus:outline-none focus:ring-2 focus:ring-[#2D3377]/20 ${
+                theme === "dark" 
+                  ? 'bg-[#2A2E37] text-white placeholder-gray-500' 
+                  : 'bg-gray-50 text-gray-800 placeholder-gray-400'
+              }`}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Phone Number
+            </label>
+            <div className="flex gap-2">
+              <select
+                name="countryCode"
+                id="countryCode"
+                value={formData.countryCode}
+                onChange={changeHandler}
+                disabled={!isEditing}
+                className={`px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                  isEditing 
+                    ? 'border-2 border-gray-200 dark:border-gray-700 focus:border-[#2D3377] dark:focus:border-[#4D55CC]' 
+                    : 'border-0'
+                } focus:outline-none focus:ring-2 focus:ring-[#2D3377]/20 ${
+                  theme === "dark" 
+                    ? 'bg-[#2A2E37] text-white' 
+                    : 'bg-gray-50 text-gray-800'
+                }`}
+              >
+                <option className={theme === "dark" ? 'bg-[#1F222A]' : 'bg-white'} value="+91">+91</option>
+                <option className={theme === "dark" ? 'bg-[#1F222A]' : 'bg-white'} value='+92'>+92</option>
+              </select>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={formData.phone_number}
+                onChange={changeHandler}
+                disabled={!isEditing}
+                className={`flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                  isEditing 
+                    ? 'border-2 border-gray-200 dark:border-gray-700 focus:border-[#2D3377] dark:focus:border-[#4D55CC]' 
+                    : 'border-0'
+                } focus:outline-none focus:ring-2 focus:ring-[#2D3377]/20 ${
+                  theme === "dark" 
+                    ? 'bg-[#2A2E37] text-white placeholder-gray-500' 
+                    : 'bg-gray-50 text-gray-800 placeholder-gray-400'
+                }`}
+              />
+            </div>
+          </div>
         </div>
+
         {isEditing && (
-          <GradientButton
-            text="Save"
-            onClick={saveHandler}
-            className="contentButton bg-gradient-to-r from-[#EB1CD6] to-[#F4A36F] text-white px-[2.3vw] text-center translate-x-[12vh]"
-          />
-        ) }
+          <div className="flex justify-end mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <GradientButton
+              text="Save Changes"
+              onClick={saveHandler}
+              className="bg-gradient-to-r from-[#2D3377] to-[#4D55CC] hover:opacity-90 text-white px-8 py-2.5 rounded-lg transition-all duration-200"
+            />
+          </div>
+        )}
       </form>
     </div>
   );

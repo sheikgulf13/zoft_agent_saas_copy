@@ -3,7 +3,7 @@
 import useTheme from "next-theme";
 import React, { useEffect, useState } from "react";
 import ChatSettingNav from "../ChatSettingNav";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { getApiConfig, getApiHeaders } from "../../../../utility/api-config";
 import { OutlinedButton } from "../../../buttons/OutlinedButton";
@@ -31,6 +31,14 @@ const Ai = () => {
     (state) => state.selectedData
   );
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const isDelete = searchParams.get('isDelete') === 'true';
+
+  useEffect(() => {
+    if(isDelete) {
+      handleDeleteClick();
+    }
+  }, [isDelete])
 
   const handleDeleteClick = () => {
     setIsDialogOpen(true);
@@ -148,7 +156,9 @@ const Ai = () => {
                 `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
               )
             }
-            borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}
+             borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
           >
             <FaArrowLeftLong className="text-sm"/>
             <span className="text-sm">Back to workspace</span>

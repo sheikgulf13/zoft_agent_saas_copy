@@ -73,7 +73,9 @@ const ConfirmationDialog = ({ isOpen, onClose, onConfirm, cancelClass }) => {
             className={`hover:bg-gray-100 transition-all duration-200 ${
               theme === 'dark' ? 'hover:bg-gray-800' : ''
             }`}
-            borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#8b8b8b]'}
+             borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
           >
             Cancel
           </OutlinedButton>

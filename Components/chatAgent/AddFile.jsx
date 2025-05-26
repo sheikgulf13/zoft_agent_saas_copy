@@ -56,7 +56,6 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
           };
           reader.readAsText(f);
         }
-        
       });
     }
   }, [file]); // Only runs when `file` changes
@@ -250,9 +249,12 @@ const DropZone = ({
       />
 
       {/* Button to trigger file selection */}
-      <ContainedButton onClick={() => inputFileRef.current.click()}>
+      <button
+        onClick={() => inputFileRef.current.click()}
+         className="px-4 py-2 rounded-md border border-[#13104A] text-[#13104A] text-sm font-medium hover:bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] hover:from-[#13104A]/95 hover:via-[#2D3377]/90 hover:via-[#18103A]/85 hover:via-[#211A55]/80 hover:to-[#13104A]/95 hover:text-white transition-all duration-300"
+      >
         Choose Files
-      </ContainedButton>
+      </button>
     </div>
   </div>
 );
@@ -262,14 +264,14 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
     {fileNames.map((name, index) => (
       <div
         key={index}
-        className="flex justify-between border p-[.5vw] mb-[2vh]"
+        className="flex justify-between border rounded-md p-[.5vw] mb-[2vh]"
       >
         {name.length < 40 ? (
           <span>{name}</span>
         ) : (
           <div className="group relative inline-block">
-          <span className="absolute bg-gray-400 top-[-35px] left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block min-w-max z-10">
-            {name}
+            <span className="absolute bg-gray-400 top-[-35px] left-0 rounded-lg px-2 py-1 text-xs shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block min-w-max z-10">
+              {name}
             </span>
             <span className="cursor-pointer">{name.slice(0, 40)}.....</span>
           </div>
@@ -280,7 +282,6 @@ const FileList = ({ fileNames, fileWordCounts, handleDelete }) => (
             onClick={() => handleDelete(name)}
             className="ml-[1vw] bg-red-500 text-white p-[.2vw] rounded"
           >
-
             Delete
           </button>
         </div>
@@ -322,10 +323,10 @@ const extractTextFromDOCX = (file) => {
       try {
         const { value } = await mammoth.extractRawText({ arrayBuffer });
         console.log(value);
-        
+
         const wordCount = value.split(/\s+/).filter(Boolean).length;
         const characterCount = value.length;
-        resolve({wordCount , characterCount });
+        resolve({ wordCount, characterCount });
       } catch (error) {
         reject(error);
       }

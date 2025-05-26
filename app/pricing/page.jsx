@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, Paper, Button, Chip, CircularProgress, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { fetchPricingPlans, fetchCurrentSubscription } from '../../store/actions/pricingActions';
 import { startSubscription } from '../../utils/razorpay';
 
 // Helper function to format plan data
-const formatPlanData = (plan, isYearly) => {
+const formatPlanData = (plan, isYearly, durationDays) => {
   // Mapping subscription types to display names
   const planNames = {
     'FREE': 'Starter',
@@ -87,6 +86,18 @@ const sortPlans = (plans) => {
   });
 };
 
+// Pricing feature component
+const PricingFeature = ({ value, label }) => (
+  <div className="pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+    <p className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+      {value}
+    </p>
+    <p className="text-sm text-gray-500 dark:text-gray-400">
+      {label}
+    </p>
+  </div>
+);
+
 const PricingPage = () => {
   const dispatch = useDispatch();
   const { plans, currentSubscription, loading, error } = useSelector((state) => state.pricing);
@@ -106,17 +117,17 @@ const PricingPage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <CircularProgress />
-      </Box>
+      <div className="flex justify-center items-center h-[50vh]">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <Typography color="error">{error}</Typography>
-      </Box>
+      <div className="flex justify-center items-center h-[50vh] text-red-500">
+        {error}
+      </div>
     );
   }
 
@@ -227,417 +238,254 @@ const PricingPage = () => {
   };
 
   return (
-    <Box>
-      {/* Current Plan Section - Moved to top */}
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Current Plan Section */}
       {currentSubscription && (
-        <Box sx={{ mb: 4, textAlign: 'center', pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-          <Typography variant="h6" sx={{ fontWeight: 500, mb: 0.5, fontSize: '1rem' }}>
+        <div className="text-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             Your Current Plan: {currentSubscription?.subscription_type?.subscription_type || 'Unknown'}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem', lineHeight: 1.5 }}>
-            Status: {currentSubscription?.status || 'N/A'} | Duration: {durationDays || 0} days | Start Date: {currentSubscription?.start_date ? new Date(currentSubscription.start_date).toLocaleDateString() : 'N/A'} | End Date: {currentSubscription?.end_date ? new Date(currentSubscription.end_date).toLocaleDateString() : 'N/A'}
-          </Typography>
-        </Box>
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Status: {currentSubscription?.status || 'N/A'} | Duration: {durationDays || 0} days | 
+            Start Date: {currentSubscription?.start_date ? new Date(currentSubscription.start_date).toLocaleDateString() : 'N/A'} | 
+            End Date: {currentSubscription?.end_date ? new Date(currentSubscription.end_date).toLocaleDateString() : 'N/A'}
+          </p>
+        </div>
       )}
 
-      {/* Billing toggle and yearly discount message */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
-        <ToggleButtonGroup
-          value={billingCycle}
-          exclusive
-          onChange={handleBillingCycleChange}
-          aria-label="billing cycle"
-          sx={{ mb: 2 }}
-        >
-          <ToggleButton value="monthly" aria-label="monthly billing">
+      {/* Billing Toggle */}
+      <div className="flex flex-col items-center mb-12">
+        <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 p-1 bg-gray-50 dark:bg-gray-800">
+          <button
+            onClick={() => handleBillingCycleChange('monthly')}
+            className={`px-4 py-2 text-sm font-medium rounded-md ${
+              billingCycle === 'monthly'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
             Monthly
-          </ToggleButton>
-          <ToggleButton value="yearly" aria-label="yearly billing">
+          </button>
+          <button
+            onClick={() => handleBillingCycleChange('yearly')}
+            className={`px-4 py-2 text-sm font-medium rounded-md ${
+              billingCycle === 'yearly'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
             Yearly
-          </ToggleButton>
-        </ToggleButtonGroup>
-        
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+          </button>
+        </div>
+        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
           {isYearly ? 'Save 16.7% with yearly billing (2 months free)' : 'Switch to yearly billing for 2 months free'}
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
-      {/* Plans grid - using Box with CSS Grid instead of deprecated Grid */}
-      <Box sx={{ 
-        width: '100%', 
-        maxWidth: 1200, 
-        mx: 'auto', 
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(3, 1fr)'
-        },
-        gap: 3,
-        justifyContent: 'center'
-      }}>
-        {/* Plan cards would be mapped from the API response */}
+      {/* Plans Grid */}
+      <div className="flex justify-center gap-8">
         {sortedPlans && sortedPlans.length > 0 ? (
           sortedPlans.map((plan, index) => (
-            <Box key={plan.id || index} sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Paper 
-                elevation={3} 
-                sx={{ 
-                  p: 3, 
-                  height: '100%',
-                  minHeight: 550, 
-                  width: '100%',
-                  maxWidth: 320,
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 2
-                }}
-              >
+            <div key={plan.id || index} className="flex justify-center">
+              <div className={`relative w-[280px] max-w-[280px] rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden ${
+                plan.popular ? 'ring-2 ring-primary' : ''
+              }`}>
                 {plan.popular && (
-                  <Chip 
-                    label="Most Popular" 
-                    color="primary" 
-                    sx={{ 
-                      position: 'absolute', 
-                      top: 0, 
-                      left: '50%', 
-                      transform: 'translateX(-50%)',
-                      borderRadius: 0,
-                      px: 2,
-                      height: 24,
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
-                      '& .MuiChip-label': {
-                        fontSize: '0.75rem',
-                      }
-                    }} 
-                  />
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm text-white px-3 py-1 text-xs rounded-b-lg font-medium">
+                    Most Popular
+                  </div>
                 )}
                 
-                <Typography variant="h5" component="h2" align="center" sx={{ fontWeight: 600, mb: 1, mt: plan.popular ? 1 : 0, fontSize: '1.25rem' }}>
-                  {plan.name}
-                </Typography>
-                
-                <Typography variant="h4" align="center" sx={{ fontWeight: 700, mb: 0.5, fontSize: '1.75rem' }}>
-                  {plan.name === 'Starter' ? 'Free' : plan.price === undefined ? 'Contact Us' : plan.price === 0 ? 'Free' : `${plan.price} ${plan.currency}`}
-                </Typography>
-                
-                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3, fontSize: '0.875rem' }}>
-                  {plan.name === 'Starter' || plan.price === 0 
-                    ? 'Forever' 
-                    : plan.price === null 
-                      ? 'Enterprise' 
-                      : plan.isYearly 
-                        ? 'Per Year' 
-                        : 'Per Month'}
-                </Typography>
-                
-                {/* Free plan: no button, Current plan: non-clickable indicator, Higher tier or yearly upgrade: Upgrade plan */}
-                {plan.price !== 0 && plan.name !== 'Starter' && (
-                  isCurrentPlan(plan.name.toUpperCase()) ? (
-                    <Box
-                      sx={{
-                        mb: 3,
-                        py: 1,
-                        borderRadius: 1,
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        textAlign: 'center',
-                        bgcolor: '#4dabf5',
-                        color: 'white'
-                      }}
-                    >
-                      Current plan
-                    </Box>
-                  ) : (
-                    isUpgradable(plan.name.toUpperCase(), plan.isYearly) && (
-                      <Button 
-                        variant={plan.popular ? "contained" : "outlined"} 
-                        color="primary" 
-                        fullWidth 
-                        sx={{ 
-                          mb: 3, 
-                          py: 1, 
-                          borderRadius: 1,
-                          fontSize: '0.875rem',
-                          fontWeight: 500,
-                          textTransform: 'none'
-                        }}
-                        onClick={() => handleSubscription(plan)}
-                        disabled={paymentLoading}
-                      >
-                        {plan.name.toUpperCase() === currentPlanType && plan.isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
-                      </Button>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-2">
+                    {plan.name}
+                  </h3>
+                  
+                  <div className="text-center mb-4">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {plan.name === 'Starter' ? 'Free' : plan.price === undefined ? 'Contact Us' : plan.price === 0 ? 'Free' : `${plan.price} ${plan.currency}`}
+                    </span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      {plan.name === 'Starter' || plan.price === 0 
+                        ? 'Forever' 
+                        : plan.price === null 
+                          ? 'Enterprise' 
+                          : plan.isYearly 
+                            ? 'Per Year' 
+                            : 'Per Month'}
+                    </p>
+                  </div>
+
+                  {plan.price !== 0 && plan.name !== 'Starter' && (
+                    isCurrentPlan(plan.name.toUpperCase()) ? (
+                      <div className="mb-6 py-2 px-4 bg-blue-500 text-white text-center rounded-lg text-sm font-medium">
+                        Current plan
+                      </div>
+                    ) : (
+                      isUpgradable(plan.name.toUpperCase(), plan.isYearly) && (
+                        <button
+                          onClick={() => handleSubscription(plan)}
+                          disabled={paymentLoading}
+                          className={`w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                            plan.popular
+                              ? 'bg-primary text-white hover:bg-primary-dark'
+                              : 'bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white'
+                          }`}
+                        >
+                          {plan.name.toUpperCase() === currentPlanType && plan.isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                        </button>
+                      )
                     )
-                  )
-                )}
-                
-                {/* Features */}
-                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  {plan.features && plan.features.map((feature, idx) => (
-                    <Box 
-                      key={idx} 
-                      sx={{ 
-                        py: 2, 
-                        borderTop: '1px solid',
-                        borderColor: 'divider',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 }}>
-                        {feature.value}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
-                        {feature.label}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Paper>
-            </Box>
+                  )}
+
+                  <div className="space-y-4">
+                    {plan.features && plan.features.map((feature, idx) => (
+                      <PricingFeature key={idx} value={feature.value} label={feature.label} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           ))
         ) : (
-          // Fallback for empty plans
           <>
             {/* Bronze Plan */}
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Paper elevation={3} sx={{ 
-                p: 3, 
-                height: '100%', 
-                minHeight: 550,
-                width: '100%',
-                maxWidth: 320,
-                display: 'flex', 
-                flexDirection: 'column', 
-                borderRadius: 2
-              }}>
-                <Typography variant="h5" component="h2" align="center" sx={{ fontWeight: 600, mb: 1, fontSize: '1.25rem' }}>
-                  Bronze
-                </Typography>
-                <Typography variant="h4" align="center" sx={{ fontWeight: 700, mb: 0.5, fontSize: '1.75rem' }}>
-                  {isYearly ? '340 INR' : '34 INR'}
-                </Typography>
-                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3, fontSize: '0.875rem' }}>
-                  {isYearly ? 'Per Year' : 'Per Month'}
-                </Typography>
-                
-                {currentPlanType === 'BRONZE' && !isYearly === !isCurrentYearly ? (
-                  <Box
-                    sx={{
-                      mb: 3,
-                      py: 1,
-                      borderRadius: 1,
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      textAlign: 'center',
-                      bgcolor: '#4dabf5',
-                      color: 'white'
-                    }}
-                  >
-                    Current plan
-                  </Box>
-                ) : (
-                  (planOrder['BRONZE'] > planOrder[currentPlanType] || 
-                   (currentPlanType === 'BRONZE' && isYearly && !isCurrentYearly)) && (
-                    <Button 
-                      variant="outlined" 
-                      color="primary" 
-                      fullWidth 
-                      sx={{ 
-                        mb: 3, 
-                        py: 1, 
-                        borderRadius: 1,
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        textTransform: 'none'
-                      }}
-                      onClick={() => handleSubscription({
-                        id: plans.find(p => p.subscription_type?.subscription_type === 'BRONZE')?.id,
-                        name: 'Bronze',
-                        duration: isYearly ? 365 : 30
-                      })}
-                      disabled={paymentLoading}
-                    >
-                      {currentPlanType === 'BRONZE' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
-                    </Button>
-                  )
-                )}
-                
-                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <PricingFeature value="25" label="Agent limit" />
-                  <PricingFeature value="1K" label="Monthly Conversations" />
-                  <PricingFeature value="50 Minutes" label="Monthly Voice Call" />
-                  <PricingFeature value="1M" label="Knowledge Base" />
-                  <PricingFeature value="1 User" label="User Per Team" />
-                  <PricingFeature value="1 GB" label="Available Space" />
-                </Box>
-              </Paper>
-            </Box>
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-2">
+                    Bronze
+                  </h3>
+                  
+                  <div className="text-center mb-4">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {isYearly ? '340 INR' : '34 INR'}
+                    </span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      {isYearly ? 'Per Year' : 'Per Month'}
+                    </p>
+                  </div>
+
+                  {currentPlanType === 'BRONZE' && !isYearly === !isCurrentYearly ? (
+                    <div className="mb-6 py-2 px-4 bg-blue-500 text-white text-center rounded-lg text-sm font-medium">
+                      Current plan
+                    </div>
+                  ) : (
+                    (planOrder['BRONZE'] > planOrder[currentPlanType] || 
+                     (currentPlanType === 'BRONZE' && isYearly && !isCurrentYearly)) && (
+                      <button
+                        onClick={() => handleSubscription({
+                          id: plans?.find(p => p.subscription_type?.subscription_type === 'BRONZE')?.id,
+                          name: 'Bronze',
+                          duration: isYearly ? 365 : 30
+                        })}
+                        disabled={paymentLoading}
+                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white"
+                      >
+                        {currentPlanType === 'BRONZE' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                      </button>
+                    )
+                  )}
+
+                  <div className="space-y-4">
+                    <PricingFeature value="25" label="Agent limit" />
+                    <PricingFeature value="1K" label="Monthly Conversations" />
+                    <PricingFeature value="50 Minutes" label="Monthly Voice Call" />
+                    <PricingFeature value="1M" label="Knowledge Base" />
+                    <PricingFeature value="1 User" label="User Per Team" />
+                    <PricingFeature value="1 GB" label="Available Space" />
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Silver Plan */}
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Paper 
-                elevation={3} 
-                sx={{ 
-                  p: 3, 
-                  height: '100%',
-                  minHeight: 550,
-                  width: '100%',
-                  maxWidth: 320,
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 2
-                }}
-              >
-                <Chip 
-                  label="Most Popular" 
-                  color="primary" 
-                  sx={{ 
-                    position: 'absolute', 
-                    top: 0, 
-                    left: '50%', 
-                    transform: 'translateX(-50%)',
-                    borderRadius: 0,
-                    px: 2,
-                    height: 24,
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    '& .MuiChip-label': {
-                      fontSize: '0.75rem',
-                    }
-                  }} 
-                />
-                <Typography variant="h5" component="h2" align="center" sx={{ fontWeight: 600, mb: 1, mt: 1, fontSize: '1.25rem' }}>
-                  Silver
-                </Typography>
-                <Typography variant="h4" align="center" sx={{ fontWeight: 700, mb: 0.5, fontSize: '1.75rem' }}>
-                  {isYearly ? '390 INR' : '39 INR'}
-                </Typography>
-                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3, fontSize: '0.875rem' }}>
-                  {isYearly ? 'Per Year' : 'Per Month'}
-                </Typography>
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden ring-2 ring-primary">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-1 text-xs font-medium">
+                  Most Popular
+                </div>
                 
-                {currentPlanType === 'SILVER' && !isYearly === !isCurrentYearly ? (
-                  <Box
-                    sx={{
-                      mb: 3,
-                      py: 1,
-                      borderRadius: 1,
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      textAlign: 'center',
-                      bgcolor: '#4dabf5',
-                      color: 'white'
-                    }}
-                  >
-                    Current plan
-                  </Box>
-                ) : (
-                  (planOrder['SILVER'] > planOrder[currentPlanType] || 
-                   (currentPlanType === 'SILVER' && isYearly && !isCurrentYearly)) && (
-                    <Button 
-                      variant="contained" 
-                      color="primary" 
-                      fullWidth 
-                      sx={{ 
-                        mb: 3, 
-                        py: 1, 
-                        borderRadius: 1,
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        textTransform: 'none'
-                      }}
-                      onClick={() => handleSubscription({
-                        id: plans.find(p => p.subscription_type?.subscription_type === 'SILVER')?.id,
-                        name: 'Silver',
-                        duration: isYearly ? 365 : 30
-                      })}
-                      disabled={paymentLoading}
-                    >
-                      {currentPlanType === 'SILVER' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
-                    </Button>
-                  )
-                )}
-                
-                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <PricingFeature value="50" label="Agent limit" />
-                  <PricingFeature value="2.5K" label="Monthly Conversations" />
-                  <PricingFeature value="100 Minutes" label="Monthly Voice Call" />
-                  <PricingFeature value="2M" label="Knowledge Base" />
-                  <PricingFeature value="1 User" label="User Per Team" />
-                  <PricingFeature value="10 GB" label="Available Space" />
-                </Box>
-              </Paper>
-            </Box>
-            
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-2">
+                    Silver
+                  </h3>
+                  
+                  <div className="text-center mb-4">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {isYearly ? '390 INR' : '39 INR'}
+                    </span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      {isYearly ? 'Per Year' : 'Per Month'}
+                    </p>
+                  </div>
+
+                  {currentPlanType === 'SILVER' && !isYearly === !isCurrentYearly ? (
+                    <div className="mb-6 py-2 px-4 bg-blue-500 text-white text-center rounded-lg text-sm font-medium">
+                      Current plan
+                    </div>
+                  ) : (
+                    (planOrder['SILVER'] > planOrder[currentPlanType] || 
+                     (currentPlanType === 'SILVER' && isYearly && !isCurrentYearly)) && (
+                      <button
+                        onClick={() => handleSubscription({
+                          id: plans?.find(p => p.subscription_type?.subscription_type === 'SILVER')?.id,
+                          name: 'Silver',
+                          duration: isYearly ? 365 : 30
+                        })}
+                        disabled={paymentLoading}
+                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-primary text-white hover:bg-primary-dark"
+                      >
+                        {currentPlanType === 'SILVER' && isYearly ? 'Upgrade to yearly' : 'Upgrade plan'}
+                      </button>
+                    )
+                  )}
+
+                  <div className="space-y-4">
+                    <PricingFeature value="50" label="Agent limit" />
+                    <PricingFeature value="2.5K" label="Monthly Conversations" />
+                    <PricingFeature value="100 Minutes" label="Monthly Voice Call" />
+                    <PricingFeature value="2M" label="Knowledge Base" />
+                    <PricingFeature value="1 User" label="User Per Team" />
+                    <PricingFeature value="10 GB" label="Available Space" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Starter Plan */}
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Paper elevation={3} sx={{ 
-                p: 3, 
-                height: '100%',
-                minHeight: 550,
-                width: '100%', 
-                maxWidth: 320,
-                display: 'flex', 
-                flexDirection: 'column', 
-                borderRadius: 2
-              }}>
-                <Typography variant="h5" component="h2" align="center" sx={{ fontWeight: 600, mb: 1, fontSize: '1.25rem' }}>
-                  Starter
-                </Typography>
-                <Typography variant="h4" align="center" sx={{ fontWeight: 700, mb: 0.5, fontSize: '1.75rem' }}>
-                  Free
-                </Typography>
-                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3, fontSize: '0.875rem' }}>
-                  Forever
-                </Typography>
-                
-                {/* Free plan will never be under current plan - removed button */}
-                
-                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <PricingFeature value="5" label="Agent limit" />
-                  <PricingFeature value="100" label="Monthly Conversations" />
-                  <PricingFeature value="20 Minutes" label="Monthly Voice Call" />
-                  <PricingFeature value="500K" label="Knowledge Base" />
-                  <PricingFeature value="1 User" label="User Per Team" />
-                  <PricingFeature value="100 MB" label="Available Space" />
-                </Box>
-              </Paper>
-            </Box>
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-center text-gray-900 dark:text-white mb-2">
+                    Starter
+                  </h3>
+                  
+                  <div className="text-center mb-4">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                      Free
+                    </span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      Forever
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <PricingFeature value="5" label="Agent limit" />
+                    <PricingFeature value="100" label="Monthly Conversations" />
+                    <PricingFeature value="20 Minutes" label="Monthly Voice Call" />
+                    <PricingFeature value="500K" label="Knowledge Base" />
+                    <PricingFeature value="1 User" label="User Per Team" />
+                    <PricingFeature value="100 MB" label="Available Space" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </>
         )}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
-
-// Pricing feature component
-const PricingFeature = ({ value, label }) => (
-  <Box 
-    sx={{ 
-      py: 2, 
-      borderTop: '1px solid',
-      borderColor: 'divider',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center'
-    }}
-  >
-    <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 }}>
-      {value}
-    </Typography>
-    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
-      {label}
-    </Typography>
-  </Box>
-);
 
 export default PricingPage; 

@@ -240,7 +240,7 @@ const Register = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, ease: "easeInOut", duration: 0.8 }}
-            className="w-[45%] h-[90%] relative z-[1] rounded-3xl flex flex-col items-center py-5 bg-white shadow-xl overflow-hidden px-[5vw]"
+            className="w-[45%] h-[90%] relative z-[1] rounded-3xl flex flex-col items-center py-[2.5vw] bg-white shadow-xl overflow-hidden px-[5vw]"
           >
             <div className="w-full flex items-center justify-center py-4">
               <img className="w-12" src="/images/ZOFT_LOGO2.png" alt="Zoft" />
