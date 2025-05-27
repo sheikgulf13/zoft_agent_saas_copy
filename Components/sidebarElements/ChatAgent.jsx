@@ -36,7 +36,7 @@ const ChatAgent = (props) => {
   };
   const createHandler = () => {
     dispatch(resetChatBot());
-    router.push('/workspace/agents/chats/createbot')
+    router.push("/workspace/agents/chats/createbot");
   };
 
   return (
@@ -48,36 +48,79 @@ const ChatAgent = (props) => {
           }`}
         >
           <div
-            className={`flex items-center justify-start gap-5 w-full pb-[5px] ${
+            className={`flex items-center justify-between gap-5 w-full pb-[5px] ${
               theme === "dark" ? " text-[#9f9f9f]" : " text-black"
             }`}
           >
-            <h1 className="text-xl font-bold">Chat Agents</h1>
-            <span className="text-sm font-medium text-[#211C84] bg-gradient-to-r from-[#4D55CC]/10 to-[#211C84]/10 px-3 py-1.5 rounded-full border border-[#4D55CC]/20 shadow-sm">
-              {workSpaceAgentList?.chat_agents?.length || 0} Agents
-            </span>
-          </div>
-
-          <div
-            className={`flex justify-center w-full overflow-y-auto`}
-            style={{ height: "calc(70vh - 5px)" }}
-          >
-            <div
-              ref={scrollRef}
-              className={`flex flex-wrap justify-start w-full ${
-                scrollHeight > 260 ? "scrollbar" : "scrollbar-none"
-              } gap-[1.5vw] p-4 transition-all ${
-                theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
-              } [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:bg-[#f2f0ef] [&::-webkit-scrollbar-track]:bg-[#f2f0ef] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/30 hover:[&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/50`}
-            >
+            <div className="flex gap-5 items-center">
+              <h1 className="text-lg font-bold">Chat Agents</h1>
+              <span className="text-sm font-medium text-[#211C84] bg-gradient-to-r from-[#4D55CC]/10 to-[#211C84]/10 px-3 py-1.5 rounded-full border border-[#4D55CC]/20 shadow-sm">
+                {workSpaceAgentList?.chat_agents?.length || 0} Agents
+              </span>
+            </div>
+            {workSpaceAgentList?.chat_agents?.length && (
               <CreateButton
                 onClick={replaceHandler}
                 Icon={FaPlus}
                 text="Create a new Chat Agent"
                 className="hover:scale-105 transition-transform duration-300"
               />
+            )}
+          </div>
+
+          {workSpaceAgentList?.chat_agents?.length && (
+            <div className="w-full flex justify-between items-center px-8 py-2 mt-4 relative group">
+              <h3
+                className={`font-semibold text-sm min-w-[45%] max-w-[45%] text-left overflow-hidden text-ellipsis ${
+                  theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+                }`}
+              >
+                Name
+              </h3>
+
+              <h3
+                className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
+                  theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+                }`}
+              >
+                No.of Actions
+              </h3>
+
+              <h3
+                className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
+                  theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+                }`}
+              >
+                Created at
+              </h3>
+
+              <h3
+                className={`font-semibold text-sm min-w-[15%] max-w-[15%] text-right pr-[1.5vw] overflow-hidden text-ellipsis ${
+                  theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+                }`}
+              >
+                Settings
+              </h3>
+            </div>
+          )}
+
+          <div
+            className={`flex justify-start w-full overflow-y-auto`}
+            style={{ height: "calc(70vh - 5px)" }}
+          >
+            <div
+              ref={scrollRef}
+              className={`flex flex-col justify-start w-full ${
+                scrollHeight > 260 ? "scrollbar" : "scrollbar-none"
+              } gap-[1vw] p-4 transition-all ${
+                theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
+              } [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar]:bg-[#f2f0ef] [&::-webkit-scrollbar-track]:bg-[#f2f0ef] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/30 hover:[&::-webkit-scrollbar-thumb]:bg-[#4D55CC]/50`}
+            >
               {isLoading ? (
-                <SkeletonCard />
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
               ) : (
                 <>
                   {workSpaceAgentList?.chat_agents?.length ? (
@@ -87,12 +130,21 @@ const ChatAgent = (props) => {
                       ))}
                     </>
                   ) : (
-                    <div
-                      className={`${
-                        theme === "dark" ? "text-[#9f9f9f]" : "text-[#9f9f9f]"
-                      } font-bold text-[1.1vw] w-[300px] h-[140px] flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-300`}
-                    >
-                      No agents created
+                    <div className="flex flex-col w-full h-full items-center justify-center gap-[2vw]">
+                      <div
+                        className={`${
+                          theme === "dark" ? "text-[#9f9f9f]" : "text-[#8b8b8b]"
+                        } font-bold text-[1.1vw] w-[300px] h-[40px] flex items-center justify-center`}
+                      >
+                        No agents created
+                      </div>
+
+                      <CreateButton
+                        onClick={replaceHandler}
+                        Icon={FaPlus}
+                        text="Create a new Chat Agent"
+                        className="hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
                   )}
                 </>
@@ -133,8 +185,8 @@ const ChatAgent = (props) => {
                   Icon={FaPlus}
                   text="Create from scratch"
                   className="hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300"
-                  width='250px'
-                  height='200px'
+                  width="250px"
+                  height="200px"
                 />
 
                 <div className="w-[280px] bg-gray-50 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
@@ -150,7 +202,7 @@ const ChatAgent = (props) => {
                     <button
                       onClick={() => {
                         setShowModal(false);
-                        router.push('/workspace/agents/chats/templates')
+                        router.push("/workspace/agents/chats/templates");
                       }}
                       className="w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-[1.02]"
                     >

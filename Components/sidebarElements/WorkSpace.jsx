@@ -88,7 +88,7 @@ const WorkSpace = () => {
   return (
     <div className="h-[100vh] overflow-hidden flex items-center justify-center">
       <div
-        className={`w-[90%] overflow-y-auto h-[90vh] rounded-[.9vh] shadow-xl py-[2%] px-[2%] relative  ${
+        className={`w-[90%] overflow-y-auto h-[90vh] rounded-2xl shadow-md py-[2%] px-[2%] relative  ${
           theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
         }`}
       >
@@ -205,7 +205,9 @@ const WorkSpace = () => {
                   } border-b-[.1vw] outline-none w-full p-[.5vw]`}
                 />
               </div>
-              <ContainedButton onClick={replaceHandler}>Create</ContainedButton>
+              <div className="w-full flex justify-center mt-4">
+                <ContainedButton onClick={replaceHandler} className="text-center px-[4vw]">Create</ContainedButton>
+              </div>
             </div>
           </Modal>
         )}

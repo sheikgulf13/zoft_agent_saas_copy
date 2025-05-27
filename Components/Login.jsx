@@ -90,6 +90,19 @@ const Login = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    try {
+       const { user, session, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      });
+      console.log('login user', user)
+      console.log('login session', session)
+      console.log('login error', error)
+    } catch (error) {
+      console.log('error in google login', error)
+    }
+  }
+
+  {/*const handleGoogleSignIn = async () => {
     const response = await fetch(`${url}/auth/sso/google`, {
       ...getApiConfig(),
       method: "POST",
@@ -137,7 +150,7 @@ const Login = () => {
         }
       }
     }, 0);
-  };
+  };*/}
 
   const session_fetch = async (access_token, refresh_token) => {
     console.log(access_token, refresh_token);

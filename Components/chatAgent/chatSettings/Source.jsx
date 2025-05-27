@@ -86,9 +86,10 @@ const Source = () => {
   }, [rawText])
 
   useEffect(() => {
+    console.log('checking file word count on  existing page', fileWordCounts)
     const changes = DetectChanges(pastedUrl);
     setHasChanges(changes > 0);
-  }, [pastedUrl, existingFile, rawText]);
+  }, [pastedUrl, existingFile, rawText, fileWordCounts]);
 
   const DetectChanges = (urls) => {
     let change = 0;
@@ -100,12 +101,20 @@ const Source = () => {
       change += 1;
     }
 
-    // Compare files - only check if files were added or removed
-    const currentFiles = Object.keys(existingFile);
-    const originalFiles = Object.keys(selectedChatAgent?.file_word_count || {});
+    // Compare file word counts
+    const originalFileCounts = selectedChatAgent?.file_word_count || {};
+    const newFileCounts = fileWordCounts || {};
     
-    // Simple check if files changed
-    if (JSON.stringify(currentFiles) !== JSON.stringify(originalFiles)) {
+    // Check if any file's word count has changed
+    const hasFileChanges = Object.keys(newFileCounts).some(fileName => {
+      return newFileCounts[fileName]?.wordCount !== originalFileCounts[fileName]?.wordCount;
+    }) || Object.keys(originalFileCounts).some(fileName => {
+      return !newFileCounts[fileName] || newFileCounts[fileName]?.wordCount !== originalFileCounts[fileName]?.wordCount;
+    });
+
+    console.log('changes', hasFileChanges);
+
+    if (hasFileChanges) {
       change += 1;
     }
 
@@ -166,7 +175,7 @@ const Source = () => {
     formData.append("chat_agent_id", selectedChatAgent?.id);
     formData.append("URLs", urls);
     formData.append("raw_text", rawText);
-    formData.append("existing_files", existingFiles);
+    formData.append("existing_files", existingFile);
     formData.append("url_word_count", JSON.stringify(dict));
     formData.append("file_word_count", JSON.stringify(fileWordCounts.wordCount));
     formData.append("raw_text_word_count", rawWordCounts);
