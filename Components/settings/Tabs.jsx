@@ -25,13 +25,15 @@ const Tabs = () => {
   };
 
   const getTabClassNames = (tabName) => {
-    const baseClasses = "flex-1 py-2 px-4 text-center";
+    const baseClasses = "flex-1 py-3 px-4 text-center transition-all duration-200 font-medium";
     const activeClasses =
       theme === "dark"
-        ? "bg-[#1A1C22] text-white border-b-2 border-[#EB1CD6]"
-        : "bg-white text-black border-b-2 border-[#EB1CD6]";
+        ? "bg-[#1A1C22] text-white border-b-2 border-[#2D3377]"
+        : "bg-white text-[#2D3377] border-b-2 border-[#2D3377]";
     const inactiveClasses =
-      theme === "dark" ? "bg-[#2A2E37] text-white" : "bg-gray-200 text-black";
+      theme === "dark" 
+        ? "bg-[#2A2E37] text-gray-400 hover:text-white hover:bg-[#2A2E37]/80" 
+        : "bg-gray-50 text-gray-600 hover:text-[#2D3377] hover:bg-gray-100";
 
     return `${baseClasses} ${
       activeTab === tabName ? activeClasses : inactiveClasses
@@ -47,14 +49,14 @@ const Tabs = () => {
   };
 
   return (
-    <div className="">
+    <div className="flex flex-col h-[65vh] max-h-[65vh]">
       <div
-        className={`tabs flex mb-4 w-full max-w-[1000px] h-12 rounded-md shadow-md text-base ${
+        className={`tabs flex mb-6 w-full max-w-[1000px] h-14 mx-auto rounded-xl shadow-md ${
           theme === "dark" ? 'bg-[#1F222A]' : 'bg-white'
         }`}
       >
         <button
-          className={`tab rounded-l-md ${getTabClassNames(
+          className={`tab rounded-l-xl ${getTabClassNames(
             "Personal Details"
           )}`}
           style={tabButtonStyle}
@@ -77,7 +79,7 @@ const Tabs = () => {
           Security
         </button>
         <button
-          className={`tab rounded-r-md ${getTabClassNames("Billings")}`}
+          className={`tab rounded-r-xl ${getTabClassNames("Billings")}`}
           style={tabButtonStyle}
           onClick={() => setActiveTab("Billings")}
         >
@@ -85,8 +87,10 @@ const Tabs = () => {
         </button>
       </div>
       <div
-        className={`tab-content flex-1 ${
-          theme === "dark" ? 'bg-[#1F222A] text-white' : 'bg-[#F2F4F7] text-black'
+        className={`tab-content flex-1 rounded-xl p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent ${
+          theme === "dark" 
+            ? 'bg-[#1F222A] text-white' 
+            : 'bg-white text-gray-800'
         }`}
       >
         {renderContent()}

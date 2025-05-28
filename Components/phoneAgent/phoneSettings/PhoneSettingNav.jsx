@@ -33,7 +33,7 @@ const Content = () => {
       label: "Connect",
     },
     {
-      href: `/workspace/agents/phone/phonesetting/action`,
+      href: `/workspace/agents/phone/phonesetting/action?workspaceId=${workspaceId}`,
       label: "Actions",
     },
   ];
@@ -46,18 +46,21 @@ const Content = () => {
 
   return (
     <>
-      <div className={`gap-[1vw] w-full justify-center`}>
-        <div className="">
+      <div className={`gap-[1vw] w-full justify-center relative`}>
+        <div  className="absolute left-[2vw] top-[-.6vw]">
           <OutlinedButton
             onClick={() =>
               router.push(`/workspace/agents?workspaceId=${workspaceId}`)
             }
+            borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
           >
-            <FaArrowLeftLong />
-            <span className="ml-2">Back to workspace</span>
+            <FaArrowLeftLong className="text-sm" />
+            <span className="text-sm">Back to workspace</span>
           </OutlinedButton>
         </div>
-        <div className="mt-4 flex justify-center">
+        <div className="flex mt-4 justify-center">
           {links.map((link, index) => (
             <>
               <Link
@@ -65,8 +68,8 @@ const Content = () => {
                 className={`${
                   (pathname.includes(link.href) ||
                     pathname.includes(link.href.split("?")[0])) &&
-                  "border-b-[.25vw] border-zinc-500"
-                } px-[.5vw] pb-[.8vw]`}
+                  "border-b-[.25vw] border-[#2D3377]/90"
+                } px-[.5vw] pb-[.8vw] rounded-sm`}
               >
                 {link.label}
               </Link>
@@ -83,7 +86,7 @@ const PhoneSettingNav = () => {
     <Suspense fallback={"Loading..."}>
       <Content />
     </Suspense>
-  )
-}
+  );
+};
 
 export default PhoneSettingNav;

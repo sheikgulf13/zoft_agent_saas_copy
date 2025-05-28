@@ -12,6 +12,7 @@ import { cloneDeep } from "lodash";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import RequiredParam from "@/Components/RequiredParam";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const name = {
   label: "Name",
@@ -84,8 +85,8 @@ const chatActions = [
       apiMethod,
       endPoint,
       httpHeaders,
-      requestData,
       requestDataType,
+      requestData,
     ],
   },
   {
@@ -114,8 +115,8 @@ const phoneActions = [
       apiMethod,
       endPoint,
       httpHeaders,
-      requestData,
       requestDataType,
+      requestData,
     ],
   },
   {
@@ -164,6 +165,8 @@ function ActionForm({
   const [phoneNumber, setPhoneNumber] = useState(formData?.data?.forward_to);
   const [fileName, setFileName] = useState("");
   const fileInputRef = useRef(null);
+  const [jsonInput, setJsonInput] = useState("");
+
   useEffect(() => {
     setParameterData(initialData?.required_params || []);
   }, []);
@@ -322,42 +325,45 @@ function ActionForm({
       // Find the matching action type
       const actionType = forPhoneActions
         ? phoneActions.find(
-            (action) => action.name.toLowerCase() === initialData.action_type.replace(/_/g, ' ')
+            (action) =>
+              action.name.toLowerCase() ===
+              initialData.action_type.replace(/_/g, " ")
           )
         : chatActions.find(
-            (action) => action.name.toLowerCase() === initialData.action_type.replace(/_/g, ' ')
+            (action) =>
+              action.name.toLowerCase() ===
+              initialData.action_type.replace(/_/g, " ")
           );
 
       if (actionType) {
         setSelectedAction(actionType);
       }
 
-      // Set form data with all fields
       const initialFormData = {
-        action_name: initialData.action_name || '',
-        instructions: initialData.instructions || '',
+        action_name: initialData.action_name || "",
+        instructions: initialData.instructions || "",
         data: {
           ...initialData.data,
-          content: initialData.data?.content || '',
-          subject: initialData.data?.subject || '',
-          forward_to: initialData.data?.forward_to || '',
-          api_method: initialData.data?.api_method || '',
-          end_point: initialData.data?.end_point || '',
+          content: initialData.data?.content || "",
+          subject: initialData.data?.subject || "",
+          forward_to: initialData.data?.forward_to || "",
+          api_method: initialData.data?.api_method || "GET",
+          end_point: initialData.data?.end_point || "",
           http_headers: initialData.data?.http_headers || [],
           request_data: initialData.data?.request_data || [],
-          request_data_type: initialData.data?.request_data_type || ''
-        }
+          request_data_type: initialData.data?.request_data_type || "JSON",
+        },
       };
 
       setFormData(initialFormData);
-      setEditorContent(initialData.data?.content || '');
+      setEditorContent(initialData.data?.content || "");
       setInitialFormState({
         formData: initialFormData,
-        editorContent: initialData.data?.content || '',
+        editorContent: initialData.data?.content || "",
         selectedAction: actionType,
-        parameterData: initialData.required_params || []
+        parameterData: initialData.required_params || [],
       });
-      
+
       // Set HTTP headers and request data states
       if (initialData.data?.http_headers?.length > 0) {
         setIsHTTPActive(true);
@@ -365,17 +371,71 @@ function ActionForm({
       if (initialData.data?.request_data?.length > 0) {
         setIsRequestDataActive(true);
       }
+
+      if (initialData.data?.request_data_type === "Form") {
+        setIsRequestDataActive(true);
+      } else if (initialData.data?.request_data_type === "JSON") {
+        setIsRequestDataActive(true);
+
+        if (initialData.data?.request_data?.length > 0) {
+          try {
+            const jsonObj = {};
+            initialData.data.request_data.forEach(({ key, value }) => {
+              try {
+                jsonObj[key] = JSON.parse(value);
+              } catch {
+                jsonObj[key] = value;
+              }
+            });
+            setJsonInput(JSON.stringify(jsonObj, null, 2));
+          } catch (error) {
+            setJsonInput("");
+          }
+        }
+      }
     } else {
       setSelectedAction(forPhoneActions ? phoneActions[0] : chatActions[0]);
-      setFormData({});
-      setEditorContent('');
+      setFormData({
+        data: {
+          api_method: "GET",
+          request_data_type: "JSON",
+        },
+      });
+      setEditorContent("");
       setIsHTTPActive(false);
       setIsRequestDataActive(false);
       setInitialFormState(null);
+      setJsonInput("");
     }
   }, [initialData, forPhoneActions]);
 
-  // Add effect to track form changes
+  // Add effect to set default api_method if not set
+  useEffect(() => {
+    if (!initialData && !formData?.data?.api_method) {
+      setFormData((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          api_method: "GET",
+        },
+      }));
+    }
+  }, [initialData, formData?.data?.api_method]);
+
+  useEffect(() => {
+    const currentApiMethod = formData?.data?.api_method;
+    if (currentApiMethod === "GET" || currentApiMethod === "DELETE") {
+      setIsRequestDataActive(false);
+      setFormData((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          request_data: [],
+        },
+      }));
+    }
+  }, [formData?.data?.api_method]);
+
   useEffect(() => {
     if (!initialFormState) {
       setIsFormChanged(true);
@@ -383,28 +443,34 @@ function ActionForm({
     }
 
     const hasFormChanged = () => {
-      // Check if action type changed
-      if (selectedAction.name.toLowerCase() !== initialFormState.selectedAction.name.toLowerCase()) {
+      if (
+        selectedAction.name.toLowerCase() !==
+        initialFormState.selectedAction.name.toLowerCase()
+      ) {
         return true;
       }
 
-      // Check if basic fields changed
-      if (formData.action_name !== initialFormState.formData.action_name ||
-          formData.instructions !== initialFormState.formData.instructions) {
+      if (
+        formData.action_name !== initialFormState.formData.action_name ||
+        formData.instructions !== initialFormState.formData.instructions
+      ) {
         return true;
       }
 
-      // Check if data fields changed
       const initialDataFields = initialFormState.formData.data || {};
       const currentDataFields = formData.data || {};
 
-      // Check content
       if (editorContent !== initialFormState.editorContent) {
         return true;
       }
 
-      // Check other fields
-      const fieldsToCheck = ['subject', 'forward_to', 'api_method', 'end_point', 'request_data_type'];
+      const fieldsToCheck = [
+        "subject",
+        "forward_to",
+        "api_method",
+        "end_point",
+        "request_data_type",
+      ];
       for (const field of fieldsToCheck) {
         if (currentDataFields[field] !== initialDataFields[field]) {
           return true;
@@ -412,13 +478,20 @@ function ActionForm({
       }
 
       // Check arrays
-      if (JSON.stringify(currentDataFields.http_headers) !== JSON.stringify(initialDataFields.http_headers) ||
-          JSON.stringify(currentDataFields.request_data) !== JSON.stringify(initialDataFields.request_data)) {
+      if (
+        JSON.stringify(currentDataFields.http_headers) !==
+          JSON.stringify(initialDataFields.http_headers) ||
+        JSON.stringify(currentDataFields.request_data) !==
+          JSON.stringify(initialDataFields.request_data)
+      ) {
         return true;
       }
 
       // Check parameters
-      if (JSON.stringify(parameterData) !== JSON.stringify(initialFormState.parameterData)) {
+      if (
+        JSON.stringify(parameterData) !==
+        JSON.stringify(initialFormState.parameterData)
+      ) {
         return true;
       }
 
@@ -426,7 +499,32 @@ function ActionForm({
     };
 
     setIsFormChanged(hasFormChanged());
-  }, [formData, editorContent, selectedAction, parameterData, initialFormState]);
+  }, [
+    formData,
+    editorContent,
+    selectedAction,
+    parameterData,
+    initialFormState,
+  ]);
+
+  useEffect(() => {
+    if (initialData || formData) {
+      const timeout = setTimeout(() => {
+        const requestDataType = initialData?.data?.request_data_type || formData?.data?.request_data_type;
+        if (requestDataType) {
+          setFormData(prev => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              request_data_type: requestDataType
+            }
+          }));
+        }
+      }, 200); 
+
+      return () => clearTimeout(timeout);
+    }
+  }, []);
 
   useEffect(() => {
     console.log(formData);
@@ -534,7 +632,6 @@ function ActionForm({
 
       console.log("Final isExist:", isExist);
 
-      // Set error if field is required but missing
       if (!isExist) {
         newErrors[field.value] = "This field is required.";
       }
@@ -582,12 +679,103 @@ function ActionForm({
     setEditorContent("");
   };
 
+  useEffect(() => {
+    if (
+      formData?.data?.api_method === "GET" ||
+      formData?.data?.api_method === "DELETE"
+    ) {
+      setIsRequestDataActive(false);
+
+      setFormData((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          request_data: [],
+        },
+      }));
+    } else {
+      if (!formData?.data?.request_data_type) {
+        setFormData((prev) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            request_data_type: "JSON",
+          },
+        }));
+      }
+    }
+  }, [formData?.data?.api_method]);
+
+  useEffect(() => {
+    const currentType = formData?.data?.request_data_type;
+    const currentData = formData?.data?.request_data;
+
+    if (currentType === "Form") {
+      setIsRequestDataActive(true);
+
+      if (jsonInput) {
+        try {
+          const jsonObj = JSON.parse(jsonInput);
+          setFormData((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              request_data: Object.entries(jsonObj).map(([key, value]) => ({
+                key,
+                value:
+                  typeof value === "object"
+                    ? JSON.stringify(value)
+                    : String(value),
+              })),
+            },
+          }));
+        } catch (error) {}
+      }
+    } else if (currentType === "JSON") {
+      setIsRequestDataActive(true);
+
+      if (currentData?.length > 0) {
+        try {
+          const jsonObj = {};
+          currentData.forEach(({ key, value }) => {
+            try {
+              jsonObj[key] = JSON.parse(value);
+            } catch {
+              jsonObj[key] = value;
+            }
+          });
+          setJsonInput(JSON.stringify(jsonObj, null, 2));
+        } catch (error) {
+          setJsonInput("");
+        }
+      }
+    }
+  }, [formData?.data?.request_data_type]);
+
+  useEffect(() => {
+    if (
+      formData?.data?.request_data_type === "JSON" &&
+      formData?.data?.request_data?.length > 0
+    ) {
+      try {
+        const jsonObj = {};
+        formData.data.request_data.forEach(({ key, value }) => {
+          try {
+            jsonObj[key] = JSON.parse(value);
+          } catch {
+            jsonObj[key] = value;
+          }
+        });
+        setJsonInput(JSON.stringify(jsonObj, null, 2));
+      } catch (error) {}
+    }
+  }, [formData?.data?.request_data]);
+
   if (typeof window === "undefined") {
     return <></>;
   }
 
   const GetField = (field) => {
-    // console.log(field);
     switch (field.label) {
       case "Instructions": {
         return (
@@ -596,7 +784,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.instructions || ""}
-            className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white px-[.5vw] py-[.5vw] ${
+            className={`w-full h-[200px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-[.5vw] py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -606,7 +794,7 @@ function ActionForm({
 
       case "Content": {
         return (
-          <div className="mt-2 bg-white min-h-[200px] h-[200px] border-0 shadow-sm">
+          <div className="mt-2 bg-white dark:bg-gray-700 min-h-[200px] h-[200px] border border-gray-200 dark:border-gray-600 rounded-md shadow-sm">
             <style jsx global>{`
               .ql-container {
                 height: calc(100% - 42px) !important;
@@ -616,11 +804,20 @@ function ActionForm({
                 border-top: none !important;
                 border-left: none !important;
                 border-right: none !important;
-                border-bottom: 1px solid #ccc !important;
+                border-bottom: 1px solid #e5e7eb !important;
+                background: #f9fafb !important;
+              }
+              .dark .ql-toolbar {
+                border-bottom: 1px solid #374151 !important;
+                background: #1f2937 !important;
               }
               .ql-editor {
                 height: 100% !important;
                 overflow-y: auto !important;
+                color: #111827 !important;
+              }
+              .dark .ql-editor {
+                color: #f9fafb !important;
               }
             `}</style>
             <ReactQuill
@@ -628,13 +825,15 @@ function ActionForm({
               value={editorContent}
               onChange={handleEditorChange}
               placeholder="Start typing..."
-              className={`h-full ${errors[field.value] ? "border-red-500" : ""}`}
+              className={`h-full ${
+                errors[field.value] ? "border-red-500" : ""
+              }`}
               modules={{
                 toolbar: [
-                  ['bold', 'italic', 'underline'],
-                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                  ['clean']
-                ]
+                  ["bold", "italic", "underline"],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["clean"],
+                ],
               }}
             />
           </div>
@@ -649,7 +848,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.data?.subject || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -665,7 +864,7 @@ function ActionForm({
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
               defaultCountry="US"
-              className="w-full flex px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full flex px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4D55CC]"
             />
           </div>
         );
@@ -676,15 +875,15 @@ function ActionForm({
           <select
             name={field.label}
             id={field.value}
-            value={formData?.data?.api_method || ""}
+            value={formData?.data?.api_method || "GET"}
             onChange={handleChange}
-            className={`mt-1 block flex-1 py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm`}
+            className="mt-1 block flex-1 py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600"
           >
-            <option value="" disabled hidden>
-              Select Method
-            </option>
             <option value="GET">GET</option>
             <option value="POST">POST</option>
+            <option value="PATCH">PATCH</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
           </select>
         );
       }
@@ -697,7 +896,7 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.data?.end_point || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -709,7 +908,7 @@ function ActionForm({
         return (
           <>
             {isHTTPActive && (
-              <div className="flex flex-col gap-2 bg-white rounded-md p-5">
+              <div className="flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-md p-5 border border-gray-200 dark:border-gray-600">
                 {formData?.data?.http_headers?.map((pair, index) => (
                   <div
                     key={index}
@@ -721,7 +920,7 @@ function ActionForm({
                       placeholder="Header Key"
                       value={pair.key}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
+                      className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
                     />
                     <input
                       type="text"
@@ -729,12 +928,12 @@ function ActionForm({
                       placeholder="Header Value"
                       value={pair.value}
                       onChange={handleInputChange(index, "http_headers")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
+                      className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemovePair(index, "http_headers")}
-                      className=" text-black"
+                      className="text-gray-400 hover:text-red-500 transition-colors duration-200"
                     >
                       X
                     </button>
@@ -752,7 +951,7 @@ function ActionForm({
                         "http_headers"
                       )
                     }
-                    className="text-[#702963] w-full text-start text-sm mr-5"
+                    className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm mr-5 transition-colors duration-200"
                   >
                     + Add Key
                   </button>
@@ -767,53 +966,133 @@ function ActionForm({
         return (
           <>
             {isRequestDataActive && (
-              <div className="flex flex-col gap-2 w-full justify-start bg-white rounded-md p-5">
-                {formData?.data?.request_data?.map((pair, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-2 items-center justify-between w-full overflow-hidden"
-                  >
-                    <input
-                      type="text"
-                      name="key"
-                      placeholder="Key"
-                      value={pair.key}
-                      onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
-                    />
-                    <input
-                      type="text"
-                      name="value"
-                      placeholder="Value"
-                      value={pair.value}
-                      onChange={handleInputChange(index, "request_data")}
-                      className="border p-2 rounded-md text-sm shadow-sm w-[45%] bg-gray-100"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePair(index, "request_data")}
-                      className=" text-black cursor-pointer"
-                    >
-                      x
-                    </button>
+              <div className="flex flex-col gap-2 w-full justify-start bg-white dark:bg-gray-800 rounded-md p-5 border border-gray-200 dark:border-gray-600">
+                {formData?.data?.api_method === "GET" ||
+                formData?.data?.api_method === "DELETE" ? (
+                  // Key-Value pairs for GET and DELETE (disabled)
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Request data is not applicable for GET and DELETE methods
                   </div>
-                ))}
+                ) : formData?.data?.request_data_type === "JSON" ? (
+                  // JSON input for POST, PATCH, PUT with JSON type
+                  <div className="w-full">
+                    <textarea
+                      value={jsonInput}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Always update the textarea value
+                        setJsonInput(value);
 
-                {(formData?.data?.request_data ?? []).length <
-                  maxRequestDataPairs && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleAddPair(
-                        maxRequestDataPairs,
-                        isRequestDataActive,
-                        "request_data"
-                      )
-                    }
-                    className="text-[#702963] w-full text-start text-sm"
-                  >
-                    + Add Key
-                  </button>
+                        // Try to parse and update formData if we have content
+                        if (value.trim()) {
+                          try {
+                            const jsonValue = JSON.parse(value);
+                            setFormData((prev) => ({
+                              ...prev,
+                              data: {
+                                ...prev.data,
+                                request_data: Object.entries(jsonValue).map(
+                                  ([key, value]) => ({
+                                    key,
+                                    value:
+                                      typeof value === "object"
+                                        ? JSON.stringify(value)
+                                        : String(value),
+                                  })
+                                ),
+                              },
+                            }));
+                          } catch (error) {
+                            // If JSON is invalid, just keep the textarea value as is
+                            // Don't update formData
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // When textarea loses focus, ensure the value is still there
+                        if (!jsonInput) {
+                          setJsonInput(e.target.value);
+                        }
+                      }}
+                      placeholder="Enter JSON data..."
+                      className="w-full h-[200px] border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent font-mono"
+                    />
+                    {jsonInput && (
+                      <div className="mt-2 text-sm flex items-center gap-1">
+                        {(() => {
+                          try {
+                            JSON.parse(jsonInput);
+                            return (
+                              <span className="text-green-500 flex items-center gap-1">
+                                <FaCheckCircle className="text-lg" />
+                                Valid JSON
+                              </span>
+                            );
+                          } catch (error) {
+                            return (
+                              <span className="text-red-500 flex items-center gap-1">
+                                <FaTimesCircle className="text-lg" />
+                                Invalid JSON
+                              </span>
+                            );
+                          }
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // Key-Value pairs for POST, PATCH, PUT with Form type
+                  <>
+                    {formData?.data?.request_data?.map((pair, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 items-center justify-between w-full overflow-hidden"
+                      >
+                        <input
+                          type="text"
+                          name="key"
+                          placeholder="Key"
+                          value={pair.key}
+                          onChange={handleInputChange(index, "request_data")}
+                          className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          name="value"
+                          placeholder="Value"
+                          value={pair.value}
+                          onChange={handleInputChange(index, "request_data")}
+                          className="border border-gray-200 dark:border-gray-600 p-2 rounded-md text-sm shadow-sm w-[45%] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemovePair(index, "request_data")
+                          }
+                          className="text-gray-400 hover:text-red-500 transition-colors duration-200"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+
+                    {(formData?.data?.request_data ?? []).length <
+                      maxRequestDataPairs && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleAddPair(
+                            maxRequestDataPairs,
+                            isRequestDataActive,
+                            "request_data"
+                          )
+                        }
+                        className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm transition-colors duration-200"
+                      >
+                        + Add Key
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -825,13 +1104,35 @@ function ActionForm({
           <select
             name={field.label}
             id={field.value}
-            value={formData?.data?.request_data_type || ""}
-            onChange={handleChange}
-            className="mt-1 block w-full py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+            value={
+              formData?.data?.request_data_type ||
+              initialData?.data?.request_data_type ||
+              "JSON"
+            }
+            onChange={(e) => {
+              const newType = e.target.value;
+              handleChange(e);
+
+              // Reset request data when switching types
+              setFormData((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  request_data: [],
+                },
+              }));
+            }}
+            disabled={
+              formData?.data?.api_method === "GET" ||
+              formData?.data?.api_method === "DELETE"
+            }
+            className={`mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600 ${
+              formData?.data?.api_method === "GET" ||
+              formData?.data?.api_method === "DELETE"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
-            <option value="" disabled hidden>
-              Select Type
-            </option>
             <option value="JSON">JSON</option>
             <option value="Form">Form</option>
           </select>
@@ -847,7 +1148,7 @@ function ActionForm({
             placeholder={field.placeholder}
             maxLength={30}
             value={formData?.action_name || ""}
-            className={`w-full rounded-md mt-[.5vw] bg-white text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] ${
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
               errors[field.value] ? "border-red-500" : ""
             }`}
             onChange={handleChange}
@@ -858,18 +1159,18 @@ function ActionForm({
   };
 
   return (
-    <div className="h-[65vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
+    <div className="h-[85vh] scrollbar p-[1vw] pr-[1.8vw] mr-[-1vw] flex flex-col justify-between">
       <h2 className="text-xl font-semibold mb-[1vw]">Action Form</h2>
       <form
         onSubmit={handleSubmit}
         className="overflow-y-auto pr-2"
-        style={{ height: "calc(70vh - 160px)" }}
+        style={{ height: "calc(90vh - 160px)" }}
       >
-        <div className="bg-gray-100 rounded-lg p-5 mb-8">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 mb-8 shadow-sm">
           <div>
             <label
               htmlFor="action-type"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-200"
             >
               Action Type
             </label>
@@ -877,7 +1178,7 @@ function ActionForm({
               id="action-type"
               value={selectedAction?.id}
               onChange={handleActionChange}
-              className="mt-1 block w-full py-2 px-3 bg-white rounded-md shadow-sm focus:outline-none sm:text-sm"
+              className="mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600"
             >
               {forPhoneActions
                 ? phoneActions.map((action) => (
@@ -894,26 +1195,28 @@ function ActionForm({
           </div>
 
           {selectedAction?.fields.slice(0, 2).map((field, index) => (
-            <div key={index} className="mt-4">
+            <div key={index} className="mt-4 ">
               <label
                 htmlFor={field.label}
-                className="block mt-[1vw] text-sm font-medium text-gray-700"
+                className="block mt-[1vw] text-sm font-medium text-gray-700 dark:text-gray-200"
               >
                 {field.label}
               </label>
               {GetField(field)}
               {errors[field.value] && (
-                <p className="text-red-500 text-xs">{errors[field.value]}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors[field.value]}
+                </p>
               )}
             </div>
           ))}
         </div>
 
         <div className="w-full flex justify-center">
-          <div className="bg-gray-300 h-[1px] w-[80%]" />
+          <div className="bg-gray-200 dark:bg-gray-700 h-[1px] w-[90%]" />
         </div>
 
-        <div className="bg-gray-100 rounded-lg p-5 mt-8">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 mt-8 shadow-sm">
           {selectedAction?.fields.slice(2).map((field, index) => (
             <div
               key={index}
@@ -933,7 +1236,7 @@ function ActionForm({
                   htmlFor={field.label}
                   className={`${
                     field.label === "API Method" ? "flex" : "block mt-1"
-                  } text-sm font-medium text-gray-700`}
+                  } text-sm font-medium text-gray-700 dark:text-gray-200`}
                 >
                   {field.label}
                 </label>
@@ -945,7 +1248,7 @@ function ActionForm({
                       onChange={() => setIsHTTPActive(!isHTTPActive)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-[#702963] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#702963]"></div>
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC]"></div>
                   </label>
                 )}
                 {field.label === "Request Data" && (
@@ -956,16 +1259,29 @@ function ActionForm({
                       onChange={() =>
                         setIsRequestDataActive(!isRequestDataActive)
                       }
+                      disabled={
+                        formData?.data?.api_method === "GET" ||
+                        formData?.data?.api_method === "DELETE"
+                      }
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-[#702963] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#702963]"></div>
+                    <div
+                      className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC] ${
+                        formData?.data?.api_method === "GET" ||
+                        formData?.data?.api_method === "DELETE"
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                    ></div>
                   </label>
                 )}
               </div>
 
               {GetField(field)}
               {errors[field.value] && (
-                <p className="text-red-500 text-xs">{errors[field.value]}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors[field.value]}
+                </p>
               )}
             </div>
           ))}
@@ -1059,20 +1375,27 @@ function ActionForm({
             parameterData={parameterData}
             setParameterData={setParameterData}
             formSubmitted={formSubmitted}
+            actionType={selectedAction?.name}
           />
         </div>
       </form>
-      <div className="flex items-center justify-between mt-[15px]">
-        <OutlinedButton onClick={toggle}>Cancel</OutlinedButton>
+      <div className="flex items-center justify-between mt-[15px] gap-4">
+        <button
+          onClick={toggle}
+          type="button"
+          className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC] transition-all duration-200 font-medium shadow-sm"
+        >
+          Cancel
+        </button>
         <button
           onClick={handleSubmit}
           type="submit"
           disabled={initialData && !isFormChanged}
           className={`${
             initialData && !isFormChanged
-              ? 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 text-gray-500 cursor-not-allowed opacity-60'
-              : 'bg-[#702963] hover:bg-opacity-[0.85]'
-          } shadow-sm text-white px-4 py-2 rounded transition-all duration-300`}
+              ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+              : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
+          } px-6 py-2.5 rounded-lg shadow-sm transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC]`}
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>

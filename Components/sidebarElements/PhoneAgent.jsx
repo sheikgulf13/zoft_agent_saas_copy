@@ -104,11 +104,15 @@ const PhoneAgent = () => {
   const [phoneData, setPhoneData] = useState([]);
   const urlFetch = process.env.url;
   const formData = new FormData();
+  const searchParams = new URLSearchParams(window.location.search);
+  const templateData = JSON.parse(
+    decodeURIComponent(searchParams.get("template"))
+  );
 
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
-    console.log('====================================');
-    console.log(selectedWorkSpace);
-    console.log('====================================');
+  console.log("====================================");
+  console.log(selectedWorkSpace);
+  console.log("====================================");
 
   formData.append("workspace_id", selectedWorkSpace);
   const languages = elevenlabsVoice?.map((item) => item.language_accent);
@@ -116,8 +120,16 @@ const PhoneAgent = () => {
   const uniqueLanguages = [...new Set(languages)];
 
   useEffect(() => {
-    console.log('phone aent cheking', phoneAgentName, phoneAgentPurpose, phoneAgentType, companyBusiness, companyName, gender)
-  }, [phoneAgentName, phoneAgentPurpose, phoneAgentType])
+    console.log(
+      "phone aent cheking",
+      phoneAgentName,
+      phoneAgentPurpose,
+      phoneAgentType,
+      companyBusiness,
+      companyName,
+      gender
+    );
+  }, [phoneAgentName, phoneAgentPurpose, phoneAgentType]);
 
   useEffect(() => {
     if (!language_mapping_accent) return;
@@ -146,7 +158,7 @@ const PhoneAgent = () => {
           body: formData,
         });
         const data = await response.json();
-        console.log('twilio no', data);
+        console.log("twilio no", data);
 
         setPhoneData(data);
         // Set initial phone number to first value if data exists
@@ -238,7 +250,7 @@ const PhoneAgent = () => {
       phoneAgentName === "" ||
       phoneAgentPurpose === "" ||
       (gender === "" && language === "") ||
-      voice === "" 
+      voice === ""
       // phoneNumber === ""
     ) {
       setErr("Enter the data");
@@ -345,7 +357,7 @@ const PhoneAgent = () => {
                       : "h-[53vh] overflow-y-scroll scrollBar pt-[1.5vw]"
                   }`}
                 >
-                  <div className="bg-gray-100 rounded-lg p-6 mb-8">
+                  <div className="bg-gray-50 rounded-lg p-6 mb-8">
                     <h1 className="text-2xl font-bold mb-3">
                       AI Assistant Configuration
                     </h1>
@@ -368,7 +380,7 @@ const PhoneAgent = () => {
                           <input
                             id="name"
                             type="text"
-                            value={phoneAgentName}
+                            value={templateData ? templateData?.agent_name : phoneAgentName}
                             onChange={(e) =>
                               dispatch(setphoneAgentName(e.target.value))
                             }
@@ -521,7 +533,8 @@ const PhoneAgent = () => {
                                 htmlFor="phone"
                                 className="block text-sm font-medium text-gray-700"
                               >
-                                Phone number <span className="text-red-500">*</span>
+                                Phone number{" "}
+                                <span className="text-red-500">*</span>
                               </label>
                               {/*err && phoneNumber === "" && (
                                 <span className="text-red-900 capitalize Hsm font-medium">
@@ -531,7 +544,9 @@ const PhoneAgent = () => {
                             </div>
                             {phoneData.length === 0 && (
                               <div className="p-2 bg-yellow-50 border border-yellow-200 rounded-md flex-1 ml-2">
-                                <p className="text-sm text-yellow-700">Please add Twilio details</p>
+                                <p className="text-sm text-yellow-700">
+                                  Please add Twilio details
+                                </p>
                               </div>
                             )}
                           </div>
@@ -563,14 +578,16 @@ const PhoneAgent = () => {
                                 className="w-full number-input border-0 focus:ring-0 focus:outline-none px-3 py-2"
                               />
                             )}
-
                           </div>
-                          {phoneData.length > 0 ? (<p className="text-xs text-gray-500">
-                            Select your Twilio phone number
-                          </p>) : (<p className="text-xs text-gray-500">
-                            Enter your Twilio phone number
-                          </p>) }
-                          
+                          {phoneData.length > 0 ? (
+                            <p className="text-xs text-gray-500">
+                              Select your Twilio phone number
+                            </p>
+                          ) : (
+                            <p className="text-xs text-gray-500">
+                              Enter your Twilio phone number
+                            </p>
+                          )}
                         </div>
                       </div>
                     </form>
@@ -615,7 +632,7 @@ const PhoneAgent = () => {
                       : "h-[53vh] overflow-y-scroll scrollBar pt-[2vw]"
                   }`}
                 >
-                  <div className="bg-gray-100 rounded-lg p-6 mb-8">
+                  <div className="bg-gray-50 rounded-lg p-6 mb-8">
                     <h1 className="text-2xl font-bold mb-6">
                       Company Configuration
                     </h1>
@@ -701,13 +718,13 @@ const PhoneAgent = () => {
         </div>
 
         <div
-          className={`w-full absolute bottom-0 h-[6.5vh] ${
+          className={`w-full absolute bottom-0 h-[6.5vh] py-[2vw] ${
             theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
           }`}
         >
           <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
-            <OutlinedButton onClick={prevHandler}>Cancel</OutlinedButton>
-            <ContainedButton onClick={nextHandler}>Continue</ContainedButton>
+            <OutlinedButton onClick={prevHandler} borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]">Cancel</OutlinedButton>
+            <ContainedButton onClick={nextHandler} className="py-[0.35vw]">Continue</ContainedButton>
           </div>
         </div>
       </div>

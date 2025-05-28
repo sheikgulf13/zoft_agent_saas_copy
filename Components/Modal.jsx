@@ -10,7 +10,7 @@ const Modal = ({ open, onClose, classname, children }) => {
         onClick={onClose}
         className={`
           fixed inset-0 flex justify-center items-center transition-all duration-300 z-[1000]
-          ${open ? "visible bg-black/40" : "invisible"}
+          ${open ? "visible bg-black/30 backdrop-blur-sm" : "invisible"}
         `}
       >
         {/* modal */}

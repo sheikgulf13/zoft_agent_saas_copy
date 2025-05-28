@@ -34,7 +34,7 @@ const Content = () => {
         <div className={`flex justify-center gap-[10px] mt-4`}>
           {links.map((link, index) => (
             <>
-              <Link href={link.href} className={`${(pathname.includes(link.href) || (index > 2 && pathname.includes(link.href.slice(0, 44)))) && 'border-b-[.25vw] border-zinc-500'} px-[.5vw] pb-[.8vw]`}>{link.label}</Link>
+              <Link href={link.href} className={`${(pathname.includes(link.href) || (index > 2 && pathname.includes(link.href.slice(0, 44)))) && 'border-b-[.25vw] border-[#2D3377]/90'} px-[.5vw] pb-[.8vw] rounded-sm`}>{link.label}</Link>
             </>
           ))}
         </div>

@@ -249,12 +249,11 @@ const callHistory = () => {
   }, []);
 
   return (
-    <div
-      className={`flex flex-col justify-start items-center p-8  w-full h-[100vh]`}
-    >
+  <div className="flex flex-col justify-start items-center px-8 h-screen w-full">
+      {/* Header */}
       <div
-        className={`border-b-[1px] w-full text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+        className={`border-b-[1px] flex justify-center px-8 mt-8 mb-5 w-full text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : "text-black"
         }`}
       >
         <PhoneSettingNav />

@@ -257,9 +257,12 @@ const Activity = () => {
                   `/workspace/agents?workspaceId=${selectedChatAgent?.workspace_id}`
                 )
               }
-            >
-              <FaArrowLeftLong />
-              <span className="ml-2">Back to workspace</span>
+                 borderColor={
+              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+            }
+                      >
+                        <FaArrowLeftLong className="text-sm"/>
+                        <span className="text-sm">Back to workspace</span>
             </OutlinedButton>
           </div>
           <ChatSettingNav />

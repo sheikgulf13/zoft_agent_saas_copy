@@ -7,7 +7,7 @@ const GradientButton = ({ Icon, text, isActive, onClick, className }) => {
       type='button'
       className={`py-[.6vw] text-lg capitalize flex items-center gap-[1vw] px-[1vw] text-center cursor-pointer font-medium rounded-lg ${className} ${
         isActive
-          ? 'bg-[#702963] text-white'
+          ? 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm text-white'
           : 'hover:bg-gray-200'
       }`}
       onClick={onClick}
