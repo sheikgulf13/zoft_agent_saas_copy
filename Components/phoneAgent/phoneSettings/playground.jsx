@@ -60,7 +60,8 @@ const Content = () => {
   };
 
   const makeCall = async () => {
-    const reqURL = `${phone_url}/start-call`;
+    // const reqURL = `${phone_url}/start-call`;
+    const reqURL = `${phone_url}/outgoing-call`;
     const formData = new FormData();
     formData.append("phone_agent_id", phoneAgentID);
     formData.append("customer_name", cus_Name);

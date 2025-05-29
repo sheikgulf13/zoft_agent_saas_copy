@@ -13,7 +13,7 @@ const connect = () => {
   const [phoneAgent, setPhoneAgent] = useState(null);
   const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const [webhook, setWebhook]= useState('https://phone.zoft.ai/start-call');
+  const [webhook, setWebhook]= useState('https://voice.zoft.ai/outgoing-call');
 
   const [embedcode, setEmbedcode]= useState('Embed code here');
 

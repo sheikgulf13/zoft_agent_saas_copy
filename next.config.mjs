@@ -4,7 +4,7 @@ const nextConfig = {
          url:'https://api.zoft.ai',
          chat_url:'https://chat.zoft.ai',
          boturl:'https://chat-embed.zoft.ai/',
-         phone_url:'https://phone.zoft.ai',
+         phone_url:'https://voice.zoft.ai',
     }
 };
 
