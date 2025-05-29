@@ -52,14 +52,7 @@ const Playground = () => {
       formData.append("text_color", selectedTextColor);
       formData.append("greeting", greeting || "");
 
-      const response = await fetch(`${urlFetch}/chat_agent/color`, {
-        ...getApiConfig(),
-        method: "POST",
-        headers: new Headers({
-          ...getApiHeaders(),
-        }),
-        body: formData,
-      });
+      const response = await fetch(`${urlFetch}/chat_agent/color`);
       console.log("response", response);
     } catch (error) {
       console.error("Error updating color:", error);
