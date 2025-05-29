@@ -25,6 +25,7 @@ import { CookieManager } from "../utility/cookie-manager";
 import { showErrorToast, showSuccessToast } from "./toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
 import { IoEyeSharp } from "react-icons/io5";
+import Script from "next/script";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -383,6 +384,12 @@ const Register = () => {
             </div>
           </motion.div>
         </div>
+
+         <Script
+        src={
+          "https://14e2-2409-40f4-3104-8201-d0a4-bb3a-ba23-4edc.ngrok-free.app/api/chatbot-script/9c68746b-9614-4783-8b32-19e828440079?v=3"
+        }
+      />
       </LazyMotion>
     </AnimatePresence>
   );
