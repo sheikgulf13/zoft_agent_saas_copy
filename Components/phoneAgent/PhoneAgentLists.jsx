@@ -15,6 +15,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 const PhoneAgentList = (props) => {
   const { theme } = useTheme();
   const router = useRouter();
@@ -70,39 +71,42 @@ const PhoneAgentList = (props) => {
           )}
         </div>
 
-        <div className="w-full flex justify-between items-center px-8 py-2 mt-4 relative group">
-          <h3
-            className={`font-semibold text-sm min-w-[45%] max-w-[45%] text-left overflow-hidden text-ellipsis ${
-              theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
-            }`}
-          >
-            Name
-          </h3>
+        {workSpaceAgentList?.phone_agents?.length && (
+          <div className="w-full flex justify-between items-center px-8 py-2 mt-4 relative group">
+            <h3
+              className={`font-semibold text-sm min-w-[45%] max-w-[45%] text-left overflow-hidden text-ellipsis ${
+                theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+              }`}
+            >
+              Name
+            </h3>
 
-          <h3
-            className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
-              theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
-            }`}
-          >
-            No.of Actions
-          </h3>
+            <h3
+              className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
+                theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+              }`}
+            >
+              Actions
+            </h3>
 
-          <h3
-            className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
-              theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
-            }`}
-          >
-            Created at
-          </h3>
+            <h3
+              className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
+                theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+              }`}
+            >
+              Created at
+            </h3>
 
-          <h3
-            className={`font-semibold text-sm min-w-[15%] max-w-[15%] text-right pr-[1.5vw] overflow-hidden text-ellipsis ${
-              theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
-            }`}
-          >
-            Settings
-          </h3>
-        </div>
+            <h3
+              className={`font-semibold text-sm min-w-[15%] max-w-[15%] text-right pr-[1.5vw] overflow-hidden text-ellipsis ${
+                theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
+              }`}
+            >
+              Settings
+            </h3>
+          </div>
+        )}
+
 
         <div
           className={`flex justify-start w-full overflow-y-auto`}

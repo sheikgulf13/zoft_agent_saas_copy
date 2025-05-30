@@ -83,7 +83,7 @@ const ChatAgent = (props) => {
                   theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
                 }`}
               >
-                No.of Actions
+                Actions
               </h3>
 
               <h3

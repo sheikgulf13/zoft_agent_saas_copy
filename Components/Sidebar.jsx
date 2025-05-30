@@ -186,7 +186,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       <div className="flex flex-col items-center h-full relative border-t pt-[2vh] border-zinc-300 w-[90%]">
         <div className="w-full h-1/2 flex flex-col items-center gap-[.6vw] relative">
           {navButtons.slice(0, 4).map((button, index) => {
-            const isActive = pathname.includes(button.path);
+            const isActive = button.path === '/integrations' ? pathname === button.path : pathname.includes(button.path);
 
             return (
               <Link

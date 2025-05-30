@@ -45,6 +45,8 @@ const Register = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const { username, email, password, animationComplete, showLogin, fadeIn } =
     useSelector((state) => state.user);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   // console.log(fadeIn);
 
@@ -53,8 +55,17 @@ const Register = () => {
       dispatch(setAnimationComplete(true));
     }, 1000);
 
-    return () => clearTimeout(timeoutId);
-  }, [dispatch]);
+    const interval = setInterval(() => {
+      if (!isPaused) {
+        setCurrentSlide((prev) => (prev === 0 ? 1 : 0));
+      }
+    }, 2500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(interval);
+    };
+  }, [dispatch, isPaused]);
 
   const registerHandler = async (e) => {
     e.preventDefault();
@@ -229,19 +240,56 @@ const Register = () => {
   return (
     <AnimatePresence>
       <LazyMotion features={domAnimation}>
-        <div className="w-full h-[100vh] bg-gray-50 flex justify-around gap-[6vw] px-[5vw] items-center overflow-hidden">
-          <div className="w-[40%] h-[80%] z-[5] rounded-3xl overflow-hidden relative items-center justify-center">
-            <img
-              src="/images/doodle-Login.png"
-              alt="doodle"
-              className="h-[80%] w-[80%] z-5"
-            />
+        <div className="w-full h-[100vh] bg-white flex justify-around gap-[6vw] px-[5vw] items-center overflow-hidden">
+          <div className="w-[40%] h-[80%] z-[5] rounded-3xl overflow-hidden relative flex flex-col items-center justify-center">
+            <div 
+              className="relative w-full h-[60%]"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="absolute w-full h-full"
+              >
+                <img
+                  src={currentSlide === 0 ? "/videos/Chatbot.gif" : "/videos/Innovation.gif"}
+                  alt={currentSlide === 0 ? "Chatbot Demo" : "Innovation Demo"}
+                  className="h-full w-full object-contain"
+                />
+              </motion.div>
+            </div>
+            <div className="w-full flex flex-col items-center gap-4 mt-6">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {currentSlide === 0 ? "Smart Chatbot" : "Innovative Solutions"}
+              </h2>
+              <p className="text-center text-gray-600 max-w-[80%]">
+                {currentSlide === 0 
+                  ? "Experience our intelligent chatbot that provides instant support and answers to your queries 24/7."
+                  : "Discover cutting-edge solutions that transform the way you work and collaborate."}
+              </p>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => setCurrentSlide(0)}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    currentSlide === 0 ? "bg-[#2D3377] w-6" : "bg-gray-300"
+                  }`}
+                />
+                <button
+                  onClick={() => setCurrentSlide(1)}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    currentSlide === 1 ? "bg-[#2D3377] w-6" : "bg-gray-300"
+                  }`}
+                />
+              </div>
+            </div>
           </div>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, ease: "easeInOut", duration: 0.8 }}
-            className="w-[45%] h-[90%] relative z-[1] rounded-3xl flex flex-col items-center py-[2.5vw] bg-white shadow-xl overflow-hidden px-[5vw]"
+            className="w-[45%] h-[90%] relative z-[1] rounded-3xl flex flex-col items-center justify-center gap-4 py-[2.5vw] bg-white overflow-hidden px-[5vw]"
           >
             <div className="w-full flex items-center justify-center py-4">
               <img className="w-12" src="/images/ZOFT_LOGO2.png" alt="Zoft" />
@@ -272,10 +320,10 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="w-full flex-1">
+            <div className="w-full">
               <form
                 onKeyDown={handleKeyDown}
-                className="w-full h-full flex flex-col justify-between py-4"
+                className="w-full h-full flex flex-col justify-center py-4"
               >
                 <div className="flex flex-col gap-1.5 mt-4">
                   <FormInput

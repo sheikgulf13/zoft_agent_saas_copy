@@ -225,7 +225,7 @@ const Deploy = () => {
         className={`w-full h-screen flex justify-center items-center overflow-y-auto relative ${
           theme === "dark"
             ? "bg-[#1F222A] text-white"
-            : "bg-[#F2F4F7] text-black"
+            : "bg-gray-50 text-black"
         }`}
       >
         <div>
@@ -248,12 +248,12 @@ const Deploy = () => {
           )}
         </div>
 
-        <div className="w-[90%] h-[90%] bg-white flex justify-center items-center relative gap-[3vw] py-[20px] rounded-lg">
+        <div className="w-[90%] h-[90%] bg-gray-50 flex justify-center items-center relative gap-[3vw] py-[20px] rounded-lg">
           <div className="w-full absolute top-0 py-[20px] px-[20px]">
             <h1 className="text-[30px] font-bold text-black">Preview</h1>
           </div>
           <div
-            className={`w-[40%] h-[65vh]  rounded-[0.833vw] shadow-xl py-[2vw] relative ${
+            className={`w-[40%] h-[65vh]  rounded-[0.833vw] shadow-lg py-[2vw] relative ${
               theme === "dark"
                 ? "bg-[#1F222A] text-white"
                 : "bg-white text-black"
@@ -316,7 +316,7 @@ const Deploy = () => {
           {chatAgent && (
             <Chatbot height={"65vh"} chatAgent={chatAgent} loading={loading} />
           )}
-          <div className="w-full absolute bottom-0 bg-white h-[9.5vh] py-[10px]">
+          <div className="w-full absolute bottom-0 h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">
               <ContainedButton
                 onClick={() => {

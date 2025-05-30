@@ -331,19 +331,19 @@ const Actions = ({ editPage }) => {
               <div className="h-[1px] w-12 bg-zinc-300"></div>
 
               <div className="h-full flex items-center justify-start gap-2">
-                <div className="w-8 h-8 rounded-full border-2 border-cyan-500 text-blue-400 flex justify-center items-center">
-                  2
+                <div className="w-8 h-8 rounded-full bg-green-600 flex justify-center items-center">
+                  <TickIcon />
                 </div>
-                <h2 className="capitalize font-medium text-lg">actions</h2>
+                <h2 className="capitalize font-medium text-lg">Data Source</h2>
               </div>
 
               <div className="h-[1px] w-12 bg-zinc-300"></div>
 
-              <div className="h-full flex items-center justify-start gap-2 opacity-40">
+              <div className="h-full flex items-center justify-start gap-2">
                 <div className="w-8 h-8 rounded-full border-2 border-cyan-500 text-blue-400 flex justify-center items-center">
                   3
                 </div>
-                <h2 className="capitalize font-medium text-lg">Preview</h2>
+                <h2 className="capitalize font-medium text-lg">Actions</h2>
               </div>
             </div>
           </div>
@@ -618,7 +618,7 @@ const Actions = ({ editPage }) => {
           <div className="w-full h-full flex justify-end items-center gap-[2vw] px-[3vw] ">
             <OutlinedButton
               onClick={() =>
-                navigate.push("/workspace/agents/phone/createagent")
+                navigate.push("/workspace/agents/phone/datasource")
               }
               borderColor="border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333] py-[0.3vw]"
             >

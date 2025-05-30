@@ -20,6 +20,7 @@ const Playground = () => {
   const [selectedTextColor, setSelectedTextColor] = useState("#FFFFFF");
   const [greeting, setGreeting] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [notification, setNotification] = useState({ show: false, message: "", type: "" });
   const urlFetch = process.env.url;
 
   const predefinedColors = [
@@ -43,21 +44,45 @@ const Playground = () => {
   const handleColorUpdate = async () => {
     try {
       setIsUpdating(true);
-      console.log("Updating color to:", selectedColor);
+      setNotification({ show: false, message: "", type: "" });
 
       const formData = new FormData();
-
       formData.append("chat_agent_id", selectedChatAgent.id);
       formData.append("color_code", selectedColor);
       formData.append("text_color", selectedTextColor);
       formData.append("greeting", greeting || "");
 
-      const response = await fetch(`${urlFetch}/chat_agent/color`);
-      console.log("response", response);
+      const response = await fetch(`${urlFetch}/chat_agent/color`, {
+        ...getApiConfig(),
+        method: "POST",
+        headers: new Headers({
+          ...getApiHeaders(),
+        }),
+        body: formData,
+      });
+
+      if (response.ok) {
+        setNotification({
+          show: true,
+          message: "Color & Greeting update successful",
+          type: "success"
+        });
+      } else {
+        throw new Error("Update failed");
+      }
     } catch (error) {
       console.error("Error updating color:", error);
+      setNotification({
+        show: true,
+        message: "Error updating Color & Greeting",
+        type: "error"
+      });
     } finally {
       setIsUpdating(false);
+      // Auto hide notification after 3 seconds
+      setTimeout(() => {
+        setNotification({ show: false, message: "", type: "" });
+      }, 3000);
     }
   };
 
@@ -164,7 +189,7 @@ const Playground = () => {
                     </div>
                   </div>*/}
 
-                  <div className="bg-white p-2 rounded-lg shadow-sm">
+                  <div className="bg-white p-2 rounded-lg shadow-sm colorPicker">
                     <HexColorPicker
                       color={selectedColor}
                       onChange={setSelectedColor}
@@ -255,6 +280,28 @@ const Playground = () => {
                     {isUpdating ? "Updating..." : "Update Color & Greeting"}
                   </button>
                 </div>
+
+                {notification.show && (
+                  <div
+                    className={`absolute top-4 right-4 px-4 py-2 rounded-lg shadow-lg transition-all duration-300 transform translate-x-0 ${
+                      notification.type === "success"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">
+                        {notification.message}
+                      </span>
+                      <button
+                        onClick={() => setNotification({ show: false, message: "", type: "" })}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
