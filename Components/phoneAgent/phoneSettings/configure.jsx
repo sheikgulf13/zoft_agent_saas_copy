@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PhoneSettingNav from "./PhoneSettingNav";
 import { useRouter, useSearchParams } from "next/navigation";
 import useTheme from "next-theme";
@@ -45,13 +45,15 @@ const Configure = () => {
     console.log(selectedPhoneAgent);
     
     if (selectedPhoneAgent?.voice_id) {
-      const filteredVoiceUrl = elevenlabsVoice.find(
-        (item) => item.voice_id === selectedPhoneAgent?.voice_id
+      const filteredVoiceUrl = elevenlabsVoice?.elevenlabs.find(
+        (item) => item?.voice_id === selectedPhoneAgent?.voice_id
+      ) ||  elevenlabsVoice?.ultravox.find(
+        (item) => item?.voiceId === selectedPhoneAgent?.voice_id
       );
   
       if (filteredVoiceUrl) {
         console.log(filteredVoiceUrl);
-        setVoiceUrl(filteredVoiceUrl.preview_url);
+        setVoiceUrl(filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl);
       } else {
         setVoiceUrl("");
       }
@@ -62,6 +64,7 @@ const Configure = () => {
     if (audioRef.current && voiceUrl) {
       audioRef.current.load();
     }
+    console.log('voice url config', voiceUrl)
   }, [voiceUrl]);
 
   useEffect(() => {
@@ -74,25 +77,41 @@ const Configure = () => {
     //     language_mapping_accent[language].includes(item.labels.accent)
     //   );
     // });
-    const filteredVoiceNames = elevenlabsVoice.filter((item) => {
-      return (
-        (!gender || item.labels.gender === gender) &&
-        (!language ||
-          language_mapping_accent[language]?.includes(item.labels.accent))
-      );
-    });
+     const filteredVoiceNames = () => {
+       if (!elevenlabsVoice || !language_mapping_accent) return [];
+   
+       const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
+         const genderMatch = !gender || item.labels?.gender === gender;
+         const languageMatch =
+           !language ||
+           language_mapping_accent[language]?.includes(item.labels?.accent);
+         return genderMatch && languageMatch;
+       });
+   
+       const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
+         const genderMatch = !gender || item?.gender === gender;
+         const languageMatch =
+           !language ||
+           language_mapping_accent[language]?.includes(item.accent?.toLowerCase());
+         return genderMatch && languageMatch;
+       });
+   
+       return [...elevenLabsVoices, ...ultravoxVoices];
+     };
 
     setFilteredVoiceNames(filteredVoiceNames);
   }, [language, gender, language_mapping_accent]);
 
   const handleVoiceChange = (e) => {
-    const filteredVoiceUrl = elevenlabsVoice.find(
+    const filteredVoiceUrl = elevenlabsVoice.elevenlabs.find(
       (item) => item.voice_id === e.target.value
+    ) || elevenlabsVoice.ultravox.find(
+      (item) => item.voiceId === e.target.value
     );
 
     if (filteredVoiceUrl) {
       console.log(filteredVoiceUrl);
-      setVoiceUrl(filteredVoiceUrl.preview_url);
+      setVoiceUrl(filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl || "");
     } else {
       setVoiceUrl("");
     }

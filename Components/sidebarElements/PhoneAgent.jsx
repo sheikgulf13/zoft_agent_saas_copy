@@ -617,10 +617,11 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
     });
 
     const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
+      const genderMatch = !gender || item?.gender === gender;
       const languageMatch =
         !language ||
         language_mapping_accent[language]?.includes(item.accent?.toLowerCase());
-      return languageMatch;
+      return genderMatch && languageMatch;
     });
 
     return [...elevenLabsVoices, ...ultravoxVoices];
@@ -746,8 +747,9 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
 
     const selectedVoice =
       elevenlabsVoice.elevenlabs.find((item) => item.voice_id === voice) ||
-      elevenlabsVoice.ultravox.find((item) => item.voice_id === voice);
-    setVoiceUrl(selectedVoice?.preview_url || "");
+      elevenlabsVoice.ultravox.find((item) => item.voiceId === voice) || elevenlabsVoice.elevenlabs.find((item) => item.voice_id === voice.voiceId) ||
+      elevenlabsVoice.ultravox.find((item) => item.voiceId === voice.voiceId);
+    setVoiceUrl(selectedVoice?.preview_url || selectedVoice?.previewUrl || "");
   }, [voice]);
 
   // Reload audio when voice URL changes
@@ -755,6 +757,7 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
     if (audioRef.current) {
       audioRef.current.load();
     }
+    console.log('voice url', voiceUrl)
   }, [voiceUrl]);
 
   // Event handlers
@@ -852,8 +855,9 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
   // Render voice option with audio preview
   const renderVoiceOption = useCallback((voice) => {
     const isElevenLabs = elevenlabsVoice.elevenlabs.some(
-      (item) => item.voice_id === voice.voice_id
+      (item) => item.voice_id === voice.voiceId
     );
+    console.log('voice id check', voice)
 
     return (
       <div className="flex items-center justify-between w-full">

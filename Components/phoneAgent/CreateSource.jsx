@@ -492,7 +492,7 @@ const CreateSource = ({ className = "", onDataChange = null }) => {
 
   return (
     <div className={`flex flex-col justify-start items-center w-full h-full max-h-full ${className}`}>
-      <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-[80%] h-[85%] max-h-[85%]">
+      <div className={`flex items-start justify-start py-8 gap-8 pl-12 pr-12 ${className ? className : 'w-[80%] h-[85%] max-h-[85%]'} `}>
         {/* Main Content */}
         <div className={`flex flex-col justify-start min-h-full max-h-full w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${themeClasses.container}`}>
           <h1 className="px-10 text-xl font-semibold pb-4 text-[#2D3377]/90">
@@ -530,7 +530,7 @@ const CreateSource = ({ className = "", onDataChange = null }) => {
               <div 
                 id={`section-${state.selectedSection}`}
                 role="tabpanel"
-                className="flex-1 overflow-hidden min-w-[75%] max-w-[75%]"
+                className={`flex-1 overflow-hidden min-w-[75%] max-w-[75%]`}
               >
                 {renderSectionContent()}
               </div>

@@ -88,6 +88,7 @@ const Actions = ({ editPage }) => {
   const [isSaving, setIsSaving] = useState(false);
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
+  const [hasFetchedImages, setHasFetchedImages] = useState(false);
   const urlFetch = process.env.url;
   // console.log(createdActions);
 
@@ -104,12 +105,91 @@ const Actions = ({ editPage }) => {
   };
 
   useEffect(() => {
+    console.log("tempActions", tempActions);
+  }, [tempActions]);
+
+  useEffect(() => {
     // Only clear selected agents if we're not in chatsetting and not in edit mode
     if (!pathname.includes("chatsetting") && !editPage) {
       dispatch(clearSelectedAgents());
       dispatch(clearState());
     }
   }, [editPage]);
+
+  useEffect(() => {
+    if (hasFetchedImages) return;
+
+    const fetchItemsImages = async () => {
+      try {
+        console.log("tempActions", tempActions);
+        const imageFiles = [];
+
+        tempActions.forEach((action) => {
+          const items = action?.data?.items || [];
+          items.forEach((item, index) => {
+            imageFiles.push(item.image);
+          });
+        });
+        const imageFilesString = imageFiles.join(",");
+        console.log("image strig", imageFiles);
+
+        const formData = new FormData();
+
+        formData.append("chat_agent_id", selectedChatAgent.id);
+        formData.append("image_file_names", imageFilesString);
+
+        const res = await fetch(`${urlFetch}/chat_agent/action_list/image`, {
+          ...getApiConfig(),
+          method: "POST",
+          headers: new Headers({
+            ...getApiHeaders(),
+          }),
+          body: formData,
+        });
+
+        if (!res.ok) {
+          console.log("error getting urls");
+          return;
+        }
+
+        const data = await res.json();
+
+        console.log('data image url', data)
+
+        setTempActions((prevActions) =>
+          prevActions.map((action) => {
+            const updatedItems =
+              action?.data?.items?.map((item) => {
+                if (item.image && data[item.image]) {
+                  return {
+                    ...item,
+                    imageUrl: data[item.image], // replace with URL from API
+                  };
+                }
+                return item; // unchanged
+              }) || [];
+
+            return {
+              ...action,
+              data: {
+                ...action.data,
+                items: updatedItems,
+              },
+            };
+          })
+        );
+
+        setHasFetchedImages(true)
+
+        console.log("res", res);
+      } catch (err) {
+        console.log("error getting image urls", err);
+      }
+    };
+    fetchItemsImages();
+
+
+  }, [tempActions]);
 
   useEffect(() => {
     console.log("seclected agent", selectedChatAgent);
@@ -193,10 +273,24 @@ const Actions = ({ editPage }) => {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
+      const imageUrls = [];
+
+      tempActions.forEach((action) => {
+        const items = action?.data?.items || [];
+        items.slice(0, 5).forEach((item) => {
+          if (item.imageUrl) {
+            imageUrls.push(item.imageUrl);
+          }
+        });
+      });
       const formData = new FormData();
       formData.append("workspace_id", selectedChatAgent?.workspace_id);
       formData.append("chat_agent_id", selectedChatAgent?.id);
       formData.append("actions", JSON.stringify(tempActions) || []);
+      formData.append(
+        "action_list_image_file",
+        JSON.stringify(imageUrls) || []
+      );
       const response = await fetch(
         `${urlFetch}/public/chat_agent/update_actions`,
         {
@@ -250,36 +344,54 @@ const Actions = ({ editPage }) => {
   return (
     <div className="h-full w-full flex flex-col items-center justify-start px-8">
       <div className="flex flex-col w-full items-center justify-start gap-4 mx-20 p-6">
-        <div className={`flex flex-col min-w-[90%] max-w-[90%] rounded-xl ${
-          theme === "dark" ? "bg-black" : ""
-        }`}>
-          <div className={`flex flex-col justify-center rounded-t-xl p-6 ${
-            theme === "dark" ? "bg-[#1F222A] text-white" : "text-black"
-          }`}>
+        <div
+          className={`flex flex-col min-w-[90%] max-w-[90%] rounded-xl ${
+            theme === "dark" ? "bg-black" : ""
+          }`}
+        >
+          <div
+            className={`flex flex-col justify-center rounded-t-xl p-6 ${
+              theme === "dark" ? "bg-[#1F222A] text-white" : "text-black"
+            }`}
+          >
             <div className="flex items-center justify-between">
               <div className="flex flex-col items-start justify-center">
-                <h1 className="text-2xl font-bold text-[#2D3377]/90">Actions</h1>
+                <h1 className="text-2xl font-bold text-[#2D3377]/90">
+                  Actions
+                </h1>
                 <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
                   Instruct your agent to perform different actions during calls.
                 </p>
               </div>
 
-              {pathname === "/workspace/agents/chats/chatsetting/action" && hasUnsavedChanges && (
-                <div className="flex items-center gap-4 mt-4 justify-end w-full">
-                  <OutlinedButton onClick={handleCancelChanges} disabled={isSaving} borderColor={'border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]'}>
-                    Cancel Changes
-                  </OutlinedButton>
-                  <ContainedButton onClick={handleSaveChanges} disabled={isSaving}>
-                    {isSaving ? "Saving..." : "Save Changes"}
-                  </ContainedButton>
-                </div>
-              )}
+              {pathname === "/workspace/agents/chats/chatsetting/action" &&
+                hasUnsavedChanges && (
+                  <div className="flex items-center gap-4 mt-4 justify-end w-full">
+                    <OutlinedButton
+                      onClick={handleCancelChanges}
+                      disabled={isSaving}
+                      borderColor={
+                        "border-2 border-[#808080] text-[#808080] hover:border-[#b8b8b8] hover:text-[#b8b8b8]"
+                      }
+                    >
+                      Cancel Changes
+                    </OutlinedButton>
+                    <ContainedButton
+                      onClick={handleSaveChanges}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? "Saving..." : "Save Changes"}
+                    </ContainedButton>
+                  </div>
+                )}
             </div>
 
             <div className="flex flex-col items-center mt-2">
-              <div className={`mt-2 mb-4 w-full max-h-[calc(100vh-400px)] overflow-y-auto bg-white p-6 rounded-lg shadow-sm ${
-                theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
-              }`}>
+              <div
+                className={`mt-2 mb-4 w-full max-h-[calc(100vh-400px)] overflow-y-auto bg-white p-6 rounded-lg shadow-sm ${
+                  theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
+                }`}
+              >
                 {tempActions?.length === 0 || !tempActions ? (
                   <p className="text-gray-600 dark:text-gray-400 text-base text-center font-medium my-6">
                     No actions created yet.
@@ -341,9 +453,11 @@ const Actions = ({ editPage }) => {
             </div>
           </div>
 
-          <div className={`w-full flex flex-col gap-4 items-start justify-center rounded-b-xl p-6 ${
-            theme === "dark" ? "bg-[#1F222A] text-white" : "text-black"
-          }`}>
+          <div
+            className={`w-full flex flex-col gap-4 items-start justify-center rounded-b-xl p-6 ${
+              theme === "dark" ? "bg-[#1F222A] text-white" : "text-black"
+            }`}
+          >
             {showForm && (
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[10000] flex justify-center items-center">
                 <div className="bg-white min-w-[50%] max-w-[50%] h-[85vh] rounded-xl shadow-xl">
@@ -369,18 +483,15 @@ const Actions = ({ editPage }) => {
                 Are you sure you want to Delete?
               </h4>
               <p className="text-base text-center text-gray-600 dark:text-gray-400">
-                This workspace and all of its data and configuration will be deleted
+                This workspace and all of its data and configuration will be
+                deleted
               </p>
             </div>
             <div className="flex items-center gap-6">
-              <button
-                className="px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 transition-colors"
-              >
+              <button className="px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 transition-colors">
                 Cancel
               </button>
-              <button
-                className="px-6 py-2 text-base font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
-              >
+              <button className="px-6 py-2 text-base font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
                 Delete
               </button>
             </div>

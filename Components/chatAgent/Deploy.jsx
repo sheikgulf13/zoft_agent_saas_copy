@@ -47,6 +47,15 @@ const Deploy = () => {
     const formData = new FormData();
     const urls = [];
 
+    const imageUrls = [];
+
+    createdActions.forEach((action) => {
+      const items = action?.data?.items || [];
+      items.forEach((item) => {
+       formData.append("action_list_image_file", item.imageUrl);
+      });
+    });
+
     console.log("url", url);
 
     url.forEach((url1, index) => {
@@ -69,6 +78,7 @@ const Deploy = () => {
     formData.append("url_word_count", JSON.stringify(dict));
     formData.append("workspace_id", selectedWorkSpace);
     formData.append("actions", JSON.stringify(createdActions));
+    
     const tempFileCount = JSON.stringify(fileCount);
     formData.append("file_word_count", tempFileCount);
     const response = await fetch(`${urlFetch}/public/chat_agent/create_test`, {
@@ -83,9 +93,13 @@ const Deploy = () => {
     const data = await response.json();
     console.log("chat id check", data.chat_agent_id);
     if (data.chat_agent_id) {
-      setFrame(`<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`);
+      setFrame(
+        `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`
+      );
     } else {
-      setFrame(`<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`);
+      setFrame(
+        `<script src="https://chat-embed.zoft.ai/api/chatbot-script/${data.chat_agent_id}"></script>`
+      );
     }
     setEmbedLoading(false);
     setChatAgent(data);
@@ -223,9 +237,7 @@ const Deploy = () => {
     ) : ( */}
       <div
         className={`w-full h-screen flex justify-center items-center overflow-y-auto relative ${
-          theme === "dark"
-            ? "bg-[#1F222A] text-white"
-            : "bg-gray-50 text-black"
+          theme === "dark" ? "bg-[#1F222A] text-white" : "bg-gray-50 text-black"
         }`}
       >
         <div>
@@ -301,10 +313,13 @@ const Deploy = () => {
                         theme={dracula}
                         codeBlock
                         customStyle={{
-                          maxHeight: '35vh',
-                          overflowY: 'auto',
-                          scrollbarWidth: 'thin',
-                          scrollbarColor: theme === 'dark' ? '#2D3377 #0A0929' : '#2D3377 #000000',
+                          maxHeight: "35vh",
+                          overflowY: "auto",
+                          scrollbarWidth: "thin",
+                          scrollbarColor:
+                            theme === "dark"
+                              ? "#2D3377 #0A0929"
+                              : "#2D3377 #000000",
                         }}
                       />
                     </div>
@@ -341,23 +356,23 @@ const Deploy = () => {
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+          background: ${theme === "dark" ? "#0A0929" : "#E5E7EB"};
           border-radius: 2px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #2D3377;
+          background: #2d3377;
           border-radius: 2px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #211A55;
+          background: #211a55;
         }
 
         /* For Firefox */
         .custom-scrollbar {
           scrollbar-width: thin;
-          scrollbar-color: #2D3377 ${theme === 'dark' ? '#0A0929' : '#E5E7EB'};
+          scrollbar-color: #2d3377 ${theme === "dark" ? "#0A0929" : "#E5E7EB"};
         }
       `}</style>
     </>

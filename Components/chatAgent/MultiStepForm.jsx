@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import TickIcon from "../Icons/TickIcon";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
-import Source from "./chatSettings/SourceCopy";
+//import Source from "./chatSettings/SourceCopy";
+import CreateSource from '../phoneAgent/CreateSource';
 import { useRouter } from "next/navigation";
 import Actions from "./Actions";
 import CreateBot from "./CreateBot";
@@ -211,7 +212,7 @@ const MultiStepForm = () => {
     </form>
   );
 
-  const renderDataSourceForm = () => <Source />;
+  const renderDataSourceForm = () => <CreateSource className="w-full h-full" />;
 
   const renderActionsForm = () => <Actions editPage={false} />;
 
@@ -237,7 +238,7 @@ const MultiStepForm = () => {
       <div className="flex flex-col justify-between bg-white h-[90%] w-[90%] rounded-lg overflow-hidden relative">
         {renderStepIndicator()}
         <div className="w-full mx-auto h-[100%] overflow-hidden bg-gray-50">
-          <div className="w-full mx-auto h-[100%] flex justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
+          <div className="w-full mx-auto h-[100%] flex flex-1 justify-center p-[3.5vh] !pb-[20px] overflow-y-scroll scrollBar">
             {renderContent()}
           </div>
         </div>

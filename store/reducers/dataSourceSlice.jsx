@@ -19,9 +19,10 @@ const datasourceSlice = createSlice({
         },
         setFileCount: (state,action)=>{
             state.fileCount=action.payload
-        }
+        },
+        resetData: () => initialState, 
     }
 })
 
-export const {seturl, setrawText,setFileCount} = datasourceSlice.actions
+export const {seturl, setrawText,setFileCount, resetData} = datasourceSlice.actions
 export default datasourceSlice.reducer

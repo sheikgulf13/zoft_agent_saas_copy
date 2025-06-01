@@ -29,6 +29,10 @@ const Content = () => {
       label: "Call History",
     },
     {
+      href: `/workspace/agents/phone/phonesetting/source?workspaceId=${workspaceId}`,
+      label: "Source",
+    },
+    {
       href: `/workspace/agents/phone/phonesetting/connect?workspaceId=${workspaceId}`,
       label: "Connect",
     },

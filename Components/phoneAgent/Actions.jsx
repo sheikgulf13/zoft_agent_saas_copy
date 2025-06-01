@@ -43,6 +43,7 @@ import {
   clearSelectedData,
 } from "@/store/reducers/selectedDataSlice";
 import { showErrorToast, showSuccessToast } from "../toast/success-toast";
+import { resetData } from "@/store/reducers/dataSourceSlice";
 
 const promptFields = [
   {
@@ -69,6 +70,8 @@ const promptFields = [
 
 const Actions = ({ editPage }) => {
   const dispatch = useDispatch();
+  // url is used in createPhoneAgent function
+  const { url: reduxUrls, rawText, fileCount } = useSelector((state) => state.data);
   const {
     phoneAgentType,
     phoneAgentName,
@@ -99,6 +102,7 @@ const Actions = ({ editPage }) => {
   const [selectedAction, setSelectedAction] = useState(null);
   const [modal, setModal] = useState(false);
   const promptRef = useRef();
+  const { file } = useSelector((state) => state.file);
   const { selectedWorkSpace } = useSelector((state) => state.selectedData);
   const [tempActions, setTempActions] = useState([]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -204,7 +208,21 @@ const Actions = ({ editPage }) => {
   };
 
   const createPhoneAgent = async () => {
+    const urls = [];
     const formdata = new FormData();
+    const dict = {};
+
+    reduxUrls.forEach((url1, index) => {
+      urls.push(url1.url);
+      dict[url1.url] = url1.word_count;
+    });
+
+    console.log(dict);
+
+    file?.forEach((file, index) => {
+      formdata.append(`files`, file);
+    });
+
     formdata.append("work_space_id", selectedWorkSpace);
     formdata.append("phone_agent_type", phoneAgentType);
     formdata.append("phone_agent_name", phoneAgentName);
@@ -216,6 +234,12 @@ const Actions = ({ editPage }) => {
     formdata.append("company_name", companyName);
     formdata.append("company_business", companyBusiness);
     formdata.append("company_products_services", companyServices);
+    formdata.append("raw_text", rawText);
+    formdata.append("raw_text_word_count", rawText.split(" ").length);
+    formdata.append("URLs", JSON.stringify(urls));
+    formdata.append("url_word_count", JSON.stringify(dict));
+    const tempFileCount = JSON.stringify(fileCount);
+    formdata.append("file_word_count", tempFileCount);
     formdata.append("created_actions", JSON.stringify(createdActions));
     formdata.append("prompt", prompt);
     formdata.append("script", script);
@@ -242,6 +266,7 @@ const Actions = ({ editPage }) => {
     if (response.status === 200) {
       response = await response.json();
       dispatch(setPhoneAgentId(response.phone_agent_id));
+      dispatch(resetData())
       navigate.push("/workspace/agents/phone/preview");
     }
   };
@@ -555,7 +580,9 @@ const Actions = ({ editPage }) => {
                 }`}
               >
                 <div>
-                  <h5 className="text-2xl font-bold text-[#2D3377]/90">Script</h5>
+                  <h5 className="text-2xl font-bold text-[#2D3377]/90">
+                    Script
+                  </h5>
                   <p className="text-gray-600 dark:text-gray-400 text-base font-medium mt-1">
                     Add script for your agent
                   </p>
