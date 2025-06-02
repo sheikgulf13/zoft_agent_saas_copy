@@ -54,7 +54,7 @@ const AgentList = (key, agent) => {
         <h3 className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${
           theme === "dark" ? "text-gray-200" : "text-[#8b8b8b]"
         }`}>
-          {key && JSON.parse(key?.agent?.actions)?.length}
+          {key && key?.agent?.actions && JSON?.parse(key?.agent?.actions)?.length}
         </h3>
 
         <h3 className={`font-semibold text-sm min-w-[20%] max-w-[20%] text-left overflow-hidden text-ellipsis ${

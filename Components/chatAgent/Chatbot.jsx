@@ -37,6 +37,7 @@ const Chatbot = ({
 
   useEffect(() => {
     if (audioReceiveRef.current) {
+      audioReceiveRef.current.currentTime = 0;
       audioReceiveRef.current.play().catch((e) => {
         console.warn("Audio playback failed", e);
       });
@@ -129,7 +130,7 @@ const Chatbot = ({
 
   return (
     <div
-      className={`relative rounded-3xl overflow-hidden flex flex-col shadow-md p-1 ${
+      className={`relative rounded-3xl overflow-hidden max-w-[350px] flex flex-col shadow-md p-1 ${
         theme === "dark"
           ? "text-gray-400 bg-[#1F222A]"
           : "text-gray-800 bg-white"

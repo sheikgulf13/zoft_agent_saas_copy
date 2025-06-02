@@ -126,6 +126,7 @@ const Preview = () => {
         theme === "dark" ? "bg-[#1D2027] text-white" : "bg-[#F2F4F7] text-black"
       }`}
     >
+      {/*
       <div
         className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
           theme === "dark" ? "bg-[#1A1C21] text-white" : "bg-white text-black"
@@ -139,7 +140,7 @@ const Preview = () => {
             <h2 className="capitalize font-medium text-[.9vw]">
               phonebot creation
             </h2>
-            {/* <Chip label={phoneAgentType} color="primary" /> */}
+            {/* <Chip label={phoneAgentType} color="primary" /> // closing bracket should be added
           </div>
 
           <div className="h-[1px] w-[3vw] bg-zinc-300 "></div>
@@ -161,6 +162,7 @@ const Preview = () => {
           </div>
         </div>
       </div>
+      */}
 
       <div
         className={`w-[90%] overflow-y-auto mx-auto h-[80vh] mt-[5vh] mb-[5vh] rounded-xl shadow-lg py-8 px-8 ${

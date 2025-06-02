@@ -24,6 +24,7 @@ import { updateSelectedWorkSpace } from "@/store/reducers/selectedDataSlice";
 import { resetWorkSpace } from "../../store/actions/workspaceActions";
 import { showConfirmationModal } from "../modals/ConfirmationModal";
 import { CookieManager } from "../../utility/cookie-manager";
+import WalkthroughGuide from "../WalkthroughGuide";
 
 const WorkSpace = () => {
   const { theme } = useTheme();
@@ -33,7 +34,22 @@ const WorkSpace = () => {
   const { workSpaceList } = useSelector((state) => state.workSpaceList);
   const [modal, setModal] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
   const url = process.env.url;
+
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const isOnboarded = CookieManager.getCookie('onboarded');
+    if (!isOnboarded) {
+      setShowWalkthrough(true);
+    }
+  }, []);
+
+  const handleWalkthroughComplete = async () => {
+    // Set onboarded cookie
+    CookieManager.setCookie('onboarded', 'true', 365);
+    setShowWalkthrough(false);
+  };
 
   const getWorkspaceList = async () => {
     let list = await getWorkSpaceListApi();
@@ -60,7 +76,14 @@ const WorkSpace = () => {
 
   const workspaceHandler = async (workspaceId) => {
     dispatch(updateSelectedWorkSpace(workspaceId));
-
+    
+    // Check if this is the first workspace creation
+    const isFirstWorkspace = !CookieManager.getCookie('agents_onboarded');
+    if (isFirstWorkspace) {
+      // Set a temporary cookie to track that we're showing the agents walkthrough
+      CookieManager.setCookie('showing_agents_walkthrough', 'true', 1);
+    }
+    
     router.push(`/workspace/agents?workspaceId=${workspaceId}`);
   };
 
@@ -87,6 +110,7 @@ const WorkSpace = () => {
 
   return (
     <div className="h-[100vh] overflow-hidden flex items-center justify-center">
+      {showWalkthrough && <WalkthroughGuide onComplete={handleWalkthroughComplete} />}
       <div
         className={`w-[90%] overflow-y-auto h-[90vh] rounded-2xl shadow-md py-[2%] px-[2%] relative  ${
           theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"

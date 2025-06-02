@@ -1,3 +1,3 @@
-import { seturl, setrawText, setFileCount } from "../reducers/dataSourceSlice";
+import { seturl, setrawText, setFileCount, resetData } from "../reducers/dataSourceSlice";
 
-export { seturl, setrawText, setFileCount };
+export { seturl, setrawText, setFileCount, resetData };

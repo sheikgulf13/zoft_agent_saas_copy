@@ -753,3 +753,7 @@ display: none;
 }
 
 
+.colorPicker .react-colorful__hue {
+  height: 5px;
+  border-radius: 0 0 4px 4px;
+}
