@@ -195,7 +195,7 @@ const Chatbot = ({
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`p-2 rounded-xl text-base max-w-[75%] w-fit shadow-sm ${
+              className={`p-2 rounded-xl text-xs max-w-[75%] w-fit shadow-sm ${
                 message.type === "user"
                   ? "bg-gray-50 text-[#333333] ml-auto hover:bg-gray-100 transition-colors duration-200 rounded-br-none"
                   : "bg-gray-100 text-[#333333] mr-auto hover:bg-gray-200 transition-colors duration-200 rounded-bl-none"
