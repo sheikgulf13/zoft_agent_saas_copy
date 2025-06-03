@@ -5,7 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import useTheme from "next-theme";
 import GradientButton from "@/Components/buttons/GradientButton";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CopyBlock, dracula } from "react-code-blocks";
 import TickIcon from "../Icons/TickIcon";
 import Chatbot from "./Chatbot";
@@ -14,8 +14,10 @@ import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { CookieManager } from "@/utility/cookie-manager";
 import SimpleAlert from "../toast/success-toast";
+import { resetData } from "@/store/reducers/dataSourceSlice";
 
 const Deploy = () => {
+  const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
   const navigate = useRouter();
   const [loading, setLoading] = useState(true);
@@ -115,6 +117,7 @@ const Deploy = () => {
         setToast("");
       }, 3000);
     }
+     dispatch(resetData())
     setLoading(false);
   };
   useEffect(() => {

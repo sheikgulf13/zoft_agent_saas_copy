@@ -266,9 +266,9 @@ const Actions = ({ editPage }) => {
     if (response.status === 200) {
       response = await response.json();
       dispatch(setPhoneAgentId(response.phone_agent_id));
-      dispatch(resetData())
       navigate.push("/workspace/agents/phone/preview");
     }
+    dispatch(resetData())
   };
 
   const handleSaveChanges = async () => {

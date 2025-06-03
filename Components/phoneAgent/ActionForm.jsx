@@ -123,7 +123,7 @@ const ACTION_CONFIGS = {
     },
     {
       id: 2,
-      name: "Web hooks",
+      name: "Send API request",
       fields: [
         FIELD_DEFINITIONS.name,
         FIELD_DEFINITIONS.instructions,
@@ -180,7 +180,7 @@ const ACTION_CONFIGS = {
     },
     {
       id: 3,
-      name: "Web hooks",
+      name: "Send API request",
       fields: [
         FIELD_DEFINITIONS.name,
         FIELD_DEFINITIONS.instructions,
@@ -312,6 +312,23 @@ function ActionForm({
     }
   }, [showCardForm]);
 
+  useEffect(() => {
+    console.log("formData", formData?.data);
+  }, [formData]);
+
+  useEffect(() => {
+    if (selectedAction.name === "Send video") {
+      setFormData((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          api_method: '',
+          request_data_type: '',
+        },
+      }));
+    }
+  }, [selectedAction]);
+
   // Initialize form with initial data or existing formData
   useEffect(() => {
     // Check both initialData and formData for existing data
@@ -340,12 +357,16 @@ function ActionForm({
           content: existingData.data?.content || "",
           subject: existingData.data?.subject || "",
           forward_to: existingData.data?.forward_to || "",
-          api_method: existingData.data?.api_method || DEFAULT_API_METHOD,
+          api_method:
+            existingData.data?.api_method ||
+            (actionType !== "send_video" && DEFAULT_API_METHOD),
           end_point: existingData.data?.end_point || "",
           http_headers: existingData.data?.http_headers || [],
           request_data: existingData.data?.request_data || [],
           request_data_type:
-            existingData.data?.request_data_type || DEFAULT_REQUEST_DATA_TYPE,
+            existingData.data?.request_data_type ||
+            (actionType !== "send_video" && DEFAULT_REQUEST_DATA_TYPE),
+            video: existingData?.data?.video || "",
         },
       };
 
@@ -412,8 +433,10 @@ function ActionForm({
       setSelectedAction(actions[0]);
       setFormData({
         data: {
-          api_method: DEFAULT_API_METHOD,
-          request_data_type: DEFAULT_REQUEST_DATA_TYPE,
+          api_method:
+            selectedAction.name !== "Send video" && DEFAULT_API_METHOD,
+          request_data_type:
+            selectedAction.name !== "Send video" && DEFAULT_REQUEST_DATA_TYPE,
         },
       });
       setEditorContent("");
@@ -426,6 +449,8 @@ function ActionForm({
       setIsFormChanged(false);
       setItems([{ id: uuidv4(), isPlaceholder: true }]);
     }
+
+    console.log("actions checking", actions);
   }, [initialData, actions]);
 
   // Form change detection
@@ -868,10 +893,11 @@ function ActionForm({
     setCardFormData((prev) => ({
       ...prev,
       image: file.name,
-      imageUrl: file
+      imageUrl: file,
     }));
 
-    {/*if (file) {
+    {
+      /*if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setCardFormData((prev) => ({
@@ -880,12 +906,13 @@ function ActionForm({
         }));
       };
       reader.readAsArrayBuffer(file);
-    }*/}
+    }*/
+    }
   }, []);
 
-  useEffect(() =>{
-    console.log('image url', cardFormData?.image)
-  }, [cardFormData])
+  useEffect(() => {
+    console.log("image url", cardFormData?.image);
+  }, [cardFormData]);
 
   const handleSubmit = useCallback(
     (e) => {
@@ -916,16 +943,18 @@ function ActionForm({
         ...formData,
       };
 
-      // Submit and reset
-      handleCreateAction(actionData);
-      toggle();
+      console.log("action data", actionData);
+
+      //// Submit and reset
+      //handleCreateAction(actionData);
+      //toggle();
 
       // Reset form and cache
-      setFormData({});
-      setErrors({});
-      setEditorContent("");
-      setFormSubmitted(false);
-      setActionFormDataCache({});
+      //setFormData({});
+      //setErrors({});
+      //setEditorContent("");
+      //setFormSubmitted(false);
+      //setActionFormDataCache({});
     },
     [
       formData,
@@ -1287,7 +1316,7 @@ function ActionForm({
       }
 
       case "List":
-        //console.log('image url in list', cardFormData?.image)
+        console.log("image url in list", cardFormData?.imageUrl);
         return (
           <div className="w-full">
             {showCardForm && (
@@ -1323,19 +1352,20 @@ function ActionForm({
                         } border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center cursor-pointer relative group hover:border-[#4D55CC] shadow-sm transition-colors duration-200`}
                       >
                         {cardFormData.imageUrl ? (
-                          typeof cardFormData.imageUrl === 'string' && cardFormData?.imageUrl?.includes('supabase') ? (
+                          typeof cardFormData.imageUrl === "string" &&
+                          cardFormData?.imageUrl?.includes("supabase") ? (
                             <img
                               src={cardFormData?.imageUrl}
                               alt={cardFormData.title}
                               className="w-full h-full object-cover"
                             />
-                          ) : (
+                          ) : cardFormData.imageUrl instanceof Blob ? (
                             <img
                               src={URL.createObjectURL(cardFormData?.imageUrl)}
                               alt={cardFormData.title}
                               className="w-full h-full object-cover"
                             />
-                          )
+                          ) : null
                         ) : (
                           <div className="text-center">
                             <FaImage className="text-gray-400 text-xl mx-auto mb-1" />
@@ -1518,19 +1548,22 @@ function ActionForm({
                       <div className="flex flex-col gap-2">
                         <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                           {cardFormData.imageUrl ? (
-                            typeof cardFormData.imageUrl === 'string' && cardFormData?.imageUrl?.includes('supabase') ? (
+                            typeof cardFormData.imageUrl === "string" &&
+                            cardFormData?.imageUrl?.includes("supabase") ? (
                               <img
                                 src={cardFormData?.imageUrl}
                                 alt={cardFormData.title}
                                 className="w-full h-full object-cover"
                               />
-                            ) : (
+                            ) : cardFormData.imageUrl instanceof Blob ? (
                               <img
-                                src={URL.createObjectURL(cardFormData?.imageUrl)}
+                                src={URL.createObjectURL(
+                                  cardFormData?.imageUrl
+                                )}
                                 alt={cardFormData.title}
                                 className="w-full h-full object-cover"
                               />
-                            )
+                            ) : null
                           ) : (
                             <div className="flex flex-col items-center gap-1">
                               <FaImage className="text-gray-400 text-lg" />
@@ -1654,7 +1687,8 @@ function ActionForm({
                     <div className="relative">
                       <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                         {card.imageUrl ? (
-                          typeof card.imageUrl === 'string' && card?.imageUrl?.includes('supabase') ? (
+                          typeof card.imageUrl === "string" &&
+                          card?.imageUrl?.includes("supabase") ? (
                             <img
                               src={card?.imageUrl}
                               alt={card.title}
@@ -1695,19 +1729,20 @@ function ActionForm({
                     <>
                       <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                         {card.imageUrl ? (
-                          typeof card.imageUrl === 'string' && card?.imageUrl?.includes('supabase') ? (
+                          typeof card.imageUrl === "string" &&
+                          card?.imageUrl?.includes("supabase") ? (
                             <img
                               src={card.imageUrl}
                               alt={card.title}
                               className="w-full h-full object-cover"
                             />
-                          ) : (
+                          ) : card.imageUrl instanceof Blob ? (
                             <img
                               src={URL?.createObjectURL(card?.imageUrl)}
                               alt={card.title}
                               className="w-full h-full object-cover"
                             />
-                          )
+                          ) : null
                         ) : (
                           <div className="flex flex-col items-center gap-1">
                             <FaImage className="text-gray-400 text-lg" />
@@ -1785,7 +1820,12 @@ function ActionForm({
             return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
           }
 
-          // Return null for direct video URLs
+          // Loom
+          if (url.includes("loom.com")) {
+            const videoId = url.split("loom.com/")[1]?.split("?")[0];
+            return videoId ? `https://www.loom.com/embed/${videoId}` : null;
+          }
+
           return null;
         };
 
@@ -1794,8 +1834,51 @@ function ActionForm({
             url.includes("youtube.com") ||
             url.includes("youtu.be") ||
             url.includes("dailymotion.com") ||
-            url.includes("vimeo.com")
+            url.includes("vimeo.com") ||
+            url.includes("loom.com")
           );
+        };
+
+        const validateVideoUrl = (url) => {
+          if (!url) return "Video URL is required";
+          if (!isEmbeddableUrl(url)) {
+            return "Please enter a valid URL from YouTube, Vimeo, Loom, or Dailymotion";
+          }
+          return "";
+        };
+
+        const handleVideoUrlChange = (e) => {
+          const url = e.target.value;
+          const error = validateVideoUrl(url);
+          setErrors((prev) => ({
+            ...prev,
+            [field.value]: error,
+          }));
+
+          setFormData((prev) => ({
+            ...prev,
+            data: {
+              ...prev.data,
+              video: url,
+            },
+          }));
+        };
+
+        const handleVideoUrlSubmit = (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const url = formData?.data?.video || "";
+            const error = validateVideoUrl(url);
+            if (!error) {
+              setFormData((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  video: url,
+                },
+              }));
+            }
+          }
         };
 
         const videoUrl = formData?.data?.video || "";
@@ -1809,18 +1892,19 @@ function ActionForm({
               type="url"
               name={field.label}
               id={field.value}
-              placeholder="Enter video URL (YouTube, Dailymotion, Vimeo, or direct video file)"
+              placeholder="Enter video URL (YouTube, Vimeo, Loom, or Dailymotion)"
               value={videoUrl}
               className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
                 errors[field.value] ? "border-red-500" : ""
               }`}
-              onChange={handleChange}
+              onChange={handleVideoUrlChange}
+              onKeyDown={handleVideoUrlSubmit}
             />
             {errors[field.value] && (
               <p className="text-red-500 text-xs mt-1">{errors[field.value]}</p>
             )}
 
-            {videoUrl && (
+            {videoUrl && !errors[field.value] && (
               <div className="w-[80%] aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                 {isEmbeddableUrl(videoUrl) ? (
                   <iframe
@@ -1832,21 +1916,9 @@ function ActionForm({
                     className="w-full h-full"
                   ></iframe>
                 ) : (
-                  <video
-                    src={videoUrl}
-                    controls
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      console.error("Error loading video:", e);
-                      setErrors((prev) => ({
-                        ...prev,
-                        [field.value]:
-                          "Invalid video URL or unsupported format",
-                      }));
-                    }}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
+                  <div className="w-full h-full flex items-center justify-center text-red-500">
+                    Invalid video URL
+                  </div>
                 )}
               </div>
             )}
