@@ -106,7 +106,8 @@ const Actions = ({ editPage }) => {
 
   useEffect(() => {
     console.log("tempActions", tempActions);
-  }, [tempActions]);
+    console.log("selected action", selectedAction);
+  }, [tempActions, selectedAction]);
 
   useEffect(() => {
     // Only clear selected agents if we're not in chatsetting and not in edit mode

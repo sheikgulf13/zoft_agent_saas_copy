@@ -2,8 +2,9 @@
 const nextConfig = {
     env:{
          url:'https://api.zoft.ai',
-         //url:'https://1b76-106-219-178-201.ngrok-free.app',
+         //url:'https://c30d-106-219-179-151.ngrok-free.app',
          chat_url:'https://chat.zoft.ai',
+         //chat_url:'https://aa9a-106-219-179-151.ngrok-free.app',
          boturl:'https://chat-embed.zoft.ai/',
          phone_url:'https://phone.zoft.ai',
     }

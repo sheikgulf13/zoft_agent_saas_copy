@@ -7,7 +7,7 @@ import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { ContainedButton } from "../buttons/ContainedButton";
 import { CookieManager } from "../../utility/cookie-manager";
 import SmudgyBackground from "../SmudgyBackground";
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaImage, FaTelegramPlane } from "react-icons/fa";
 
 const Chatbot = ({
   width,
@@ -19,7 +19,7 @@ const Chatbot = ({
 }) => {
   // State to store the messages
   const [messages, setMessages] = useState([
-    { message: "Hey! how can I help you today?.", type: "bot" },
+    { message: "Hey! how can I help you today?.", role: "bot" },
   ]);
   const [sessionUUID, setSessionUUID] = useState("");
   const urlFetch = process.env.chat_url;
@@ -35,6 +35,12 @@ const Chatbot = ({
     setSessionUUID(uuid);
   }, []);
 
+
+
+  useEffect(() => {
+    console.log("message checking", messages);
+  }, [messages]);
+
   useEffect(() => {
     if (audioReceiveRef.current) {
       audioReceiveRef.current.currentTime = 0;
@@ -43,7 +49,7 @@ const Chatbot = ({
       });
     }
     const initialMessage = {
-      type: "bot",
+      role: "bot",
       message: greeting ? greeting : "👋 Hi!, How can i help you?",
     };
     setMessages(() => [initialMessage]);
@@ -73,7 +79,7 @@ const Chatbot = ({
     if (!input || input === null) return;
     setMessages((prevChatLog) => [
       ...prevChatLog,
-      { type: "user", message: input },
+      { role: "user", message: input },
     ]);
     setInput("");
     const textInput = input;
@@ -83,7 +89,8 @@ const Chatbot = ({
       chat_agent_id: chatAgent?.chat_agent_id || chatAgent?.id,
       conversation_history: messages,
     };
-    await fetch(`${urlFetch}/tester/chat`, {
+   try {
+    const res = await fetch(`${urlFetch}/tester/chat`, {
       ...getApiConfig(),
       method: "POST",
       headers: new Headers({
@@ -91,18 +98,37 @@ const Chatbot = ({
         "Content-Type": "application/json",
       }),
       body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res) {
-          if (audioReceiveRef.current) {
-            audioReceiveRef.current.play().catch((e) => {
-              console.warn("Audio playback failed", e);
-            });
-          }
-        }
-        setMessages((pre) => [...pre, { type: "bot", message: res.response }]);
+    });
+
+    const resJson = await res.json();
+
+    if (audioReceiveRef.current) {
+      audioReceiveRef.current.play().catch((e) => {
+        console.warn("Audio playback failed", e);
       });
+    }
+
+
+    const updatedItems =
+      resJson?.items?.map((item) => ({
+        ...item,
+        imageUrl: resJson?.item_images?.[item.image] || item.imageUrl,
+      })) || [];
+
+    const { action_triggered, collected_params, item_images, ...cleanedMessage } = resJson;
+
+    const botMessage = {
+      role: "bot",
+      message: resJson.response, 
+      ...cleanedMessage,
+      items: updatedItems,
+    };
+
+    setMessages((prev) => [...prev, botMessage]);
+  } catch (error) {
+    console.error("Failed to fetch bot response:", error);
+  }
+
   };
 
   // State for the current input
@@ -112,7 +138,7 @@ const Chatbot = ({
   // Function to handle sending a new message
   const handleSendMessage = () => {
     if (input.trim()) {
-      setMessages([...messages, { type: "user", message: input }]);
+      setMessages([...messages, { role: "user", message: input }]);
       setInput(""); // Clear input after sending
 
       // Simulate bot response (this is just an example, replace with real logic)
@@ -121,11 +147,66 @@ const Chatbot = ({
           ...prevMessages,
           {
             message: "Thanks for your message! We'll get back to you shortly.",
-            type: "bot",
+            role: "bot",
           },
         ]);
       }, 1000);
     }
+  };
+
+  // Function to detect URLs in text
+  const detectAndFormatLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text?.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 underline break-all"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
+  const getEmbedUrl = (url) => {
+    // YouTube
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      const videoId = url.includes("youtu.be")
+        ? url.split("youtu.be/")[1]?.split("?")[0]
+        : url.split("v=")[1]?.split("&")[0];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+
+    // Dailymotion
+    if (url.includes("dailymotion.com")) {
+      const videoId = url.split("/video/")[1]?.split("?")[0];
+      return videoId
+        ? `https://www.dailymotion.com/embed/video/${videoId}`
+        : null;
+    }
+
+    // Vimeo
+    if (url.includes("vimeo.com")) {
+      const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
+      return videoId ? `https://player.vimeo.com/video/${videoId}` : null;
+    }
+
+    // Loom
+    if (url.includes("loom.com")) {
+      const videoId = url.split("loom.com/")[1]?.split("?")[0];
+      return videoId ? `https://www.loom.com/embed/${videoId}` : null;
+    }
+
+    return null;
   };
 
   return (
@@ -193,15 +274,128 @@ const Chatbot = ({
         {/* Messages Section */}
         <div className="flex-1 z-[5] overflow-y-scroll p-2 py-4 space-y-4">
           {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`p-2 rounded-xl text-base max-w-[75%] w-fit shadow-sm ${
-                message.type === "user"
-                  ? "bg-gray-50 text-[#333333] ml-auto hover:bg-gray-100 transition-colors duration-200 rounded-br-none"
-                  : "bg-gray-100 text-[#333333] mr-auto hover:bg-gray-200 transition-colors duration-200 rounded-bl-none"
-              }`}
-            >
-              {message.message}
+            <div className="flex flex-col w-full gap-2">
+              <div
+                key={index}
+                className={`p-2 rounded-xl text-base max-w-[75%] w-fit shadow-sm ${
+                  message.role === "user"
+                    ? "bg-gray-50 text-[#333333] ml-auto hover:bg-gray-100 transition-colors duration-200 rounded-br-none"
+                    : "bg-gray-100 text-[#333333] mr-auto hover:bg-gray-200 transition-colors duration-200 rounded-bl-none"
+                }`}
+              >
+                {message.role === "bot"
+                  ? detectAndFormatLinks(message.message)
+                  : message.message}
+              </div>
+              {message.type === "video" && message.url ? (
+                <div className="w-[80%] aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <iframe
+                    src={getEmbedUrl(message.url)}
+                    title="Video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  ></iframe>
+                </div>
+              ) : (
+                <></>
+              )}
+              {message.type === "list_of_items" && message?.items ? (
+                <div className="flex gap-3 overflow-x-auto pb-2 px-3 min-h-[300px] items-center scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {message.items.map((card) => (
+                    <div
+                      key={card.id}
+                      className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200`}
+                    >
+                      {card.isPlaceholder ? (
+                        <div className="relative">
+                          <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                            {card.imageUrl ? (
+                              typeof card.imageUrl === "string" &&
+                              card?.imageUrl?.includes("supabase") ? (
+                                <img
+                                  src={card?.imageUrl}
+                                  alt={card.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <img
+                                  src={URL.createObjectURL(card?.imageUrl)}
+                                  alt={card.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              )
+                            ) : (
+                              <div className="flex flex-col items-center gap-1">
+                                <FaImage className="text-gray-400 text-lg" />
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  No Image
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
+                            {card.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
+                            {card.description}
+                          </p>
+
+                          {card.linkText && (
+                            <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
+                              <span className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200">
+                                {card.linkText}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                            {card.imageUrl &&
+                            typeof card.imageUrl === "string" &&
+                            card?.imageUrl?.includes("supabase") ? (
+                              <img
+                                src={card.imageUrl}
+                                alt={card.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center gap-1">
+                                <FaImage className="text-gray-400 text-lg" />
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  No Image
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
+                            {card.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
+                            {card.description}
+                          </p>
+
+                          {card.linkText && (
+                            <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
+                              <a
+                                href={`${card.url}`}
+                                target="blank"
+                                className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200"
+                              >
+                                {card.linkText}
+                              </a>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           ))}
           {/* Add a div with ref to scroll into view */}
