@@ -15,7 +15,7 @@ const getWorkSpaceListApi = async () => {
   });
 
   if(response.status === 401) {
-    return window.location.href = "/register";
+    return window.location.href = "/login";
   }
 
   if (response.status === 200) {

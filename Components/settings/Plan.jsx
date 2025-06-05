@@ -8,7 +8,7 @@ const Plan = () => {
   const { theme } = useTheme();
   
   return (
-    <div className='w-full text-base min-h-screen bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900'>
+    <div className='w-full text-base min-h-screen '>
       <div className={`pt-8 px-6 max-w-7xl mx-auto ${theme === "dark" ? 'text-white' : 'text-black'}`}>
         <h1 className='text-3xl font-bold text-[#2D3377] mb-3 tracking-tight'>Pricing Plans</h1>
         <p className='text-base text-gray-500 dark:text-gray-400 mb-8 max-w-2xl'>
@@ -17,8 +17,8 @@ const Plan = () => {
       </div>
       
       {/* Scrollable Pricing Page container */}
-      <div className='h-auto bg-white overflow-hidden pb-8 px-6 w-full max-w-7xl mx-auto'>
-        <div className='bg-white h-auto dark:bg-gray-800 rounded-2xl p-6'>
+      <div className='h-full overflow-hidden pb-8 px-6 w-full max-w-7xl mx-auto'>
+        <div className=' h-full dark:bg-gray-800 rounded-2xl p-6'>
           <PricingPage />
         </div>
       </div>

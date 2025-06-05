@@ -38,9 +38,11 @@ const connect = () => {
 
   return (
     <div className="flex flex-col justify-start items-start px-8 w-full h-screen">
-      <div className={`border-b-[.1vw] flex justify-center px-8 mt-8 relative w-full text-base border-zinc-300 ${
-        theme === "dark" ? "text-[#9f9f9f]" : "text-black"
-      }`}>
+     <div
+        className={`border-b-[1px] mt-8 mb-8 flex justify-center relative w-full text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+        }`}
+      >
         <PhoneSettingNav />
       </div>
 

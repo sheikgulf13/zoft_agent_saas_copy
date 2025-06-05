@@ -13,6 +13,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'react-quill/dist/quill.snow.css';
+import { getDashboardDataApi } from '@/api/dashboard/dashboard';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     router.includes('chatsetting') || router.includes('templates') ? setIsSidebarCollapsed(true) : setIsSidebarCollapsed(false)
   }, [router])
+    
 
   return (
     <Provider store={store}>

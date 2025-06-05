@@ -16,16 +16,11 @@ const getApiHeaders = () => {
     }
 }
 
+
 const getSessionId = () => {
-    const session_id = CookieManager.getCookie("session_id");
+  if (typeof window === "undefined") return null;
 
-    if(session_id) {
-        return session_id;
-    }
-
-    if(typeof window !== "undefined") {
-        window.location = "/register";
-    }
-}
+  return CookieManager.getCookie("session_id") || null;
+};
 
 export { getApiConfig, getApiHeaders, getSessionId };

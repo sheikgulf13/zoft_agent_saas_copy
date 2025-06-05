@@ -316,18 +316,18 @@ function ActionForm({
     console.log("formData", formData?.data);
   }, [formData]);
 
-  useEffect(() => {
+  {/*useEffect(() => {
     if (selectedAction.name === "Send video") {
       setFormData((prev) => ({
         ...prev,
         data: {
           ...prev.data,
-          api_method: '',
-          request_data_type: '',
+          api_method: "",
+          request_data_type: "",
         },
       }));
     }
-  }, [selectedAction]);
+  }, [selectedAction]);*/}
 
   // Initialize form with initial data or existing formData
   useEffect(() => {
@@ -366,7 +366,7 @@ function ActionForm({
           request_data_type:
             existingData.data?.request_data_type ||
             (actionType !== "send_video" && DEFAULT_REQUEST_DATA_TYPE),
-            video: existingData?.data?.video || "",
+          video: existingData?.data?.video || "",
         },
       };
 

@@ -74,24 +74,7 @@ const AgentList = ({ agent }) => {
         <div
           className={`flex min-w-[15%] max-w-[15%] justify-end gap-2 p-2 rounded-xl transition-all duration-300`}
         >
-          <button
-            className={`p-2 rounded-full transition-all duration-200 ${
-              theme === "dark"
-                ? "hover:bg-[#2A2E37] hover:text-[#4D55CC]"
-                : "hover:bg-gray-100 hover:text-[#4D55CC]"
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(
-                `/workspace/agents/chats/phonesetting/ai?workspaceId=${agent?.workspace_id}`
-              );
-            }}
-          >
-            <IoSettingsSharp
-              size={20}
-              className="text-[#13104A]/95 hover:scale-110 transition-transform duration-200"
-            />
-          </button>
+       
           <button
             className={`p-2 rounded-full transition-all duration-200 ${
               theme === "dark"
