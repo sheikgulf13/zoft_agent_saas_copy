@@ -49,9 +49,9 @@ const Tabs = () => {
   };
 
   return (
-    <div className="flex flex-col h-[65vh] max-h-[65vh]">
+    <div className="flex flex-col h-[65vh]">
       <div
-        className={`tabs flex mb-6 w-full max-w-[1000px] h-14 mx-auto rounded-xl shadow-md ${
+        className={`tabs flex mb-6 w-full max-w-[1100px] h-14 mx-auto rounded-xl shadow-md ${
           theme === "dark" ? 'bg-[#1F222A]' : 'bg-white'
         }`}
       >
@@ -87,10 +87,10 @@ const Tabs = () => {
         </button>
       </div>
       <div
-        className={`tab-content flex-1 rounded-xl p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent ${
+        className={`tab-content flex-1  rounded-xl p-6  scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent ${
           theme === "dark" 
             ? 'bg-[#1F222A] text-white' 
-            : 'bg-white text-gray-800'
+            : ' text-gray-800'
         }`}
       >
         {renderContent()}

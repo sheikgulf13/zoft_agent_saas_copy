@@ -35,8 +35,8 @@ export default function NestedModal() {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: "600px" }} className="flex flex-col justify-between items-center gap-4 rounded-lg">
-          <h2 id="parent-modal-title" className="font-bold">Work in progress (sneak peak)</h2>
-          <p id="parent-modal-description">
+          <h2 id="parent-modal-title" className="font-bold text-black">Work in progress (sneak peak)</h2>
+          <p id="parent-modal-description" className='text-gray-600'>
            This page is under progress
           </p>
           <ContainedButton onClick={handleClose} className="p-4">Go back</ContainedButton>

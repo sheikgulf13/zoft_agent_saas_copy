@@ -109,10 +109,10 @@ const WorkSpace = () => {
   };
 
   return (
-    <div className="h-[100vh] overflow-hidden flex items-center justify-center">
+    <div className="h-[100vh] overflow-hidden flex items-center justify-center bg-white">
       {showWalkthrough && <WalkthroughGuide onComplete={handleWalkthroughComplete} />}
       <div
-        className={`w-[90%] overflow-y-auto h-[90vh] rounded-2xl shadow-md py-[2%] px-[2%] relative  ${
+        className={`w-full overflow-y-auto h-full py-[2%] px-10 relative  ${
           theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white text-black"
         }`}
       >

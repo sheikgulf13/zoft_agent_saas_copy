@@ -376,12 +376,12 @@ const Actions = ({ editPage }) => {
 
         <div className="flex w-full h-[calc(100vh-50px)] overflow-hidden">
           <div
-            className={`flex flex-col w-full items-center justify-start gap-6 mx-12 p-8 pt-4 mt-12 overflow-y-auto scrollbar ${
+            className={`flex flex-col w-full items-center justify-start gap-6 mx-12 p-8 pt-8 mt-0 mb-12 overflow-y-auto scrollbar ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"
             }`}
           >
             <div
-              className={`flex flex-col min-w-[90%] max-w-[90%] shadow-md rounded-lg p-8 ${
+              className={`flex flex-col min-w-[80%] max-w-[80%] shadow-md rounded-lg p-8 ${
                 theme === "dark" ? "bg-black" : "bg-white"
               }`}
             >

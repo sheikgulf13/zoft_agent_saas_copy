@@ -109,10 +109,8 @@ const PricingPage = () => {
     dispatch(fetchCurrentSubscription());
   }, [dispatch]);
 
-  const handleBillingCycleChange = (event, newBillingCycle) => {
-    if (newBillingCycle !== null) {
-      setBillingCycle(newBillingCycle);
-    }
+  const handleBillingCycleChange = (newBillingCycle) => {
+    setBillingCycle(newBillingCycle);
   };
 
   if (loading) {
@@ -241,7 +239,7 @@ const PricingPage = () => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Current Plan Section */}
       {currentSubscription && (
-        <div className="text-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="text-center mb-8 p-6 bg-white rounded-xl shadow-sm border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             Your Current Plan: {currentSubscription?.subscription_type?.subscription_type || 'Unknown'}
           </h2>

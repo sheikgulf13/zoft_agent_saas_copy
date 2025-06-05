@@ -14,12 +14,12 @@ const Integrations = () => {
 
   return (
   <div className="flex flex-col justify-center items-center px-8 w-full h-[100vh]">
-      <div
-        className={`border-b flex justify-center relative w-full mt-8 pt-6 text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : "text-black"
+       <div
+        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] mb-[.9vw] text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
         }`}
       >
-        <div className="absolute left-8 top-[-.6vw]">
+        <div className="absolute left-[2vw] top-[-.6vw]">
           <OutlinedButton
             onClick={() => router.push(`/workspace/agents`)}
             borderColor={

@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import PhoneSettingNav from "./PhoneSettingNav";
 import { useRouter, useSearchParams } from "next/navigation";
 import useTheme from "next-theme";
@@ -14,6 +21,7 @@ import {
 } from "../../../utility/eleven-labs-voice";
 import AudioPlayer from "../../AudioPlayer";
 import ConfirmationDialog from "@/Components/chatAgent/chatSettings/settings/ConfirmationDialog";
+import { TiArrowSortedDown } from "react-icons/ti";
 
 const Configure = () => {
   const { theme } = useTheme();
@@ -29,31 +37,34 @@ const Configure = () => {
   const [language, setLanguage] = useState(selectedPhoneAgent?.language);
   const [voiceUrl, setVoiceUrl] = useState("");
   const searchParams = useSearchParams();
-  const isDelete = searchParams.get('isDelete') === 'true';
+  const isDelete = searchParams.get("isDelete") === "true";
   const [gender, setGender] = useState(
     selectedPhoneAgent?.voice_gender?.toLowerCase()
   );
 
-
   useEffect(() => {
-    if(isDelete) {
+    if (isDelete) {
       handleDeleteClick();
     }
-  }, [isDelete])
+  }, [isDelete]);
 
   useEffect(() => {
     console.log(selectedPhoneAgent);
-    
+
     if (selectedPhoneAgent?.voice_id) {
-      const filteredVoiceUrl = elevenlabsVoice?.elevenlabs.find(
-        (item) => item?.voice_id === selectedPhoneAgent?.voice_id
-      ) ||  elevenlabsVoice?.ultravox.find(
-        (item) => item?.voiceId === selectedPhoneAgent?.voice_id
-      );
-  
+      const filteredVoiceUrl =
+        elevenlabsVoice?.elevenlabs.find(
+          (item) => item?.voice_id === selectedPhoneAgent?.voice_id
+        ) ||
+        elevenlabsVoice?.ultravox.find(
+          (item) => item?.voiceId === selectedPhoneAgent?.voice_id
+        );
+
       if (filteredVoiceUrl) {
         console.log(filteredVoiceUrl);
-        setVoiceUrl(filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl);
+        setVoiceUrl(
+          filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl
+        );
       } else {
         setVoiceUrl("");
       }
@@ -64,7 +75,7 @@ const Configure = () => {
     if (audioRef.current && voiceUrl) {
       audioRef.current.load();
     }
-    console.log('voice url config', voiceUrl)
+    console.log("voice url config", voiceUrl);
   }, [voiceUrl]);
 
   useEffect(() => {
@@ -77,41 +88,43 @@ const Configure = () => {
     //     language_mapping_accent[language].includes(item.labels.accent)
     //   );
     // });
-     const filteredVoiceNames = () => {
-       if (!elevenlabsVoice || !language_mapping_accent) return [];
-   
-       const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
-         const genderMatch = !gender || item.labels?.gender === gender;
-         const languageMatch =
-           !language ||
-           language_mapping_accent[language]?.includes(item.labels?.accent);
-         return genderMatch && languageMatch;
-       });
-   
-       const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
-         const genderMatch = !gender || item?.gender === gender;
-         const languageMatch =
-           !language ||
-           language_mapping_accent[language]?.includes(item.accent?.toLowerCase());
-         return genderMatch && languageMatch;
-       });
-   
-       return [...elevenLabsVoices, ...ultravoxVoices];
-     };
+    const filteredVoiceNames = () => {
+      if (!elevenlabsVoice || !language_mapping_accent) return [];
+
+      const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
+        const genderMatch = !gender || item.labels?.gender === gender;
+        const languageMatch =
+          !language ||
+          language_mapping_accent[language]?.includes(item.labels?.accent);
+        return genderMatch && languageMatch;
+      });
+
+      const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
+        const genderMatch = !gender || item?.gender === gender;
+        const languageMatch =
+          !language ||
+          language_mapping_accent[language]?.includes(
+            item.accent?.toLowerCase()
+          );
+        return genderMatch && languageMatch;
+      });
+
+      return [...elevenLabsVoices, ...ultravoxVoices];
+    };
 
     setFilteredVoiceNames(filteredVoiceNames);
   }, [language, gender, language_mapping_accent]);
 
   const handleVoiceChange = (e) => {
-    const filteredVoiceUrl = elevenlabsVoice.elevenlabs.find(
-      (item) => item.voice_id === e.target.value
-    ) || elevenlabsVoice.ultravox.find(
-      (item) => item.voiceId === e.target.value
-    );
+    const filteredVoiceUrl =
+      elevenlabsVoice.elevenlabs.find((item) => item.voice_id === e.target.value) ||
+      elevenlabsVoice.ultravox.find((item) => item.voiceId === e.target.value);
 
     if (filteredVoiceUrl) {
       console.log(filteredVoiceUrl);
-      setVoiceUrl(filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl || "");
+      setVoiceUrl(
+        filteredVoiceUrl?.preview_url || filteredVoiceUrl?.previewUrl || ""
+      );
     } else {
       setVoiceUrl("");
     }
@@ -152,20 +165,34 @@ const Configure = () => {
   useEffect(() => {
     const changes = DetectChanges();
     setHasChanges(changes > 0);
-  }, [name, purpose, voice, phoneNumber, companyName, companyBusiness, companyServices, language, gender]);
+  }, [
+    name,
+    purpose,
+    voice,
+    phoneNumber,
+    companyName,
+    companyBusiness,
+    companyServices,
+    language,
+    gender,
+  ]);
 
   const DetectChanges = () => {
     let change = 0;
-    
+
     if (name !== selectedPhoneAgent?.phone_agent_name) change += 1;
     if (purpose !== selectedPhoneAgent?.conversation_purpose) change += 1;
     if (voice !== selectedPhoneAgent?.voice_id) change += 1;
     if (phoneNumber !== selectedPhoneAgent?.phone_number) change += 1;
     if (companyName !== selectedPhoneAgent?.company_name) change += 1;
     if (companyBusiness !== selectedPhoneAgent?.company_business) change += 1;
-    if (companyServices !== selectedPhoneAgent?.company_products_services) change += 1;
+    if (companyServices !== selectedPhoneAgent?.company_products_services)
+      change += 1;
     if (language !== selectedPhoneAgent?.language) change += 1;
-    if (gender?.toLowerCase() !== selectedPhoneAgent?.voice_gender?.toLowerCase()) change += 1;
+    if (
+      gender?.toLowerCase() !== selectedPhoneAgent?.voice_gender?.toLowerCase()
+    )
+      change += 1;
 
     return change;
   };
@@ -235,19 +262,36 @@ const Configure = () => {
   console.log(uniqueLanguages);
   // console.log(" PRINTING ")
   // console.log(phoneAgentID);
+
+  // Custom Hooks
+  const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => clearTimeout(handler);
+    }, [value, delay]);
+
+    return debouncedValue;
+  };
+
+
   return (
     <div className="flex flex-col px-8 h-screen w-full">
       {/* Header */}
       <div
-        className={`border-b-[1px] flex justify-center px-8 mt-8 mb-5 w-full text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : "text-black"
+        className={`border-b-[1px] mt-8 mb-8 flex justify-center relative w-full text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
         }`}
       >
         <PhoneSettingNav />
       </div>
 
       <div className="h-full flex-1 px-8 overflow-hidden scrollbar scrollbar-light">
-        <div className="w-[80%] flex flex-col justify-center gap-6 mx-auto p-8 bg-white text-gray-800 rounded-xl shadow-lg">
+        <div className="w-[80%] flex flex-col justify-center gap-4 mx-auto p-4 bg-white text-gray-800 rounded-xl shadow-lg">
           <div className="flex justify-end">
             <ContainedButton
               bgColor="bg-red-500 hover:bg-red-600 transition-colors"
@@ -256,7 +300,7 @@ const Configure = () => {
               Delete
             </ContainedButton>
           </div>
-          
+
           <div
             className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
             style={{ height: "calc(100vh - 340px)" }}
@@ -344,7 +388,7 @@ const Configure = () => {
                       >
                         Language <span className="text-red-500">*</span>
                       </label>
-                      <select
+                    <select
                         id="language"
                         value={language}
                         onChange={(e) => setLanguage(e.target.value)}
@@ -355,6 +399,7 @@ const Configure = () => {
                           <option value={data}>{data}</option>
                         ))}
                       </select>
+                   
                       <p className="text-xs text-gray-500">
                         Select the language your agent will use
                       </p>
@@ -369,7 +414,7 @@ const Configure = () => {
                     >
                       Voice <span className="text-red-500">*</span>
                     </label>
-                    <div className="flex bg-white border border-gray-300 rounded-lg p-2 justify-between items-center">
+                    <div className="flex bg-white border border-gray-300 rounded-lg p-2 gap-2 justify-between items-center">
                       <select
                         id="voice"
                         value={voice}
@@ -383,6 +428,7 @@ const Configure = () => {
                           <option value={data.voice_id}>{data.name}</option>
                         ))}
                       </select>
+                    
                       <audio ref={audioRef} controls className="w-[45%]">
                         <source src={voiceUrl} type="audio/mpeg" />
                         Your browser does not support the audio element.
@@ -428,7 +474,9 @@ const Configure = () => {
 
             {/* Company Configuration Form */}
             <div className="bg-gray-50 rounded-xl p-8 shadow-sm">
-              <h1 className="text-2xl font-bold text-[#2D3377]/90 mb-6">Company Configuration</h1>
+              <h1 className="text-2xl font-bold text-[#2D3377]/90 mb-6">
+                Company Configuration
+              </h1>
               <form className="flex flex-wrap md:flex-nowrap gap-8">
                 {/* Left Column */}
                 <div className="space-y-6 flex-1">
@@ -504,12 +552,12 @@ const Configure = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <ContainedButton 
+            <ContainedButton
               onClick={updatePhoneAgent}
               disabled={!hasChanges}
               className={`transition-colors ${
-                hasChanges 
-                  ? "hover:opacity-[0.85] cursor-pointer" 
+                hasChanges
+                  ? "hover:opacity-[0.85] cursor-pointer"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
               }`}
             >

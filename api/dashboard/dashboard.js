@@ -16,7 +16,7 @@ const getDashboardDataApi = async () => {
         console.log('response', response)
 
         if(response.status === 401) {
-            return window.location.href = "/register";
+            return window.location.href = "/login";
         }
         
         if (!response.ok) {

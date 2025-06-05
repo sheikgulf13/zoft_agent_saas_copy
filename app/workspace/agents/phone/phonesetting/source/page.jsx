@@ -1,9 +1,9 @@
 import React from 'react'
-import Source from '../../../../../../Components/chatAgent/chatSettings/Source'
+import EditSource from '../../../../../../Components/phoneAgent/phoneSettings/EditSource';
 
 const page = () => {
   return (
-    <Source />
+    <EditSource />
   )
 }
 

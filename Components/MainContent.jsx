@@ -41,10 +41,15 @@ const MainContent = () => {
   return (
     <div
       className={`h-screen items-center justify-center flex flex-col p- flex-1 ${
-        theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#F2F4F7]"
+        theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white"
       }`}
     >
       {/* <Header /> */}
+      <div className="bg-white flex items-center justify-end w-full min-h-[8vh] max-h-[8vh] px-10 shadow-sm border border-b-gray-200">
+        <button className="text-black border border-blue-950 rounded-full px-10 py-2">
+          Upgrade
+        </button>
+      </div>
       <DashboardContainer />
     </div>
   );
