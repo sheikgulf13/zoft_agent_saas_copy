@@ -2,27 +2,28 @@ import { motion } from 'framer-motion';
 import useTheme from 'next-theme';
 import Link from 'next/link';
 
-const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, height, isClickable }) => {
+const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, height, disabled }) => {
     const { theme } = useTheme();
 
     return (
         <motion.button
             type='button'
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{pointerEvents: isClickable}}
+            whileHover={{ scale: disabled ? 1 : 1.05 }}
+            whileTap={{ scale: disabled ? 1 : 0.95 }}
+            disabled={disabled}
             className={`
                 ${isWorkSpace ? "w-[180px] h-[180px] flex-col rounded-2xl" : `w-[${width ? width : '200px'}] h-[${height ? height : '40px'}] rounded-md px-[1vw] py-[1vw] gap-[1vw]`} 
                 text-base capitalize flex items-center justify-center 
                 border-[1px] text-center cursor-pointer font-bold 
                 transition-all duration-200 ease-in-out
+                ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 ${theme === "dark" 
                     ? 'border-[#4D55CC]  hover:bg-[#4D55CC]/20 text-gray-200' 
                     : 'border-[#211C84]  hover:bg-[#211C84]/10 text-[#211C84]'
                 }
                 shadow-md hover:shadow-lg
             `}
-            onClick={onClick}
+            onClick={disabled ? undefined : onClick}
         >
             {Icon && typeof Icon === 'string' ? (
                 <motion.div 

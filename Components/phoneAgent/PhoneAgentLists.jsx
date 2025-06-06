@@ -66,8 +66,8 @@ const PhoneAgentList = (props) => {
               }}
               Icon={FaPlus}
               text="Create a new Phone Agent"
-              className="hover:scale-105 transition-transform duration-300"
-              isClickable={`${isLimitReached ? 'none' : 'auto'}`}
+              className="hover:scale-105 transition-transform duration-300 relative z-10"
+              disabled={isLimitReached}
             />
           )}
         </div>
