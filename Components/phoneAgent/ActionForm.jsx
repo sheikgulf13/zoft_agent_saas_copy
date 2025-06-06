@@ -945,16 +945,16 @@ function ActionForm({
 
       console.log("action data", actionData);
 
-      //// Submit and reset
-      //handleCreateAction(actionData);
-      //toggle();
+      // Submit and reset
+      handleCreateAction(actionData);
+      toggle();
 
       // Reset form and cache
-      //setFormData({});
-      //setErrors({});
-      //setEditorContent("");
-      //setFormSubmitted(false);
-      //setActionFormDataCache({});
+      setFormData({});
+      setErrors({});
+      setEditorContent("");
+      setFormSubmitted(false);
+      setActionFormDataCache({});
     },
     [
       formData,

@@ -38,6 +38,8 @@ import { clearState as clearPhoneAgentState } from "@/store/actions/phoneAgentAc
 import { MdOutlineWebhook } from "react-icons/md";
 
 import { LuCalendarClock } from "react-icons/lu";
+import { RiListCheck3 } from "react-icons/ri";
+import { BsPlayCircle } from "react-icons/bs";
 import {
   clearSelectedAgents,
   clearSelectedData,
@@ -445,12 +447,16 @@ const Actions = ({ editPage }) => {
                           <div className="flex gap-3 items-center">
                             {action.action_type === "send_email" ? (
                               <IoMailOutline className="text-2xl text-[#2D3377]" />
-                            ) : action.action_type === "web_hooks" ? (
+                            ) : action.action_type === "send_api_request" ? (
                               <MdOutlineWebhook className="text-2xl text-[#2D3377]" />
                             ) : action.action_type === "booking_appointment" ? (
                               <LuCalendarClock className="text-2xl text-[#2D3377]" />
                             ) : action.action_type === "call_forwarding" ? (
                               <BsTelephoneForward className="text-2xl text-[#2D3377]" />
+                            ) : action.action_type === "list_of_items" ? (
+                              <RiListCheck3 className="text-2xl text-[#2D3377]" />
+                            ) : action.action_type === "send_video" ? (
+                              <BsPlayCircle className="text-2xl text-[#2D3377]" />
                             ) : (
                               <></>
                             )}
