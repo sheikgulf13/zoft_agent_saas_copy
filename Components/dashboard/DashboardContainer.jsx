@@ -18,6 +18,7 @@ import {
 import { Line, Bar, Pie } from "react-chartjs-2";
 import { useSubscription } from "@/context/SubscriptionContext";
 import SmudgyBackground from "../SmudgyBackground";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   LinearScale,
@@ -43,6 +44,8 @@ const DashboardContainer = () => {
     loading,
     error,
   } = useSubscription();
+
+  const router=useRouter();
 
   const fetchDashboardData = async () => {
     const response = await getDashboardDataApi();
@@ -229,7 +232,36 @@ const DashboardContainer = () => {
             </p>
           </div>
         </div>
-      ) : (
+      ) : 
+      
+      (data && Object.keys(data).length === 0)?
+      (
+        <div className="flex items-center justify-center h-[80vh]">
+          <div className="text-center">
+            <div className="mb-6 flex justify-center">
+              <img 
+                src="/images/emptyDashBoard.png" 
+                alt="No Dashboard Data" 
+                className="mx-auto w-80 h-80 object-contain bg-white p-4"
+              />
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+            Looks like you haven't created any agent to view the dashboard analytics.
+            </h3>
+            <p className="text-gray-500 mb-6">
+            Fornuately, its easy to create one.
+            </p>
+            <button
+              className="bg-blue-600 text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 transition text-lg shadow-md"
+              onClick={() => {router.push("/workspace")}}
+            >
+              Create Agent
+            </button>
+          </div>
+        </div>
+      )
+      :
+      (
         <>
           <div className="flex items-center justify-between my-4 gap-4">
             <div className="shadow-md border-gray-200 border-[1px] rounded-xl p-6 mt-4 h-[150px] flex flex-1 flex-col items-start justify-center hover:scale-[1.05] cursor-pointer transition-all duration-200">

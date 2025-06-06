@@ -12,6 +12,7 @@ import SmudgyBackground from "./SmudgyBackground";
 const MainContent = () => {
   const { theme, setTheme } = useTheme();
   const searchParams = useSearchParams();
+  const [showTopBar, setShowTopBar] = useState(true);
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const {
@@ -62,28 +63,40 @@ const MainContent = () => {
   }
 
   return (
+
+
     <div
-      className={`h-screen items-center justify-center flex flex-col p- flex-1 ${
-        theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white"
-      }`}
+      className={`h-screen items-center justify-center flex flex-col p- flex-1 ${theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white"
+        }`}
     >
-      {/* <Header /> */}
-      <div className="bg-white flex items-center justify-end w-full min-h-[8vh] max-h-[8vh] px-10 shadow-sm border border-b-gray-200">
-        <button
-          onClick={() => setShowModal(true)}
-          className="text-black border border-blue-950 rounded-full px-10 py-2 mr-4"
-        >
-          {subscriptionDetails?.type || "FREE"}
-        </button>
-        {subscriptionDetails?.type === "FREE" && (
-          <button
-            onClick={() => router.push("/appsettings")}
-            className="text-black border border-blue-950 rounded-full px-10 py-2"
-          >
-            Upgrade
-          </button>
-        )}
-      </div>
+      {subscriptionDetails?.type === "FREE" && showTopBar && (
+        <div className="w-full flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] shadow-lg mb-6 relative">
+          <span className="text-white text-lg font-medium flex items-center gap-2">
+            <svg className="w-6 h-6 mr-2" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+              <rect x="4" y="4" width="16" height="16" rx="4" fill="#fff" fillOpacity="0.1" />
+              <path d="M8 12h8M12 8v8" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            You’re on the free plan — step up to premium and elevate your experience!
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              className="bg-[#F871A0] hover:bg-[#EC4899] text-white font-semibold px-6 py-2 rounded-md text-base shadow transition"
+              onClick={() => router.push("/appsettings")}
+            >
+              Upgrade
+            </button>
+            <button
+              className="ml-2 text-white hover:bg-white/20 rounded-full p-2 transition"
+              onClick={() => setShowTopBar(false)}
+              aria-label="Close"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
@@ -120,11 +133,10 @@ const MainContent = () => {
                     Status
                   </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      isSubscriptionValid
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${isSubscriptionValid
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
-                    }`}
+                      }`}
                   >
                     {isSubscriptionValid ? "Active" : "Inactive"}
                   </span>
@@ -163,7 +175,7 @@ const MainContent = () => {
                     <span className="font-medium text-gray-800">
                       {Math.floor(
                         (subscriptionDetails?.limits?.voiceSecondsLimit || 0) /
-                          60
+                        60
                       )}{" "}
                       minutes
                     </span>
@@ -173,7 +185,7 @@ const MainContent = () => {
                     <span className="font-medium text-gray-800">
                       {Math.floor(
                         (subscriptionDetails?.limits?.knowledgeBaseLimit || 0) /
-                          1000
+                        1000
                       )}
                       K characters
                     </span>
