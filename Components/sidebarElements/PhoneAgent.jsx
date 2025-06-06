@@ -863,10 +863,12 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center justify-between w-full gap-2">
           <span>{voice.name}</span>
-          <img
-            src={`${isElevenLabs ? '/images/elevenlabs-symbol.png' : '/images/ZOFT_LOGO2.png'}`}
-            className={`w-8 h-8`}
-          />
+          <div className="min-w-10 max-w-10 pr-5">
+            <img
+              src={`${isElevenLabs ? '/images/elevenlabs-symbol.png' : '/images/ZOFT_LOGO2.png'}`}
+              className={`min-w-7 h-7`}
+            />
+          </div>
         </div>
       </div>
     );

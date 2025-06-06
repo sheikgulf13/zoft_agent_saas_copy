@@ -1,38 +1,50 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatAgent from "../sidebarElements/ChatAgent";
 import PhoneAgentList from "../phoneAgent/PhoneAgentLists";
+import { useSelector } from "react-redux";
+import { useSubscription } from "@/context/SubscriptionContext";
+import { useRouter } from "next/navigation";
+import SmudgyBackground from "../SmudgyBackground";
 
 const Agents = (props) => {
   const { isLoading } = props;
+  const router = useRouter();
   const [selectedAgent, setSelectedAgent] = useState("chat");
+  const { workSpaceAgentList } = useSelector(
+    (state) => state.workSpaceAgentList
+  );
+  const {
+    isSubscriptionValid,
+    subscriptionDetails,
+    checkPermission,
+    refreshSubscription,
+    loading,
+    error,
+  } = useSubscription();
+  const isAgentLimitReached =
+    workSpaceAgentList?.chat_agents?.length +
+      workSpaceAgentList?.phone_agents?.length >=
+    subscriptionDetails?.limits?.agentLimit;
 
-  const templateCards = [
-    {
-      title: "Use Template",
-      description: "Start with a pre-built template for your agent",
-      icon: "📋",
-      action: "Create",
-    },
-    {
-      title: "Use Call Template",
-      description: "Create an agent optimized for phone calls",
-      icon: "📞",
-      action: "Create",
-    },
-    {
-      title: "Use Chat Template",
-      description: "Create an agent optimized for chat conversations",
-      icon: "💬",
-      action: "Create",
-    },
-  ];
+  useEffect(() => {
+    refreshSubscription();
+  }, []);
+
+  // Loading state for subscription data
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[100vh] py-[2%]">
       {/* Navigation Bar */}
-      <div className="mb-6 ml-20">
+      <div className="mb-6 mx-20 flex justify-between items-center">
         <div className="inline-flex rounded-lg p-2 ">
           {/* Chat Button Group */}
           <div className="relative inline-block">
@@ -81,14 +93,41 @@ const Agents = (props) => {
             )}
           </div>
         </div>
+
+        {isAgentLimitReached && (
+          <div className="flex items-center gap-3 mr-4">
+            <p className="text-sm text-red-600 font-semibold">
+              Agent limit reached
+            </p>
+            <div className="relative w-full py-3 bg-white text-white overflow-hidden rounded-full">
+              <SmudgyBackground
+                colorHex={"#2D3377"}
+                noiseDensity={20}
+                layerCount={15}
+                baseOpacity={0.15}
+                opacityStep={0.05}
+                fogOpacity={0.2}
+                zIndex={0}
+              />
+              <div className=" w-full flex items-center justify-between !z-[10]">
+                <button
+                  onClick={() => router.push("/appsettings")}
+                  className="w-full text-white z-[11] text-sm font-bold text-center hover:opacity-[0.8]"
+                >
+                  Upgrade
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content Area */}
       <div>
         {selectedAgent === "chat" ? (
-          <ChatAgent isLoading={isLoading} />
+          <ChatAgent isLoading={isLoading} islimitReached={isAgentLimitReached} />
         ) : (
-          <PhoneAgentList isLoading={isLoading} />
+          <PhoneAgentList isLoading={isLoading} islimitReached={isAgentLimitReached} />
         )}
       </div>
     </div>

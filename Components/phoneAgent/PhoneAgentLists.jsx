@@ -23,7 +23,7 @@ const PhoneAgentList = (props) => {
   const [scrollHeight, setScrollHeight] = useState();
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
-  const { isLoading } = props;
+  const { isLoading, isLimitReached  } = props;
   const [showModal, setShowModal] = useState(false);
   const { workSpaceAgentList } = useSelector(
     (state) => state.workSpaceAgentList
@@ -67,6 +67,7 @@ const PhoneAgentList = (props) => {
               Icon={FaPlus}
               text="Create a new Phone Agent"
               className="hover:scale-105 transition-transform duration-300"
+              isClickable={`${isLimitReached ? 'none' : 'auto'}`}
             />
           )}
         </div>
@@ -110,7 +111,7 @@ const PhoneAgentList = (props) => {
 
         <div
           className={`flex justify-start w-full overflow-y-auto`}
-          style={{ height: "calc(70vh - 5px)" }}
+          style={{ height: "calc(70vh - 50px)" }}
         >
           <div
             ref={scrollRef}

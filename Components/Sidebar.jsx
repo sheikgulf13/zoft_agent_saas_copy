@@ -86,7 +86,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       color: "primary",
     },
     {
-      Icon: MessageIcon,
+      Icon: '/images/integration.png',
       text: "Integrations",
       path: "/integrations",
       className: "Integrations",

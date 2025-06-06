@@ -21,7 +21,7 @@ const ChatAgent = (props) => {
   const { workSpaceAgentList } = useSelector(
     (state) => state.workSpaceAgentList
   );
-  const { isLoading } = props;
+  const { isLoading, isLimitReached } = props;
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
 
@@ -35,6 +35,7 @@ const ChatAgent = (props) => {
     setShowModal(true);
   };
   const createHandler = () => {
+    setShowModal(false);
     dispatch(resetChatBot());
     router.push("/workspace/agents/chats/createbot");
   };
@@ -63,7 +64,8 @@ const ChatAgent = (props) => {
                 onClick={replaceHandler}
                 Icon={FaPlus}
                 text="Create a new Chat Agent"
-                className="hover:scale-105 transition-transform duration-300"
+                className={`hover:scale-105 transition-transform duration-300`}
+                isClickable={`${isLimitReached ? 'none' : 'auto'}`}
               />
             )}
           </div>
@@ -106,7 +108,7 @@ const ChatAgent = (props) => {
 
           <div
             className={`flex justify-start w-full overflow-y-auto`}
-            style={{ height: "calc(70vh - 5px)" }}
+            style={{ height: "calc(70vh - 50px)" }}
           >
             <div
               ref={scrollRef}
