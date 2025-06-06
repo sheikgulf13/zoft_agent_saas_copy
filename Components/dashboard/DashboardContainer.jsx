@@ -16,6 +16,8 @@ import {
   ArcElement,
 } from "chart.js";
 import { Line, Bar, Pie } from "react-chartjs-2";
+import { useSubscription } from "@/context/SubscriptionContext";
+import SmudgyBackground from "../SmudgyBackground";
 
 ChartJS.register(
   LinearScale,
@@ -33,6 +35,14 @@ const DashboardContainer = () => {
   const { theme } = useTheme();
   const [data, setData] = useState();
   const [noData, setNoData] = useState(false);
+  const {
+    isSubscriptionValid,
+    subscriptionDetails,
+    checkPermission,
+    refreshSubscription,
+    loading,
+    error,
+  } = useSubscription();
 
   const fetchDashboardData = async () => {
     const response = await getDashboardDataApi();
@@ -41,7 +51,7 @@ const DashboardContainer = () => {
       setData(response);
       setNoData(false);
     } else {
-      setNoData(true)
+      setNoData(true);
     }
   };
 
@@ -141,24 +151,82 @@ const DashboardContainer = () => {
     },
   };
 
+  // Loading state for subscription data
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`w-full overflow-y-auto h-full  rounded-lg shadow-md py-[2%] px-10 relative  ${
         theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#FFFFFF] text-black"
       }`}
     >
+      {subscriptionDetails?.type === "FREE" && (
+        <div className="w-full flex items-center justify-center mb-5">
+          <div className="relative min-w-full max-w-full overflow-hidden bg-white rounded-xl text-white min-h-[150px] max-h-[150px] py-8 px-4">
+            <SmudgyBackground
+              colorHex={"483AA0"}
+              noiseDensity={20}
+              layerCount={20}
+              baseOpacity={0.15}
+              opacityStep={0.05}
+              fogOpacity={0.2}
+              zIndex={1}
+            />
+
+            <div className="flex items-center justify-between mb-6 !z-[10]">
+              <div className="flex items-center space-x-2 z-[10]">
+                <span className="text-2xl font-semibold text-white">
+                  SILVER Plan Benefits
+                </span>
+                <span className="text-sm opacity-90">•</span>
+                <span className="text-sm">
+                  Enhanced features for growing businesses
+                </span>
+              </div>
+              <button
+                onClick={() => router.push("/appsettings")}
+                className="bg-white text-blue-800 px-6 py-2 rounded-full z-[10] text-sm font-medium hover:bg-blue-50 transition-colors"
+              >
+                View All Plans
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h3 className="text-2xl font-bold text-[#2D3377]">Dashboard</h3>
 
       {noData ? (
         <div className="flex items-center justify-center h-[80vh]">
           <div className="text-center">
             <div className="mb-4">
-              <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="mx-auto h-16 w-16 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No Dashboard Data Available</h3>
-            <p className="text-gray-500">We're currently unable to display the dashboard information. Please try again later.</p>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No Dashboard Data Available
+            </h3>
+            <p className="text-gray-500">
+              We're currently unable to display the dashboard information.
+              Please try again later.
+            </p>
           </div>
         </div>
       ) : (

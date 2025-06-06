@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import useTheme from 'next-theme';
 import Link from 'next/link';
 
-const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, height }) => {
+const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, height, isClickable }) => {
     const { theme } = useTheme();
 
     return (
@@ -10,6 +10,7 @@ const CreateButton = ({ Icon, text, isactive, onClick, isWorkSpace, width, heigh
             type='button'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            style={{pointerEvents: isClickable}}
             className={`
                 ${isWorkSpace ? "w-[180px] h-[180px] flex-col rounded-2xl" : `w-[${width ? width : '200px'}] h-[${height ? height : '40px'}] rounded-md px-[1vw] py-[1vw] gap-[1vw]`} 
                 text-base capitalize flex items-center justify-center 
