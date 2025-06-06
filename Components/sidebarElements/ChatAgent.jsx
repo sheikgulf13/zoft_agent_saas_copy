@@ -12,6 +12,8 @@ import { ContainedButton } from "../buttons/ContainedButton";
 import { useDispatch, useSelector } from "react-redux";
 import { resetChatBot } from "../../store/actions/botActions";
 import Modal from "../Modal";
+import { resetData } from "@/store/reducers/dataSourceSlice";
+import { resetFile } from "@/store/reducers/fileSlice";
 
 const ChatAgent = (props) => {
   const router = useRouter();
@@ -32,6 +34,8 @@ const ChatAgent = (props) => {
 
   const replaceHandler = () => {
     dispatch(resetChatBot());
+    dispatch(resetData())
+    dispatch(resetFile())
     setShowModal(true);
   };
   const createHandler = () => {

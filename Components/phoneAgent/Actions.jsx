@@ -44,6 +44,7 @@ import {
 } from "@/store/reducers/selectedDataSlice";
 import { showErrorToast, showSuccessToast } from "../toast/success-toast";
 import { resetData } from "@/store/reducers/dataSourceSlice";
+import { resetFile } from "@/store/reducers/fileSlice";
 
 const promptFields = [
   {
@@ -263,12 +264,13 @@ const Actions = ({ editPage }) => {
 
     console.log(response);
 
+    dispatch(resetData())
+    dispatch(resetFile())
     if (response.status === 200) {
       response = await response.json();
       dispatch(setPhoneAgentId(response.phone_agent_id));
       navigate.push("/workspace/agents/phone/preview");
     }
-    dispatch(resetData())
   };
 
   const handleSaveChanges = async () => {
@@ -374,7 +376,7 @@ const Actions = ({ editPage }) => {
           </div>
         )}
 
-        <div className="flex w-full h-[calc(100vh-50px)] overflow-hidden">
+        <div className="flex w-full h-[calc(100vh-5px)] overflow-hidden mt-10">
           <div
             className={`flex flex-col w-full items-center justify-start gap-6 mx-12 p-8 pt-8 mt-0 mb-12 overflow-y-auto scrollbar ${
               theme === "dark" ? "scrollbar-dark" : "scrollbar-light"

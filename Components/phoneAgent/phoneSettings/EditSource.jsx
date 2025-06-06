@@ -40,7 +40,7 @@ const EditSource = () => {
   const file = useSelector((state) => state.fileUpdate.file);
   const urlFetch = process.env.url;
   const [existingFile, setExistingFile] = useState({});
-  const { selectedChatAgent } = useSelector((state) => state.selectedData);
+  const { selectedPhoneAgent } = useSelector((state) => state.selectedData);
   const [hasChanges, setHasChanges] = useState(false);
   const [fetchedCharCounts, setFetchedCharCounts] = useState({});
   const [charCount, setCharCount] = useState(0);
@@ -49,11 +49,11 @@ const EditSource = () => {
   useEffect(() => {
     console.log("rawwordscounts", rawWordCounts);
     console.log("filwordscouns", fileWordCounts);
-    console.log("selectedAgent", selectedChatAgent);
+    console.log("selectedAgent", selectedPhoneAgent);
     console.log("totalwordscounts", totalWordCount);
 
-    if (selectedChatAgent?.url_word_count) {
-      const urlCount = Object.values(selectedChatAgent.url_word_count).reduce(
+    if (selectedPhoneAgent?.url_word_count) {
+      const urlCount = Object.values(selectedPhoneAgent.url_word_count).reduce(
         (total, count) => total + count,
         0
       );
@@ -65,7 +65,7 @@ const EditSource = () => {
     }
   }, [
     pastedUrl,
-    selectedChatAgent,
+    selectedPhoneAgent,
     rawWordCounts,
     fileWordCounts,
     totalWordCount,
@@ -77,25 +77,31 @@ const EditSource = () => {
 
   // Retrieve chat agent from local storage
   useEffect(() => {
-    setPastedUrl(selectedChatAgent?.urls || []);
-    setRawText(selectedChatAgent?.raw_text || "");
-    setRawWordCounts(selectedChatAgent?.raw_text_word_count || 0);
+    try {
+      const parsedUrls = selectedPhoneAgent?.urls ? JSON.parse(selectedPhoneAgent.urls) : [];
+      setPastedUrl(parsedUrls);
+      setRawText(selectedPhoneAgent?.raw_text || "");
+      setRawWordCounts(selectedPhoneAgent?.raw_text_word_count || 0);
 
-    // Set initial url word count from selectedChatAgent
-    if (selectedChatAgent?.url_word_count) {
-      const urlCount = Object.values(selectedChatAgent.url_word_count).reduce(
-        (total, count) => total + count,
-        0
+      // Set initial url word count from selectedPhoneAgent
+      if (selectedPhoneAgent?.url_word_count) {
+        const urlCount = Object.values(selectedPhoneAgent.url_word_count).reduce(
+          (total, count) => total + count,
+          0
+        );
+        setUrlWordCounts(urlCount);
+      }
+
+      setRawCharCount(
+        selectedPhoneAgent?.raw_text?.replace(/\s+/g, "").length || 0
       );
-      setUrlWordCounts(urlCount);
+      setFileWordCounts(selectedPhoneAgent?.file_word_count || {});
+      setExistingFile(selectedPhoneAgent?.file_word_count || {});
+    } catch (error) {
+      console.error("Error parsing URLs:", error);
+      setPastedUrl([]);
     }
-
-    setRawCharCount(
-      selectedChatAgent?.raw_text?.replace(/\s+/g, "").length || 0
-    );
-    setFileWordCounts(selectedChatAgent?.file_word_count || {});
-    setExistingFile(selectedChatAgent?.file_word_count || {});
-  }, [selectedChatAgent]);
+  }, [selectedPhoneAgent]);
 
   useEffect(() => {
     console.log("raw char cout", rawCharCount);
@@ -103,8 +109,10 @@ const EditSource = () => {
 
   useEffect(() => {
     console.log("pastedUrl checking", pastedUrl);
-    const changes = DetectChanges(pastedUrl);
-    setHasChanges(changes > 0);
+    if(pastedUrl) {
+      const changes = DetectChanges(pastedUrl);
+      setHasChanges(changes > 0);
+    }
   }, [pastedUrl, existingFile, rawText, fileWordCounts]);
 
   const DetectChanges = (urls) => {
@@ -113,13 +121,13 @@ const EditSource = () => {
 
     // Compare URLs
     const currentUrls = urls.length && urls?.map((url) => url?.url || url);
-    const originalUrls = selectedChatAgent?.urls || [];
+    const originalUrls = selectedPhoneAgent?.urls || [];
     if (JSON.stringify(currentUrls) !== JSON.stringify(originalUrls)) {
       change += 1;
     }
 
     // Compare file word counts
-    const originalFileCounts = selectedChatAgent?.file_word_count || {};
+    const originalFileCounts = selectedPhoneAgent?.file_word_count || {};
     const newFileCounts = fileWordCounts || {};
 
     // Check if any file's word count has changed
@@ -145,7 +153,7 @@ const EditSource = () => {
     }
 
     // Compare raw text
-    if (rawText !== (selectedChatAgent?.raw_text || "")) {
+    if (rawText !== (selectedPhoneAgent?.raw_text || "")) {
       change += 1;
     }
 
@@ -198,7 +206,7 @@ const EditSource = () => {
       //return;
     //}
     setErr("");
-    formData.append("chat_agent_id", selectedChatAgent?.id);
+    formData.append("chat_agent_id", selectedPhoneAgent?.id);
     formData.append("URLs", urls);
     formData.append("raw_text", rawText);
     formData.append("existing_files", existingFile);
@@ -297,21 +305,21 @@ const EditSource = () => {
               return fetchedCharCounts[item];
             }
 
-            try {
-              const data = await fetchWordData(item);
-              const count = data?.char_count || 0;
+              try {
+                const data = await fetchWordData(item);
+                const count = data?.char_count || 0;
 
-              setFetchedCharCounts((prev) => ({ ...prev, [item]: count }));
-              return count;
-            } catch (err) {
-              console.error("Error fetching char count for URL:", item, err);
-              return 0;
+                setFetchedCharCounts((prev) => ({ ...prev, [item]: count }));
+                return count;
+              } catch (err) {
+                console.error("Error fetching char count for URL:", item, err);
+                return 0;
+              }
+            } else {
+              return item?.char_count || 0;
             }
-          } else {
-            return item?.char_count || 0;
-          }
-        })
-      );
+          })
+        );
 
       urlCharCount = fetches.reduce((acc, curr) => acc + curr, 0);
 
@@ -333,21 +341,21 @@ const EditSource = () => {
               return fetchedCharCounts[item];
             }
 
-            try {
-              const data = await fetchWordData(item);
-              const count = data?.word_count || 0;
+              try {
+                const data = await fetchWordData(item);
+                const count = data?.word_count || 0;
 
-              setFetchedCharCounts((prev) => ({ ...prev, [item]: count }));
-              return count;
-            } catch (err) {
-              console.error("Error fetching char count for URL:", item, err);
-              return 0;
+                setFetchedCharCounts((prev) => ({ ...prev, [item]: count }));
+                return count;
+              } catch (err) {
+                console.error("Error fetching char count for URL:", item, err);
+                return 0;
+              }
+            } else {
+              return item?.word_count || 0;
             }
-          } else {
-            return item?.word_count || 0;
-          }
-        })
-      );
+          })
+        );
 
       urlWordCount = fetches.reduce((acc, curr) => acc + curr, 0);
 
@@ -447,8 +455,8 @@ const EditSource = () => {
                         const url =
                           typeof urlObj === "string" ? urlObj : urlObj.url;
                         const allUrls =
-                          selectedChatAgent?.urls ||
-                          Object.keys(selectedChatAgent?.url_word_count || {});
+                          JSON.parse(selectedPhoneAgent?.urls) ||
+                          Object.keys(selectedPhoneAgent?.url_word_count || {});
                         const matchedUrl = allUrls.find((u) => u === url);
 
                         return (
@@ -475,7 +483,7 @@ const EditSource = () => {
                               )}
                             </span>
                             <span className="text-gray-600 dark:text-gray-400 font-medium">
-                              {selectedChatAgent?.url_word_count?.[urlObj] ||
+                              {selectedPhoneAgent?.url_word_count?.[urlObj] ||
                                 urlObj?.word_count}{" "}
                               words
                             </span>

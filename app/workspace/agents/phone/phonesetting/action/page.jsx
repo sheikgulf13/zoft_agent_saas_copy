@@ -11,10 +11,10 @@ const page = () => {
     
   const { theme } = useTheme();
   return (
-    <div className={`flex flex-col justify-start items-center  w-full h-[100vh]`}>
+    <div className={`flex flex-col justify-start items-center px-8  w-full h-[100vh]`}>
      <div
-        className={`border-b-[1px] flex justify-center mx-8 mt-8 w-full text-base border-zinc-300 ${
-          theme === "dark" ? "text-[#9f9f9f]" : "text-black"
+        className={`border-b-[1px] mt-8 mb-8 flex justify-center relative w-full text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
         }`}
       >
         <PhoneSettingNav />

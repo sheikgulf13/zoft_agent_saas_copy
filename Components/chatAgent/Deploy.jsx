@@ -15,6 +15,7 @@ import { ContainedButton } from "../buttons/ContainedButton";
 import { CookieManager } from "@/utility/cookie-manager";
 import SimpleAlert from "../toast/success-toast";
 import { resetData } from "@/store/reducers/dataSourceSlice";
+import { resetFile } from "@/store/reducers/fileSlice";
 
 const Deploy = () => {
   const dispatch = useDispatch();
@@ -105,6 +106,8 @@ const Deploy = () => {
     }
     setEmbedLoading(false);
     setChatAgent(data);
+    dispatch(resetData())
+    dispatch(resetFile())
     if (response.ok) {
       setToast("success");
       setTimeout(() => {
@@ -117,7 +120,6 @@ const Deploy = () => {
         setToast("");
       }, 3000);
     }
-     dispatch(resetData())
     setLoading(false);
   };
   useEffect(() => {
