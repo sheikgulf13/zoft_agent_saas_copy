@@ -194,7 +194,7 @@ const PhoneAgentList = (props) => {
                     }}
                     Icon={FaPlus}
                     text="Create from scratch"
-                    className="hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300"
+                    className="hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 relative z-10"
                     width="250px"
                     height="200px"
                   />
