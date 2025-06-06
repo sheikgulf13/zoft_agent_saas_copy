@@ -125,9 +125,9 @@ const Agents = (props) => {
       {/* Content Area */}
       <div>
         {selectedAgent === "chat" ? (
-          <ChatAgent isLoading={isLoading} islimitReached={isAgentLimitReached} />
+          <ChatAgent isLoading={isLoading} isLimitReached={isAgentLimitReached} />
         ) : (
-          <PhoneAgentList isLoading={isLoading} islimitReached={isAgentLimitReached} />
+          <PhoneAgentList isLoading={isLoading} isLimitReached={isAgentLimitReached} />
         )}
       </div>
     </div>
