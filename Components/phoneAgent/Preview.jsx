@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GradientButton from "../buttons/GradientButton";
 import { setCountryCode } from "../../store/actions/phoneAgentActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { ContainedButton } from "../buttons/ContainedButton";
+import SimpleAlert from "../toast/success-toast";
 
 const Preview = () => {
   const { theme } = useTheme();
@@ -24,6 +25,7 @@ const Preview = () => {
   const [cus_Name, setCus_Name] = useState("");
   const [cus_Pur, setCus_Pur] = useState("");
   const navigate = useRouter();
+  const [toast, setToast] = useState("");
   const callSummaries = [
     {
       contact: "+91 405 555-0128",
@@ -99,6 +101,13 @@ const Preview = () => {
     navigate.push("/workspace/agents");
   };
 
+  useEffect(() => {
+    setToast("success");
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
+  }, []);
+
   const makeCall = async () => {
     const reqURL = `${url}/start-call`;
     const formData = new FormData();
@@ -126,6 +135,16 @@ const Preview = () => {
         theme === "dark" ? "bg-[#1D2027] text-white" : "bg-[#F2F4F7] text-black"
       }`}
     >
+      {toast === "success" ? (
+        <div className="fixed top-[30px] w-[250px] h-[70px] right-[30px] z-[1000]">
+          <SimpleAlert
+            content={"Phone Agent created succesfully"}
+            severity={"success"}
+          />
+        </div>
+      ) : (
+        <></>
+      )}
       {/*
       <div
         className={`w-full absolute top-0 left-[50%] translate-x-[-50%] border-b-[.1vw] border-zinc-300 p-[1.5vw] h-[6vh] flex justify-center items-center ${
@@ -185,80 +204,100 @@ const Preview = () => {
             </h6>
           </div>
 
-          <div
-            className={`flex flex-col ${
-              theme === "dark"
-                ? "bg-[#1A1C22] text-white"
-                : "bg-white text-black"
-            } p-8 rounded-xl shadow-lg gap-6 w-[700px]`}
-          >
-            <div className="flex flex-col w-full space-y-5">
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Phone
-                </label>
-                <div className="flex gap-3">
-                  <select
-                    value={countryCode}
-                    onChange={(e) => dispatch(setCountryCode(e.target.value))}
-                    className={`${
-                      theme === "dark"
-                        ? "bg-[#1A1C22] text-white border-gray-600"
-                        : "bg-gray-50 text-black border-gray-300"
-                    } w-24 px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
-                    name="countryCode"
-                    id="countryCode"
-                  >
-                    <option value="+91">+91</option>
-                    <option value="+92">+92</option>
-                    <option value="+93">+93</option>
-                  </select>
+          <div className="flex flex-col gap-1 w-[700px]">
+
+            {/*}<div className=" text-center">
+              <h2
+                className={`text-lg font-bold ${
+                  theme === "dark" ? "text-blue-700" : "text-blue-700"
+                }`}
+              >
+                Phone Agent is Created Successfully!
+              </h2>
+            </div>*/}
+
+            <div
+              className={`flex flex-col ${
+                theme === "dark"
+                  ? "bg-[#1A1C22] text-white"
+                  : "bg-white text-black"
+              } p-8 rounded-xl shadow-lg gap-3 w-full`}
+            >
+              <p
+                className={`text-lg text-center font-bold ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                Please try a demo call below
+              </p>
+              <div className="flex flex-col w-full space-y-5">
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Phone
+                  </label>
+                  <div className="flex gap-3">
+                    <select
+                      value={countryCode}
+                      onChange={(e) => dispatch(setCountryCode(e.target.value))}
+                      className={`${
+                        theme === "dark"
+                          ? "bg-[#1A1C22] text-white border-gray-600"
+                          : "bg-gray-50 text-black border-gray-300"
+                      } w-24 px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
+                      name="countryCode"
+                      id="countryCode"
+                    >
+                      <option value="+91">+91</option>
+                      <option value="+92">+92</option>
+                      <option value="+93">+93</option>
+                    </select>
+                    <input
+                      className={`w-full text-base border rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
+                        theme === "dark" ? "border-gray-600" : "border-gray-300"
+                      }`}
+                      type="text"
+                      placeholder={countryCode}
+                      onChange={(e) => setCus_Number(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Name
+                  </label>
                   <input
                     className={`w-full text-base border rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
                       theme === "dark" ? "border-gray-600" : "border-gray-300"
                     }`}
                     type="text"
-                    placeholder={countryCode}
-                    onChange={(e) => setCus_Number(e.target.value)}
+                    placeholder="Name"
+                    onChange={(e) => setCus_Name(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Purpose
+                  </label>
+                  <input
+                    className={`w-full text-base border rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
+                      theme === "dark" ? "border-gray-600" : "border-gray-300"
+                    }`}
+                    type="text"
+                    placeholder="Purpose"
+                    onChange={(e) => setCus_Pur(e.target.value)}
                   />
                 </div>
               </div>
-
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Name
-                </label>
-                <input
-                  className={`w-full text-base border rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
-                    theme === "dark" ? "border-gray-600" : "border-gray-300"
-                  }`}
-                  type="text"
-                  placeholder="Name"
-                  onChange={(e) => setCus_Name(e.target.value)}
+              <div className="mt-6 flex w-full justify-center">
+                <GradientButton
+                  text="Call Now"
+                  isActive={true}
+                  className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+                  onClick={() => makeCall()}
                 />
               </div>
-
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Purpose
-                </label>
-                <input
-                  className={`w-full text-base border rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all ${
-                    theme === "dark" ? "border-gray-600" : "border-gray-300"
-                  }`}
-                  type="text"
-                  placeholder="Purpose"
-                  onChange={(e) => setCus_Pur(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="mt-6 flex w-full justify-center">
-              <GradientButton
-                text="Call Now"
-                isActive={true}
-                className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
-                onClick={() => makeCall()}
-              />
             </div>
           </div>
         </div>

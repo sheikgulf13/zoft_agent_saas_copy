@@ -14,6 +14,8 @@ import {
 } from "../../store/actions/phoneAgentActions";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
+import { resetData } from "@/store/reducers/dataSourceSlice";
+import { resetFile } from "@/store/reducers/fileSlice";
 
 
 const PhoneAgentList = (props) => {
@@ -62,6 +64,8 @@ const PhoneAgentList = (props) => {
             <CreateButton
               onClick={() => {
                 dispatch(clearState());
+                dispatch(resetData())
+                dispatch(resetFile())
                 setShowModal(true);
               }}
               Icon={FaPlus}

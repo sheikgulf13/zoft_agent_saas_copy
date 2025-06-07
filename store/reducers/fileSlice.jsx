@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  file: [],
+};
+
 const fileSlice = createSlice({
   name: "file",
-  initialState: {
-    file: [],
-  },
+  initialState,
   reducers: {
     setFile: (state, action) => {
       state.file = [...state.file, ...action.payload];

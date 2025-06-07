@@ -14,6 +14,8 @@ import CreateSource from "./CreateSource";
 import TickIcon from "../Icons/TickIcon";
 import AddFile from "../../Components/chatAgent/AddFile";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { resetData } from "@/store/reducers/dataSourceSlice";
 
 // Constants
 const CONSTANTS = {
@@ -342,6 +344,7 @@ const DataSource = ({
   initialLoadingDelay = CONSTANTS.LOADING_TIMEOUT 
 }) => {
   const { theme } = useTheme();
+  const dispatch = useDispatch()
   const { isLoading } = useLoadingState(initialLoadingDelay);
   const { navigate, isNavigating, navigationError, clearNavigationError } = useNavigation();
   const { progress, trackProgress } = useProgressTracking();
@@ -354,6 +357,10 @@ const DataSource = ({
   const themeConfig = useMemo(() => 
     THEME_CONFIG[theme] || THEME_CONFIG.light, [theme]
   );
+
+  useEffect(() => {
+    dispatch(resetData())
+  }, [])
 
   // Event handlers with error boundaries
   const handleFormSubmit = useCallback((e) => {
@@ -495,7 +502,7 @@ const DataSource = ({
             className="py-[0.35vw] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-105"
             aria-label="Proceed to next step"
           >
-            {isNavigating ? "Creating..." : "Create"}
+            {isNavigating ? "Processing..." : "Continue"}
           </ContainedButton>
         </div>
       </footer>

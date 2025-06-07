@@ -1596,7 +1596,7 @@ function ActionForm({
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 mb-10">
                     <button
                       type="button"
                       onClick={(e) => {
@@ -1616,16 +1616,16 @@ function ActionForm({
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
-                        !cardFormData.url ||
-                        !cardFormData.linkText
+                        (cardFormData.action === 'link' && !cardFormData.url) ||
+                        (cardFormData.action === 'link' && !cardFormData.linkText)
                       }
                       className={`px-3 py-1.5 text-sm rounded-md transition-colors duration-200 ${
                         !cardFormData.image ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
-                        !cardFormData.url ||
-                        !cardFormData.linkText
+                        (cardFormData.action === 'link' && !cardFormData.url) ||
+                        (cardFormData.action === 'link' && !cardFormData.linkText)
                           ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                           : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
                       }`}
