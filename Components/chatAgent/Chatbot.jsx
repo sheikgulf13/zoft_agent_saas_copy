@@ -16,6 +16,7 @@ const Chatbot = ({
   selectedColor,
   selectedTextColor,
   greeting,
+  botImage,
 }) => {
   // State to store the messages
   const [messages, setMessages] = useState([
@@ -34,8 +35,6 @@ const Chatbot = ({
     }
     setSessionUUID(uuid);
   }, []);
-
-
 
   useEffect(() => {
     console.log("message checking", messages);
@@ -89,46 +88,49 @@ const Chatbot = ({
       chat_agent_id: chatAgent?.chat_agent_id || chatAgent?.id,
       conversation_history: messages,
     };
-   try {
-    const res = await fetch(`${urlFetch}/tester/chat`, {
-      ...getApiConfig(),
-      method: "POST",
-      headers: new Headers({
-        ...getApiHeaders(),
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(data),
-    });
-
-    const resJson = await res.json();
-
-    if (audioReceiveRef.current) {
-      audioReceiveRef.current.play().catch((e) => {
-        console.warn("Audio playback failed", e);
+    try {
+      const res = await fetch(`${urlFetch}/tester/chat`, {
+        ...getApiConfig(),
+        method: "POST",
+        headers: new Headers({
+          ...getApiHeaders(),
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(data),
       });
+
+      const resJson = await res.json();
+
+      if (audioReceiveRef.current) {
+        audioReceiveRef.current.play().catch((e) => {
+          console.warn("Audio playback failed", e);
+        });
+      }
+
+      const updatedItems =
+        resJson?.items?.map((item) => ({
+          ...item,
+          imageUrl: resJson?.item_images?.[item.image] || item.imageUrl,
+        })) || [];
+
+      const {
+        action_triggered,
+        collected_params,
+        item_images,
+        ...cleanedMessage
+      } = resJson;
+
+      const botMessage = {
+        role: "bot",
+        message: resJson.response,
+        ...cleanedMessage,
+        items: updatedItems,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Failed to fetch bot response:", error);
     }
-
-
-    const updatedItems =
-      resJson?.items?.map((item) => ({
-        ...item,
-        imageUrl: resJson?.item_images?.[item.image] || item.imageUrl,
-      })) || [];
-
-    const { action_triggered, collected_params, item_images, ...cleanedMessage } = resJson;
-
-    const botMessage = {
-      role: "bot",
-      message: resJson.response, 
-      ...cleanedMessage,
-      items: updatedItems,
-    };
-
-    setMessages((prev) => [...prev, botMessage]);
-  } catch (error) {
-    console.error("Failed to fetch bot response:", error);
-  }
-
   };
 
   // State for the current input
@@ -243,12 +245,20 @@ const Chatbot = ({
       <div className="w-full z-[5] flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 flex items-center justify-center rounded-full overflow-hidden bg-[#2D3377]/10">
-            <BsRobot
-              className={`text-xl `}
-              style={{
-                color: selectedTextColor ? selectedTextColor : "#ffffff",
-              }}
-            />
+            {botImage ? (
+              <img
+                src={botImage}
+                alt="Preview"
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <BsRobot
+                className={`text-xl `}
+                style={{
+                  color: selectedTextColor ? selectedTextColor : "#ffffff",
+                }}
+              />
+            )}
           </div>
           <h6
             className={`text-xl font-semibold`}
