@@ -21,6 +21,9 @@ const Playground = () => {
   const [greeting, setGreeting] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: "", type: "" });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [newImageChange, setNewImageChange] = useState(false);
   const urlFetch = process.env.url;
 
   const predefinedColors = [
@@ -41,6 +44,19 @@ const Playground = () => {
     "Hello! Need help with something?",
   ];
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+    setNewImageChange(true)
+  };
+
   const handleColorUpdate = async () => {
     try {
       setIsUpdating(true);
@@ -51,6 +67,10 @@ const Playground = () => {
       formData.append("color_code", selectedColor);
       formData.append("text_color", selectedTextColor);
       formData.append("greeting", greeting || "");
+      if (selectedImage) {
+        formData.append("logo_file", selectedImage);
+        formData.append("logo_file_name", selectedImage.name);
+      }
 
       const response = await fetch(`${urlFetch}/chat_agent/color`, {
         ...getApiConfig(),
@@ -79,6 +99,7 @@ const Playground = () => {
       });
     } finally {
       setIsUpdating(false);
+      setNewImageChange(false);
       // Auto hide notification after 3 seconds
       setTimeout(() => {
         setNotification({ show: false, message: "", type: "" });
@@ -258,6 +279,8 @@ const Playground = () => {
                   </div>
                 </div>
 
+               
+
                 <div className="relative w-full h-[32px] flex justify-center items-center py-4 mt-3 bg-white overflow-hidden rounded-lg">
                   <SmudgyBackground
                     colorHex={selectedColor ? selectedColor : "#2D3377"}
@@ -305,7 +328,39 @@ const Playground = () => {
               </div>
             </div>
 
-            <div className="w-[45%] h-full rounded-3xl overflow-hidden">
+            <div className="flex flex-col w-[45%] h-full gap-4 rounded-3xl overflow-hidden">
+               <div className="relative w-full h-10 bg-white border-2 border-gray-300 rounded-full shadow-sm mt-[1px] flex items-center justify-center">
+                        {imagePreview && newImageChange ? (
+                          <div className="relative w-full h-full flex items-center justify-center">
+                            {/*}<img
+                              src={imagePreview}
+                              alt="Preview"
+                              className="w-full h-full object-contain"
+                            />*/}
+                            <button
+                              onClick={() => {
+                                setSelectedImage(null);
+                                setImagePreview(null);
+                                setNewImageChange(false);
+                              }}
+                              className="w-full h-full bg-red-600 text-white rounded-full p-1 px-2 hover:bg-red-700"
+                            >
+                              Click to Cancel change
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                            <div className="text-gray-500 text-sm">Click to upload Chatbot image</div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageChange}
+                              className="hidden"
+                            />
+                          </label>
+                        )}
+                      </div>
+
               <Chatbot
                 height={"65vh"}
                 width="100%"
@@ -313,6 +368,7 @@ const Playground = () => {
                 selectedColor={selectedColor}
                 selectedTextColor={selectedTextColor}
                 greeting={greeting}
+                botImage={imagePreview}
               />
             </div>
           </div>
