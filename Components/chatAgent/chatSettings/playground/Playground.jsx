@@ -146,6 +146,42 @@ const Playground = () => {
             }`}
           >
             <div className="w-[45%]  rounded-xl overflow-hidden">
+              {/* Upload Button */}
+              <div className="relative w-[75%] mx-auto h-12 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-dashed border-blue-300 hover:border-blue-400 rounded-3xl shadow-sm mb-4 flex items-center justify-center transition-all duration-300 hover:shadow-md hover:from-blue-100 hover:to-indigo-100">
+                {imagePreview && newImageChange ? (
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <button
+                      onClick={() => {
+                        setSelectedImage(null);
+                        setImagePreview(null);
+                        setNewImageChange(false);
+                      }}
+                      className="w-full h-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-3xl px-4 py-2 font-medium text-sm transition-all duration-300 hover:shadow-md flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Cancel Upload
+                    </button>
+                  </div>
+                ) : (
+                  <label className="w-full h-full flex items-center justify-center cursor-pointer group">
+                    <div className="flex items-center gap-2 text-blue-600 group-hover:text-blue-700 font-medium text-sm transition-colors duration-200">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Upload Chatbot Image
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+              </div>
+              
               <div className="flex flex-col gap-3 p-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl shadow-sm">
                 <div className="flex flex-col gap-1.5">
                   <h3 className="text-sm font-semibold text-[#333333]">
@@ -329,38 +365,6 @@ const Playground = () => {
             </div>
 
             <div className="flex flex-col w-[45%] h-full gap-4 rounded-3xl overflow-hidden">
-               <div className="relative w-full h-10 bg-white border-2 border-gray-300 rounded-full shadow-sm mt-[1px] flex items-center justify-center">
-                        {imagePreview && newImageChange ? (
-                          <div className="relative w-full h-full flex items-center justify-center">
-                            {/*}<img
-                              src={imagePreview}
-                              alt="Preview"
-                              className="w-full h-full object-contain"
-                            />*/}
-                            <button
-                              onClick={() => {
-                                setSelectedImage(null);
-                                setImagePreview(null);
-                                setNewImageChange(false);
-                              }}
-                              className="w-full h-full bg-red-600 text-white rounded-full p-1 px-2 hover:bg-red-700"
-                            >
-                              Click to Cancel change
-                            </button>
-                          </div>
-                        ) : (
-                          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-                            <div className="text-gray-500 text-sm">Click to upload Chatbot image</div>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageChange}
-                              className="hidden"
-                            />
-                          </label>
-                        )}
-                      </div>
-
               <Chatbot
                 height={"65vh"}
                 width="100%"
