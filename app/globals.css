@@ -411,6 +411,31 @@ body {
   display: none;
 }
 
+/* Custom ultra-thin scrollbar */
+.custom-thin-scrollbar::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.custom-thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-thin-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 1px;
+}
+
+.custom-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Firefox */
+.custom-thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
   .scroll{
     scrollbar-width: 0px;
     

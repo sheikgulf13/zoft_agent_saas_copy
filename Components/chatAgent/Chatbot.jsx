@@ -302,15 +302,16 @@ const Chatbot = ({
                 <></>
               )}
               {message.type === "list_of_items" && message?.items ? (
-                <div className="flex gap-3 overflow-x-auto pb-2 px-3 min-h-[300px] items-center scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                <div className="flex gap-3 overflow-x-auto pb-2 px-3 min-h-[300px] items-center custom-thin-scrollbar">
                   {message.items.map((card) => (
                     <div
                       key={card.id}
-                      className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200`}
+                      className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200 flex flex-col`}
                     >
                       {card.isPlaceholder ? (
-                        <div className="relative">
-                          <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                        <div className="relative flex flex-col h-full">
+                          {/* Image */}
+                          <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                             {card.imageUrl ? (
                               typeof card.imageUrl === "string" &&
                               card?.imageUrl?.includes("supabase") ? (
@@ -329,30 +330,39 @@ const Chatbot = ({
                             ) : (
                               <div className="flex flex-col items-center gap-1">
                                 <FaImage className="text-gray-400 text-lg" />
-                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
                                   No Image
                                 </span>
                               </div>
                             )}
                           </div>
-                          <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
-                            {card.title}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
-                            {card.description}
-                          </p>
-
-                          {card.linkText && (
-                            <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
-                              <span className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200">
-                                {card.linkText}
-                              </span>
+                          
+                          {/* Content Area - Flex grow to fill available space */}
+                          <div className="flex flex-col flex-grow">
+                            {/* Title and Description - Takes remaining space */}
+                            <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                              <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                                {card.title}
+                              </h4>
+                              <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                                {card.description}
+                              </p>
                             </div>
-                          )}
+                            
+                            {/* Link at bottom - Fixed height */}
+                            {card.linkText && (
+                              <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
+                                <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                                  {card.linkText}
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      ) : (
-                        <>
-                          <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                                              ) : (
+                        <div className="relative flex flex-col h-full">
+                          {/* Image */}
+                          <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                             {card.imageUrl &&
                             typeof card.imageUrl === "string" &&
                             card?.imageUrl?.includes("supabase") ? (
@@ -364,32 +374,40 @@ const Chatbot = ({
                             ) : (
                               <div className="flex flex-col items-center gap-1">
                                 <FaImage className="text-gray-400 text-lg" />
-                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
                                   No Image
                                 </span>
                               </div>
                             )}
                           </div>
-                          <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
-                            {card.title}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
-                            {card.description}
-                          </p>
-
-                          {card.linkText && (
-                            <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
-                              <a
-                                href={`${card.url}`}
-                                target="blank"
-                                className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200"
-                              >
-                                {card.linkText}
-                              </a>
+                          
+                          {/* Content Area - Flex grow to fill available space */}
+                          <div className="flex flex-col flex-grow">
+                            {/* Title and Description - Takes remaining space */}
+                            <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                              <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                                {card.title}
+                              </h4>
+                              <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                                {card.description}
+                              </p>
                             </div>
-                          )}
-                        </>
-                      )}
+                            
+                            {/* Link at bottom - Fixed height */}
+                            {card.linkText && (
+                              <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
+                                <a
+                                  href={`${card.url}`}
+                                  target="blank"
+                                  className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate"
+                                >
+                                  {card.linkText}
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        )}
                     </div>
                   ))}
                 </div>

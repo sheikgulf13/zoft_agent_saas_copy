@@ -669,6 +669,11 @@ function ActionForm({
       }
     }
 
+    // Trim whitespace from string values
+    if (typeof value === 'string') {
+      value = value.trim();
+    }
+
     setFormData((prev) => {
       if (id === "action_name" || id === "instructions") {
         return { ...prev, [id]: value };
@@ -685,19 +690,21 @@ function ActionForm({
 
   const handleEditorChange = useCallback(
     (content) => {
-      setEditorContent(content);
-      handleChange(null, "content", content);
+      const trimmedContent = typeof content === 'string' ? content.trim() : content;
+      setEditorContent(trimmedContent);
+      handleChange(null, "content", trimmedContent);
     },
     [handleChange]
   );
 
   const handlePhoneNumberChange = useCallback((phone) => {
-    setPhoneNumber(phone || "");
+    const trimmedPhone = typeof phone === 'string' ? phone.trim() : (phone || "");
+    setPhoneNumber(trimmedPhone);
     setFormData((prev) => ({
       ...prev,
       data: {
         ...prev.data,
-        forward_to: phone || "",
+        forward_to: trimmedPhone,
       },
     }));
   }, []);
@@ -747,11 +754,14 @@ function ActionForm({
   const handleInputChange = useCallback(
     (index, fieldName) => (e) => {
       const { name, value } = e.target;
+      
+      // Trim whitespace from string values
+      const trimmedValue = typeof value === 'string' ? value.trim() : value;
 
       setFormData((prev) => {
         const newData = { ...prev };
         const existingData = [...(newData.data[fieldName] || [])];
-        existingData[index] = { ...existingData[index], [name]: value };
+        existingData[index] = { ...existingData[index], [name]: trimmedValue };
 
         return {
           ...newData,
@@ -783,11 +793,12 @@ function ActionForm({
   }, []);
 
   const handleJSONInputChange = useCallback((value) => {
-    setJsonInput(value);
+    const trimmedValue = typeof value === 'string' ? value.trim() : value;
+    setJsonInput(trimmedValue);
 
-    if (value.trim()) {
+    if (trimmedValue.trim()) {
       try {
-        const pairs = convertJSONToKeyValuePairs(value);
+        const pairs = convertJSONToKeyValuePairs(trimmedValue);
         setFormData((prev) => ({
           ...prev,
           data: {
@@ -1384,10 +1395,13 @@ function ActionForm({
                       </div>
                       <div className="flex-1 space-y-3">
                         <div>
-                          <div className="flex items-center mb-1">
+                          <div className="flex items-center justify-between mb-1">
                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
                               Title <span className="text-red-600">*</span>
                             </label>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {cardFormData.title?.length || 0}/50
+                            </span>
                             {!cardFormData.title && (
                               <p className="text-red-600 text-xs">required</p>
                             )}
@@ -1396,10 +1410,11 @@ function ActionForm({
                             type="text"
                             placeholder="Enter card title"
                             value={cardFormData.title}
+                            maxLength={50}
                             onChange={(e) =>
                               setCardFormData((prev) => ({
                                 ...prev,
-                                title: e.target.value,
+                                title: e.target.value.trim(),
                               }))
                             }
                             className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
@@ -1411,11 +1426,14 @@ function ActionForm({
                           />
                         </div>
                         <div>
-                          <div className="flex items-center mb-1">
+                          <div className="flex items-center justify-between mb-1">
                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
                               Description{" "}
                               <span className="text-red-600">*</span>
                             </label>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {cardFormData.description?.length || 0}/120
+                            </span>
                             {!cardFormData.description && (
                               <p className="text-red-600 text-xs">required</p>
                             )}
@@ -1423,10 +1441,11 @@ function ActionForm({
                           <textarea
                             placeholder="Enter card description"
                             value={cardFormData.description}
+                            maxLength={120}
                             onChange={(e) =>
                               setCardFormData((prev) => ({
                                 ...prev,
-                                description: e.target.value,
+                                description: e.target.value.trim(),
                               }))
                             }
                             className={`w-full max-h-[70px] rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
@@ -1455,7 +1474,7 @@ function ActionForm({
                           onChange={(e) =>
                             setCardFormData((prev) => ({
                               ...prev,
-                              action: e.target.value,
+                              action: e.target.value.trim(),
                             }))
                           }
                           className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
@@ -1491,7 +1510,7 @@ function ActionForm({
                               onChange={(e) =>
                                 setCardFormData((prev) => ({
                                   ...prev,
-                                  url: e.target.value,
+                                  url: e.target.value.trim(),
                                 }))
                               }
                               className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
@@ -1519,7 +1538,7 @@ function ActionForm({
                               onChange={(e) =>
                                 setCardFormData((prev) => ({
                                   ...prev,
-                                  linkText: e.target.value,
+                                  linkText: e.target.value.trim(),
                                 }))
                               }
                               className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm  shadow-sm border ${
@@ -1544,54 +1563,60 @@ function ActionForm({
                     <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Live Preview
                     </h4>
-                    <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2 w-56 h-[280px] max-h-[280px]">
-                      <div className="flex flex-col gap-2">
-                        <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                          {cardFormData.imageUrl ? (
-                            typeof cardFormData.imageUrl === "string" &&
-                            cardFormData?.imageUrl?.includes("supabase") ? (
-                              <img
-                                src={cardFormData?.imageUrl}
-                                alt={cardFormData.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : cardFormData.imageUrl instanceof Blob ? (
-                              <img
-                                src={URL.createObjectURL(
-                                  cardFormData?.imageUrl
-                                )}
-                                alt={cardFormData.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : null
-                          ) : (
-                            <div className="flex flex-col items-center gap-1">
-                              <FaImage className="text-gray-400 text-lg" />
-                              <span className="text-sm text-gray-500 dark:text-gray-400">
-                                No Image
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
-                          {cardFormData.title || "Card Title"}
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
-                          {cardFormData.description ||
-                            "Card description will appear here..."}
-                        </p>
+                    <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2 w-56 h-[280px] max-h-[280px]">
+                      {/* Image */}
+                      <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        {cardFormData.imageUrl ? (
+                          typeof cardFormData.imageUrl === "string" &&
+                          cardFormData?.imageUrl?.includes("supabase") ? (
+                            <img
+                              src={cardFormData?.imageUrl}
+                              alt={cardFormData.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : cardFormData.imageUrl instanceof Blob ? (
+                            <img
+                              src={URL.createObjectURL(
+                                cardFormData?.imageUrl
+                              )}
+                              alt={cardFormData.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : null
+                        ) : (
+                          <div className="flex flex-col items-center gap-1">
+                            <FaImage className="text-gray-400 text-lg" />
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              No Image
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      {cardFormData?.linkText || cardFormData?.url ? (
-                        <div className="w-full text-center pt-1.5 border-t border-gray-100 dark:border-gray-700">
-                          <span className="text-base text-center font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 p-5">
-                            {cardFormData.linkText
-                              ? cardFormData?.linkText
-                              : cardFormData?.url}
-                          </span>
+                      
+                      {/* Content Area - Flex grow to fill available space */}
+                      <div className="flex flex-col flex-grow">
+                        {/* Title and Description - Takes remaining space */}
+                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: (cardFormData?.linkText || cardFormData?.url) ? 'calc(100% - 32px)' : '100%' }}>
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {cardFormData.title || "Card Title"}
+                          </h4>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {cardFormData.description ||
+                              "Card description will appear here..."}
+                          </p>
                         </div>
-                      ) : (
-                        <></>
-                      )}
+                        
+                        {/* Link at bottom - Fixed height */}
+                        {(cardFormData?.linkText || cardFormData?.url) && (
+                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                              {cardFormData.linkText
+                                ? cardFormData?.linkText
+                                : cardFormData?.url}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -1637,11 +1662,11 @@ function ActionForm({
               </div>
             )}
 
-            <div className="flex gap-3 overflow-x-auto pb-2 px-3 min-h-[300px] items-center scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+            <div className="flex gap-3 overflow-x-auto pb-2 px-3 min-h-[300px] items-center custom-thin-scrollbar">
               {items.map((card) => (
                 <div
                   key={card.id}
-                  className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200 ${
+                  className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200 flex flex-col ${
                     activeCardId === card.id
                       ? "ring-2 ring-[#4D55CC] ring-offset-1"
                       : ""
@@ -1684,8 +1709,9 @@ function ActionForm({
                     </div>
                   )}
                   {card.isPlaceholder ? (
-                    <div className="relative">
-                      <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <div className="relative flex flex-col h-full">
+                      {/* Image */}
+                      <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                         {card.imageUrl ? (
                           typeof card.imageUrl === "string" &&
                           card?.imageUrl?.includes("supabase") ? (
@@ -1704,30 +1730,39 @@ function ActionForm({
                         ) : (
                           <div className="flex flex-col items-center gap-1">
                             <FaImage className="text-gray-400 text-lg" />
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                               No Image
                             </span>
                           </div>
                         )}
                       </div>
-                      <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
-                        {card.title}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
-                        {card.description}
-                      </p>
-
-                      {card.linkText && (
-                        <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
-                          <span className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200">
-                            {card.linkText}
-                          </span>
+                      
+                      {/* Content Area - Flex grow to fill available space */}
+                      <div className="flex flex-col flex-grow">
+                        {/* Title and Description - Takes remaining space */}
+                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {card.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {card.description}
+                          </p>
                         </div>
-                      )}
+                        
+                        {/* Link at bottom - Fixed height */}
+                        {card.linkText && (
+                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                              {card.linkText}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
-                    <>
-                      <div className="w-full h-28 rounded-lg mb-1.5 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <div className="relative flex flex-col h-full">
+                      {/* Image */}
+                      <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                         {card.imageUrl ? (
                           typeof card.imageUrl === "string" &&
                           card?.imageUrl?.includes("supabase") ? (
@@ -1746,26 +1781,35 @@ function ActionForm({
                         ) : (
                           <div className="flex flex-col items-center gap-1">
                             <FaImage className="text-gray-400 text-lg" />
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                               No Image
                             </span>
                           </div>
                         )}
                       </div>
-                      <h4 className="font-semibold mb-0.5 text-gray-800 dark:text-gray-100 text-sm">
-                        {card.title}
-                      </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-1.5 line-clamp-2">
-                        {card.description}
-                      </p>
-
-                      {card.linkText && (
-                        <div className="pt-1.5 border-t border-gray-100 dark:border-gray-700">
-                          <span className="text-lg font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200">
-                            {card.linkText}
-                          </span>
+                      
+                      {/* Content Area - Flex grow to fill available space */}
+                      <div className="flex flex-col flex-grow">
+                        {/* Title and Description - Takes remaining space */}
+                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {card.title}
+                          </h4>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {card.description}
+                          </p>
                         </div>
-                      )}
+                        
+                        {/* Link at bottom - Fixed height */}
+                        {card.linkText && (
+                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                              {card.linkText}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      
                       {activeCardId === card.id && (
                         <div className="absolute top-1.5 right-1.5">
                           <div className="bg-[#4D55CC] text-white text-[10px] px-1.5 py-0.5 rounded-full">
@@ -1773,7 +1817,7 @@ function ActionForm({
                           </div>
                         </div>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
               ))}
