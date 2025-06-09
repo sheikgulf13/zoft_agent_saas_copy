@@ -1,31 +1,31 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
-import { useDispatch } from "react-redux";
-import { upsertAction } from "@/store/reducers/phoneAgentSlice";
-import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import { v4 as uuidv4 } from "uuid";
-import { OutlinedButton } from "../buttons/OutlinedButton";
-import { ContainedButton } from "../buttons/ContainedButton";
-import { cloneDeep, isEqual } from "lodash";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import RequiredParam from "@/Components/RequiredParam";
+import { upsertAction } from "@/store/reducers/phoneAgentSlice";
+import { cloneDeep, isEqual } from "lodash";
+import dynamic from "next/dynamic";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   FaCheckCircle,
-  FaTimesCircle,
-  FaImage,
   FaEdit,
+  FaImage,
   FaPlus,
+  FaTimesCircle,
 } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { ContainedButton } from "../buttons/ContainedButton";
+import { OutlinedButton } from "../buttons/OutlinedButton";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 // Constants
 const MAX_REQUEST_DATA_PAIRS = 15;
@@ -316,7 +316,8 @@ function ActionForm({
     console.log("formData", formData?.data);
   }, [formData]);
 
-  {/*useEffect(() => {
+  {
+    /*useEffect(() => {
     if (selectedAction.name === "Send video") {
       setFormData((prev) => ({
         ...prev,
@@ -327,7 +328,8 @@ function ActionForm({
         },
       }));
     }
-  }, [selectedAction]);*/}
+  }, [selectedAction]);*/
+  }
 
   // Initialize form with initial data or existing formData
   useEffect(() => {
@@ -670,7 +672,7 @@ function ActionForm({
     }
 
     // Trim whitespace from string values
-    if (typeof value === 'string') {
+    if (typeof value === "string" && id !== "instructions" && id !== "name") {
       value = value.trim();
     }
 
@@ -690,7 +692,8 @@ function ActionForm({
 
   const handleEditorChange = useCallback(
     (content) => {
-      const trimmedContent = typeof content === 'string' ? content.trim() : content;
+      const trimmedContent =
+        typeof content === "string" ? content.trim() : content;
       setEditorContent(trimmedContent);
       handleChange(null, "content", trimmedContent);
     },
@@ -698,7 +701,7 @@ function ActionForm({
   );
 
   const handlePhoneNumberChange = useCallback((phone) => {
-    const trimmedPhone = typeof phone === 'string' ? phone.trim() : (phone || "");
+    const trimmedPhone = typeof phone === "string" ? phone.trim() : phone || "";
     setPhoneNumber(trimmedPhone);
     setFormData((prev) => ({
       ...prev,
@@ -754,9 +757,9 @@ function ActionForm({
   const handleInputChange = useCallback(
     (index, fieldName) => (e) => {
       const { name, value } = e.target;
-      
+
       // Trim whitespace from string values
-      const trimmedValue = typeof value === 'string' ? value.trim() : value;
+      const trimmedValue = typeof value === "string" ? value.trim() : value;
 
       setFormData((prev) => {
         const newData = { ...prev };
@@ -793,7 +796,7 @@ function ActionForm({
   }, []);
 
   const handleJSONInputChange = useCallback((value) => {
-    const trimmedValue = typeof value === 'string' ? value.trim() : value;
+    const trimmedValue = typeof value === "string" ? value.trim() : value;
     setJsonInput(trimmedValue);
 
     if (trimmedValue.trim()) {
@@ -903,7 +906,7 @@ function ActionForm({
 
     setCardFormData((prev) => ({
       ...prev,
-      newImage: file.name,
+      image: file.name,
       imageUrl: file,
     }));
 
@@ -930,16 +933,6 @@ function ActionForm({
       e.preventDefault();
       setFormSubmitted(true);
 
-      // Validate parameters
-      const allParamsValid = parameterData.every(
-        (param) => param.key.trim() && param.description.trim()
-      );
-
-      if (!allParamsValid) {
-        console.log("Parameter validation failed!");
-        return;
-      }
-
       // Validate form fields
       const validationErrors = validateForm();
       if (Object.keys(validationErrors).length > 0) {
@@ -947,14 +940,60 @@ function ActionForm({
         return;
       }
 
-      // Prepare action data
+      // Prepare action data based on action type
+      const actionType = toSnakeCase(selectedAction.name);
+      let filteredData = {};
+
+      // Filter data based on action type
+      switch (actionType) {
+        case 'send_email':
+          filteredData = {
+            subject: formData.data?.subject,
+            content: formData.data?.content
+          };
+          break;
+        case 'send_api_request':
+          filteredData = {
+            api_method: formData.data?.api_method,
+            request_data_type: formData.data?.request_data_type,
+            end_point: formData.data?.end_point,
+            http_headers: formData.data?.http_headers||[],
+            request_data: formData.data?.request_data||[],
+            action_name:formData.data?.action_name,
+            instructions:formData.data?.instructions
+          };
+          break;
+        case 'call_forwarding':
+          filteredData={
+            forward_to:formData.data?.forward_to
+          };
+        break;
+        case 'send_video':
+          filteredData = {
+            video: formData.data?.video
+          };
+          break;
+        case 'list_of_items':
+          filteredData = {
+            items: formData.data?.items?.map(item => ({
+              ...item,
+              imageUrl: item.imageUrl && typeof item.imageUrl === 'object' && Object.keys(item.imageUrl).length === 0 ? "" : item.imageUrl
+            }))
+          };
+          break;
+        default:
+          filteredData = formData.data;
+      }
+
+      // Prepare final action data
       const actionData = {
         id: initialData?.id || uuidv4(),
-        action_type: toSnakeCase(selectedAction.name),
-        ...formData,
+        action_type: actionType,
+        action_name: formData.action_name,
+        instructions: formData.instructions,
+        required_params: formData.required_params,
+        data: filteredData
       };
-
-      console.log("action data", actionData);
 
       // Submit and reset
       handleCreateAction(actionData);
@@ -1576,9 +1615,7 @@ function ActionForm({
                             />
                           ) : cardFormData.imageUrl instanceof Blob ? (
                             <img
-                              src={URL.createObjectURL(
-                                cardFormData?.imageUrl
-                              )}
+                              src={URL.createObjectURL(cardFormData?.imageUrl)}
                               alt={cardFormData.title}
                               className="w-full h-full object-cover"
                             />
@@ -1592,11 +1629,19 @@ function ActionForm({
                           </div>
                         )}
                       </div>
-                      
+
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
                         {/* Title and Description - Takes remaining space */}
-                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: (cardFormData?.linkText || cardFormData?.url) ? 'calc(100% - 32px)' : '100%' }}>
+                        <div
+                          className="flex-grow flex flex-col justify-start"
+                          style={{
+                            minHeight:
+                              cardFormData?.linkText || cardFormData?.url
+                                ? "calc(100% - 32px)"
+                                : "100%",
+                          }}
+                        >
                           <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
                             {cardFormData.title || "Card Title"}
                           </h4>
@@ -1605,7 +1650,7 @@ function ActionForm({
                               "Card description will appear here..."}
                           </p>
                         </div>
-                        
+
                         {/* Link at bottom - Fixed height */}
                         {(cardFormData?.linkText || cardFormData?.url) && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
@@ -1637,20 +1682,22 @@ function ActionForm({
                       type="button"
                       onClick={handleCardFormSubmit}
                       disabled={
-                        !cardFormData.newImage ||
+                        !cardFormData.image ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
-                        (cardFormData.action === 'link' && !cardFormData.url) ||
-                        (cardFormData.action === 'link' && !cardFormData.linkText)
+                        (cardFormData.action === "link" && !cardFormData.url) ||
+                        (cardFormData.action === "link" &&
+                          !cardFormData.linkText)
                       }
                       className={`px-3 py-1.5 text-sm rounded-md transition-colors duration-200 ${
-                        !cardFormData.newImage ||
+                        !cardFormData.image ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
-                        (cardFormData.action === 'link' && !cardFormData.url) ||
-                        (cardFormData.action === 'link' && !cardFormData.linkText)
+                        (cardFormData.action === "link" && !cardFormData.url) ||
+                        (cardFormData.action === "link" &&
+                          !cardFormData.linkText)
                           ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                           : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
                       }`}
@@ -1736,11 +1783,18 @@ function ActionForm({
                           </div>
                         )}
                       </div>
-                      
+
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
                         {/* Title and Description - Takes remaining space */}
-                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                        <div
+                          className="flex-grow flex flex-col justify-start"
+                          style={{
+                            minHeight: card.linkText
+                              ? "calc(100% - 32px)"
+                              : "100%",
+                          }}
+                        >
                           <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
                             {card.title}
                           </h4>
@@ -1748,7 +1802,7 @@ function ActionForm({
                             {card.description}
                           </p>
                         </div>
-                        
+
                         {/* Link at bottom - Fixed height */}
                         {card.linkText && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
@@ -1787,11 +1841,18 @@ function ActionForm({
                           </div>
                         )}
                       </div>
-                      
+
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
                         {/* Title and Description - Takes remaining space */}
-                        <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                        <div
+                          className="flex-grow flex flex-col justify-start"
+                          style={{
+                            minHeight: card.linkText
+                              ? "calc(100% - 32px)"
+                              : "100%",
+                          }}
+                        >
                           <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
                             {card.title}
                           </h4>
@@ -1799,7 +1860,7 @@ function ActionForm({
                             {card.description}
                           </p>
                         </div>
-                        
+
                         {/* Link at bottom - Fixed height */}
                         {card.linkText && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
@@ -1809,7 +1870,7 @@ function ActionForm({
                           </div>
                         )}
                       </div>
-                      
+
                       {activeCardId === card.id && (
                         <div className="absolute top-1.5 right-1.5">
                           <div className="bg-[#4D55CC] text-white text-[10px] px-1.5 py-0.5 rounded-full">

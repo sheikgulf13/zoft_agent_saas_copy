@@ -91,7 +91,7 @@ const Actions = ({ editPage }) => {
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
   const [hasFetchedImages, setHasFetchedImages] = useState(false);
-  const [existingImageFileNames,setExistingImageFileNames]=useState([]);
+  const [existingImageFileNames, setExistingImageFileNames] = useState([]);
   const urlFetch = process.env.url;
   // console.log(createdActions);
 
@@ -279,60 +279,41 @@ const Actions = ({ editPage }) => {
     setIsSaving(true);
     try {
       const newImageFiles = [];
-      const newImageFileNames = [];
+      const imageFileNames = [];
 
       tempActions.forEach((action) => {
         const items = action?.data?.items || [];
         items.slice(0, 5).forEach((item) => {
-          if (item.newImage && item.imageUrl) {
+          if (item.imageUrl instanceof Blob) {
             // This is a new image - extract blob data
             const blob = item.imageUrl;
             newImageFiles.push(blob);
-            newImageFileNames.push(item.newImage);
+            imageFileNames.push(item.newImage);
           } else if (item.imageUrl) {
-            newImageFileNames.push(item.image);
+            imageFileNames.push(item.image);
           }
         });
-      });
-
-      const newTempAction = tempActions.map((action) => {
-        if (action?.data?.items) {
-          const updatedItems = action.data.items.map(item => {
-            if (item.newImage) {
-              // Create new item object without newImage and with updated image
-              const { newImage, ...restItem } = item;
-              return {
-                ...restItem,
-                image: item.newImage // Use newImage value as the image
-              };
-            }
-            return item;
-          });
-          return {
-            ...action,
-            data: {
-              ...action.data,
-              items: updatedItems
-            }
-          };
-        }
-        return action;
       });
 
       const formData = new FormData();
       formData.append("workspace_id", selectedChatAgent?.workspace_id);
       formData.append("chat_agent_id", selectedChatAgent?.id);
-      formData.append("actions", JSON.stringify(newTempAction) || []);
-      
+      formData.append("actions", JSON.stringify(tempActions) || []);
+
       // Append new image files
       newImageFiles.forEach((file, index) => {
         formData.append("action_list_image_file", file);
       });
 
       // Append existing and new image file names
-      formData.append("new_action_list_file_names", JSON.stringify(newImageFileNames));
-      formData.append("existing_action_list_file_names", JSON.stringify(existingImageFileNames));
-
+      formData.append(
+        "new_action_list_file_names",
+        JSON.stringify(imageFileNames)
+      );
+      formData.append(
+        "existing_action_list_file_names",
+        JSON.stringify(existingImageFileNames)
+      );
 
       console.log("formData", formData);
 

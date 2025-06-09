@@ -63,17 +63,20 @@ const Content = () => {
     // const reqURL = `${phone_url}/start-call`;
     const reqURL = `${phone_url}/outgoing-call`;
     const formData = new FormData();
-    formData.append("phone_agent_id", phoneAgentID);
-    formData.append("customer_name", cus_Name);
-    formData.append("customer_phonenumber", countryCode + cus_Number);
-    formData.append("custmer_businessdetails", cus_Pur);
+   const data1={
+    "phone_agent_id": phoneAgentID,
+    "customer_name":cus_Name,
+    "customer_phone_number": countryCode + cus_Number,
+    "custmer_business_details":cus_Pur,
+    "customer_email":"",
+    }
     const response = await fetch(reqURL, {
       mode: "cors",
       method: "POST",
       headers: new Headers({
         "ngrok-skip-browser-warning": "true",
       }),
-      body: formData,
+      body: JSON.stringify(data1),
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
