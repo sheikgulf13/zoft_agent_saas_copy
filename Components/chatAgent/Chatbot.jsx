@@ -1,13 +1,13 @@
 "use client";
-import useTheme from "next-theme";
-import { useState, useRef, useEffect } from "react";
-import { v4 } from "uuid";
-import { BsRobot } from "react-icons/bs";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
-import { ContainedButton } from "../buttons/ContainedButton";
-import { CookieManager } from "../../utility/cookie-manager";
-import SmudgyBackground from "../SmudgyBackground";
+import useTheme from "next-theme";
+import { useEffect, useRef, useState } from "react";
+import { BsRobot } from "react-icons/bs";
 import { FaImage, FaTelegramPlane } from "react-icons/fa";
+import { v4 } from "uuid";
+import { CookieManager } from "../../utility/cookie-manager";
+import { ContainedButton } from "../buttons/ContainedButton";
+import SmudgyBackground from "../SmudgyBackground";
 
 const Chatbot = ({
   width,
@@ -26,6 +26,8 @@ const Chatbot = ({
   const urlFetch = process.env.chat_url;
   const audioSendRef = useRef(null);
   const audioReceiveRef = useRef(null);
+
+  console.log(botImage);
 
   useEffect(() => {
     let uuid = CookieManager.getCookie("sessionUUID");
@@ -346,11 +348,18 @@ const Chatbot = ({
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Content Area - Flex grow to fill available space */}
                           <div className="flex flex-col flex-grow">
                             {/* Title and Description - Takes remaining space */}
-                            <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                            <div
+                              className="flex-grow flex flex-col justify-start"
+                              style={{
+                                minHeight: card.linkText
+                                  ? "calc(100% - 32px)"
+                                  : "100%",
+                              }}
+                            >
                               <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
                                 {card.title}
                               </h4>
@@ -358,7 +367,7 @@ const Chatbot = ({
                                 {card.description}
                               </p>
                             </div>
-                            
+
                             {/* Link at bottom - Fixed height */}
                             {card.linkText && (
                               <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
@@ -369,7 +378,7 @@ const Chatbot = ({
                             )}
                           </div>
                         </div>
-                                              ) : (
+                      ) : (
                         <div className="relative flex flex-col h-full">
                           {/* Image */}
                           <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -390,11 +399,18 @@ const Chatbot = ({
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Content Area - Flex grow to fill available space */}
                           <div className="flex flex-col flex-grow">
                             {/* Title and Description - Takes remaining space */}
-                            <div className="flex-grow flex flex-col justify-start" style={{ minHeight: card.linkText ? 'calc(100% - 32px)' : '100%' }}>
+                            <div
+                              className="flex-grow flex flex-col justify-start"
+                              style={{
+                                minHeight: card.linkText
+                                  ? "calc(100% - 32px)"
+                                  : "100%",
+                              }}
+                            >
                               <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
                                 {card.title}
                               </h4>
@@ -402,7 +418,7 @@ const Chatbot = ({
                                 {card.description}
                               </p>
                             </div>
-                            
+
                             {/* Link at bottom - Fixed height */}
                             {card.linkText && (
                               <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
@@ -417,7 +433,7 @@ const Chatbot = ({
                             )}
                           </div>
                         </div>
-                        )}
+                      )}
                     </div>
                   ))}
                 </div>

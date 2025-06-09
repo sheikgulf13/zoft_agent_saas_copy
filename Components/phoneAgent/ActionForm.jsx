@@ -903,7 +903,7 @@ function ActionForm({
 
     setCardFormData((prev) => ({
       ...prev,
-      image: file.name,
+      newImage: file.name,
       imageUrl: file,
     }));
 
@@ -1637,7 +1637,7 @@ function ActionForm({
                       type="button"
                       onClick={handleCardFormSubmit}
                       disabled={
-                        !cardFormData.image ||
+                        !cardFormData.newImage ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
@@ -1645,7 +1645,7 @@ function ActionForm({
                         (cardFormData.action === 'link' && !cardFormData.linkText)
                       }
                       className={`px-3 py-1.5 text-sm rounded-md transition-colors duration-200 ${
-                        !cardFormData.image ||
+                        !cardFormData.newImage ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||

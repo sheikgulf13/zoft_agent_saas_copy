@@ -1,41 +1,41 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useTheme from "next-theme";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import GradientButton from "../buttons/GradientButton";
-import TickIcon from "../Icons/TickIcon";
-import { TiArrowSortedDown } from "react-icons/ti";
 import {
   clearState,
   removeAction,
   upsertAction,
 } from "@/store/actions/actionActions";
-import DeleteIcon from "../Icons/DeleteIcon";
-import SettingIcon from "../Icons/SettingIcon";
-import { v4 as uuidv4 } from "uuid";
-import Modal from "../Modal";
-import Link from "next/link";
-import { OutlinedButton } from "../buttons/OutlinedButton";
-import { ContainedButton } from "../buttons/ContainedButton";
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import ActionForm from "../phoneAgent/ActionForm";
-import { IoMailOutline } from "react-icons/io5";
-import { MdOutlineWebhook } from "react-icons/md";
-import { LuCalendarClock } from "react-icons/lu";
-import { RiListCheck3 } from "react-icons/ri";
-import { BsPlayCircle } from "react-icons/bs";
 import { addMultipleActions } from "@/store/reducers/ActionsSlice";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
-import { showSuccessToast, showErrorToast } from "../toast/success-toast";
+import useTheme from "next-theme";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
+import { BsPlayCircle } from "react-icons/bs";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import { IoMailOutline } from "react-icons/io5";
+import { LuCalendarClock } from "react-icons/lu";
+import { MdOutlineWebhook } from "react-icons/md";
+import { RiListCheck3 } from "react-icons/ri";
+import { TiArrowSortedDown } from "react-icons/ti";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { setActions } from "../../store/actions/botActions";
+import { ContainedButton } from "../buttons/ContainedButton";
+import GradientButton from "../buttons/GradientButton";
+import { OutlinedButton } from "../buttons/OutlinedButton";
+import DeleteIcon from "../Icons/DeleteIcon";
+import SettingIcon from "../Icons/SettingIcon";
+import TickIcon from "../Icons/TickIcon";
+import Modal from "../Modal";
+import ActionForm from "../phoneAgent/ActionForm";
+import { showErrorToast, showSuccessToast } from "../toast/success-toast";
 
+import { BsTelephoneForward } from "react-icons/bs";
 import {
   clearSelectedAgents,
   clearSelectedData,
 } from "../../store/actions/selectedDataActions";
-import { BsTelephoneForward } from "react-icons/bs";
 
 const promptFields = [
   {
@@ -91,6 +91,7 @@ const Actions = ({ editPage }) => {
   const promptRef = useRef();
   const [progress, setprogress] = useState(false);
   const [hasFetchedImages, setHasFetchedImages] = useState(false);
+  const [existingImageFileNames,setExistingImageFileNames]=useState([]);
   const urlFetch = process.env.url;
   // console.log(createdActions);
 
@@ -105,6 +106,8 @@ const Actions = ({ editPage }) => {
   const handleClear = () => {
     dispatch(clearState());
   };
+
+  console.log("tempActions", tempActions);
 
   useEffect(() => {
     console.log("tempActions", tempActions);
@@ -133,6 +136,7 @@ const Actions = ({ editPage }) => {
             imageFiles.push(item.image);
           });
         });
+        setExistingImageFileNames(imageFiles);
         const imageFilesString = imageFiles.join(",");
         console.log("image strig", imageFiles);
 
@@ -157,7 +161,7 @@ const Actions = ({ editPage }) => {
 
         const data = await res.json();
 
-        console.log('data image url', data)
+        console.log("data image url", data);
 
         setTempActions((prevActions) =>
           prevActions.map((action) => {
@@ -182,7 +186,7 @@ const Actions = ({ editPage }) => {
           })
         );
 
-        setHasFetchedImages(true)
+        setHasFetchedImages(true);
 
         console.log("res", res);
       } catch (err) {
@@ -190,8 +194,6 @@ const Actions = ({ editPage }) => {
       }
     };
     fetchItemsImages();
-
-
   }, [tempActions]);
 
   useEffect(() => {
@@ -276,24 +278,64 @@ const Actions = ({ editPage }) => {
   const handleSaveChanges = async () => {
     setIsSaving(true);
     try {
-      const imageUrls = [];
+      const newImageFiles = [];
+      const newImageFileNames = [];
 
       tempActions.forEach((action) => {
         const items = action?.data?.items || [];
         items.slice(0, 5).forEach((item) => {
-          if (item.imageUrl) {
-            imageUrls.push(item.imageUrl);
+          if (item.newImage && item.imageUrl) {
+            // This is a new image - extract blob data
+            const blob = item.imageUrl;
+            newImageFiles.push(blob);
+            newImageFileNames.push(item.newImage);
+          } else if (item.imageUrl) {
+            newImageFileNames.push(item.image);
           }
         });
       });
+
+      const newTempAction = tempActions.map((action) => {
+        if (action?.data?.items) {
+          const updatedItems = action.data.items.map(item => {
+            if (item.newImage) {
+              // Create new item object without newImage and with updated image
+              const { newImage, ...restItem } = item;
+              return {
+                ...restItem,
+                image: item.newImage // Use newImage value as the image
+              };
+            }
+            return item;
+          });
+          return {
+            ...action,
+            data: {
+              ...action.data,
+              items: updatedItems
+            }
+          };
+        }
+        return action;
+      });
+
       const formData = new FormData();
       formData.append("workspace_id", selectedChatAgent?.workspace_id);
       formData.append("chat_agent_id", selectedChatAgent?.id);
-      formData.append("actions", JSON.stringify(tempActions) || []);
-      formData.append(
-        "action_list_image_file",
-        JSON.stringify(imageUrls) || []
-      );
+      formData.append("actions", JSON.stringify(newTempAction) || []);
+      
+      // Append new image files
+      newImageFiles.forEach((file, index) => {
+        formData.append("action_list_image_file", file);
+      });
+
+      // Append existing and new image file names
+      formData.append("new_action_list_file_names", JSON.stringify(newImageFileNames));
+      formData.append("existing_action_list_file_names", JSON.stringify(existingImageFileNames));
+
+
+      console.log("formData", formData);
+
       const response = await fetch(
         `${urlFetch}/public/chat_agent/update_actions`,
         {
