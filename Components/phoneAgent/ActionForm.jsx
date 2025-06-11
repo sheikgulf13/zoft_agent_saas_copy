@@ -672,9 +672,9 @@ function ActionForm({
     }
 
     // Trim whitespace from string values
-    if (typeof value === "string" && id !== "instructions" && id !== "name") {
-      value = value.trim();
-    }
+    // if (typeof value === "string" && id !== "instructions" && id !== "name") {
+    //   value = value.trim();
+    // }
 
     setFormData((prev) => {
       if (id === "action_name" || id === "instructions") {
@@ -946,39 +946,45 @@ function ActionForm({
 
       // Filter data based on action type
       switch (actionType) {
-        case 'send_email':
+        case "send_email":
           filteredData = {
-            subject: formData.data?.subject,
-            content: formData.data?.content
+            subject: formData.data?.subject.trim(),
+            content: formData.data?.content.trim(),
           };
           break;
-        case 'send_api_request':
+        case "send_api_request":
           filteredData = {
             api_method: formData.data?.api_method,
             request_data_type: formData.data?.request_data_type,
             end_point: formData.data?.end_point,
-            http_headers: formData.data?.http_headers||[],
-            request_data: formData.data?.request_data||[],
-            action_name:formData.data?.action_name,
-            instructions:formData.data?.instructions
+            http_headers: formData.data?.http_headers || [],
+            request_data: formData.data?.request_data || [],
+            action_name: formData.data?.action_name,
+            instructions: formData.data?.instructions,
           };
           break;
-        case 'call_forwarding':
-          filteredData={
-            forward_to:formData.data?.forward_to
-          };
-        break;
-        case 'send_video':
+        case "call_forwarding":
           filteredData = {
-            video: formData.data?.video
+            forward_to: formData.data?.forward_to,
           };
           break;
-        case 'list_of_items':
+        case "send_video":
           filteredData = {
-            items: formData.data?.items?.map(item => ({
+            video: formData.data?.video,
+          };
+          break;
+        case "list_of_items":
+          filteredData = {
+            items: formData.data?.items?.map((item) => ({
               ...item,
-              imageUrl: item.imageUrl && typeof item.imageUrl === 'object' && Object.keys(item.imageUrl).length === 0 ? "" : item.imageUrl
-            }))
+              imageUrl:
+                item.imageUrl &&
+                typeof item.imageUrl === "object" &&
+                !item.imageUrl instanceof Blob &&
+                Object.keys(item.imageUrl).length === 0
+                  ? ""
+                  : item.imageUrl,
+            })),
           };
           break;
         default:
@@ -992,7 +998,7 @@ function ActionForm({
         action_name: formData.action_name,
         instructions: formData.instructions,
         required_params: formData.required_params,
-        data: filteredData
+        data: filteredData,
       };
 
       // Submit and reset
@@ -1642,10 +1648,10 @@ function ActionForm({
                                 : "100%",
                           }}
                         >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {cardFormData.title || "Card Title"}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {cardFormData.description ||
                               "Card description will appear here..."}
                           </p>
@@ -1654,7 +1660,7 @@ function ActionForm({
                         {/* Link at bottom - Fixed height */}
                         {(cardFormData?.linkText || cardFormData?.url) && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
                               {cardFormData.linkText
                                 ? cardFormData?.linkText
                                 : cardFormData?.url}
@@ -1795,10 +1801,10 @@ function ActionForm({
                               : "100%",
                           }}
                         >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {card.title}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {card.description}
                           </p>
                         </div>
@@ -1806,7 +1812,7 @@ function ActionForm({
                         {/* Link at bottom - Fixed height */}
                         {card.linkText && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
                               {card.linkText}
                             </span>
                           </div>
@@ -1853,10 +1859,10 @@ function ActionForm({
                               : "100%",
                           }}
                         >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {card.title}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
                             {card.description}
                           </p>
                         </div>
@@ -1864,7 +1870,7 @@ function ActionForm({
                         {/* Link at bottom - Fixed height */}
                         {card.linkText && (
                           <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
                               {card.linkText}
                             </span>
                           </div>

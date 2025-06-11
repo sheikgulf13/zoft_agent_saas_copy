@@ -288,7 +288,7 @@ const Actions = ({ editPage }) => {
             // This is a new image - extract blob data
             const blob = item.imageUrl;
             newImageFiles.push(blob);
-            imageFileNames.push(item.newImage);
+            imageFileNames.push(item.image);
           } else if (item.imageUrl) {
             imageFileNames.push(item.image);
           }
