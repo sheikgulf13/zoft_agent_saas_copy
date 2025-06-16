@@ -185,35 +185,69 @@ const EditSource = () => {
 
   const handleUpdate = async () => {
     const formData = new FormData();
-    const dict = {};
-    var urls = "";
-    var existingFiles = "";
-    pastedUrl.forEach((url1, index) => {
-      urls += url1 + ",";
-      dict[url1] = 0;
+    const existingFiles = [];
+    const fileCount = {}
+
+    const rawUrlWordCount = selectedPhoneAgent?.url_word_count || {};
+
+    const cleanedUrlWordCount = {};
+    Object.keys(rawUrlWordCount).forEach((key) => {
+      try {
+        // Attempt to parse it as JSON
+        const parsed = JSON.parse(key);
+        if (Array.isArray(parsed) && parsed.length === 1) {
+          cleanedUrlWordCount[parsed[0]] = rawUrlWordCount[key];
+        } else {
+          cleanedUrlWordCount[key] = rawUrlWordCount[key];
+        }
+      } catch (e) {
+        // Key is not a JSON stringified array — use as-is
+        cleanedUrlWordCount[key] = rawUrlWordCount[key];
+      }
     });
+
+    const urlWordCountDict = Object.fromEntries(
+      pastedUrl.map((urlObj) => {
+        const url = typeof urlObj === "string" ? urlObj : urlObj.url;
+        const wordCount = typeof urlObj === "string"
+          ? (cleanedUrlWordCount[url] || 0)
+          : urlObj.word_count;
+        return [url, wordCount];
+      })
+    );
+
+    const urlList = pastedUrl.map((urlObj) =>
+      typeof urlObj === "string" ? urlObj : urlObj.url
+    );
+
+    Object.keys(fileWordCounts).forEach(function (key) {
+      fileCount[key] = fileWordCounts[key].wordCount;
+    });
+
     Object.keys(existingFile).forEach((name, index) => {
-      existingFiles += name + ",";
+      existingFiles.push(name);
     });
-    existingFiles = existingFiles.substring(0, existingFiles.length - 1);
-    urls = urls.substring(0, urls.length - 1);
+
+
     file?.forEach((file, index) => {
       formData.append("files", file);
     });
     //const changes = DetectChanges(urls, existingFiles);
     //if (changes == 0) {
-      //setErr("No Changes Is Done");
-      //return;
+    //setErr("No Changes Is Done");
+    //return;
     //}
     setErr("");
     formData.append("chat_agent_id", selectedPhoneAgent?.id);
-    formData.append("URLs", urls);
+    formData.append("URLs", JSON.stringify(urlList));
     formData.append("raw_text", rawText);
-    formData.append("existing_files", existingFile);
-    formData.append("url_word_count", JSON.stringify(dict));
+    formData.append("existing_files", JSON.stringify(existingFiles));
+    formData.append("url_word_count", JSON.stringify(urlWordCountDict));
+
+
     formData.append(
       "file_word_count",
-      JSON.stringify(fileWordCounts.wordCount)
+      JSON.stringify(fileCount)
     );
     formData.append("raw_text_word_count", rawWordCounts);
     const response = await fetch(`${urlFetch}/public/chat_agent/update_base`, {
@@ -225,18 +259,6 @@ const EditSource = () => {
       body: formData,
     });
     const chatId = await response.text();
-    const formDataUpdate = new FormData();
-    formDataUpdate.append("chat_agent_id", chatId);
-    const res = await fetch(`${urlFetch}/public/chat_agent/get_agent/by_id`, {
-      ...getApiConfig(),
-      method: "POST",
-      headers: new Headers({
-        ...getApiHeaders(),
-      }),
-      body: formData,
-    });
-    const data = await res.json();
-    localStorage.setItem("current_agent", JSON.stringify(data[0] || []));
 
     showSuccessToast(
       "Training is in progress. please come back later to see the results."
