@@ -788,8 +788,8 @@ function ActionForm({
         data:
           updatedData.length === 0
             ? Object.fromEntries(
-                Object.entries(prev.data).filter(([key]) => key !== fieldName)
-              )
+              Object.entries(prev.data).filter(([key]) => key !== fieldName)
+            )
             : { ...prev.data, [fieldName]: updatedData },
       };
     });
@@ -979,9 +979,9 @@ function ActionForm({
               ...item,
               imageUrl:
                 item.imageUrl &&
-                typeof item.imageUrl === "object" &&
-                !item.imageUrl instanceof Blob &&
-                Object.keys(item.imageUrl).length === 0
+                  typeof item.imageUrl === "object" &&
+                  !item.imageUrl instanceof Blob &&
+                  Object.keys(item.imageUrl).length === 0
                   ? ""
                   : item.imageUrl,
             })),
@@ -1053,9 +1053,8 @@ function ActionForm({
             id={field.value}
             placeholder={field.placeholder}
             value={formData?.instructions || ""}
-            className={`w-full h-[${TEXTAREA_DEFAULT_HEIGHT}px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-[.5vw] py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
-              errors[field.value] ? "border-red-500" : ""
-            }`}
+            className={`w-full h-[${TEXTAREA_DEFAULT_HEIGHT}px] rounded-md mt-[.5vw] text-base overflow-hidden resize-none shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-[.5vw] py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${errors[field.value] ? "border-red-500" : ""
+              }`}
             onChange={handleChange}
           />
         );
@@ -1095,9 +1094,8 @@ function ActionForm({
               value={editorContent}
               onChange={handleEditorChange}
               placeholder="Start typing..."
-              className={`h-full ${
-                errors[field.value] ? "border-red-500" : ""
-              }`}
+              className={`h-full ${errors[field.value] ? "border-red-500" : ""
+                }`}
               modules={quillModules}
             />
           </div>
@@ -1121,9 +1119,8 @@ function ActionForm({
                 ? formData?.action_name || ""
                 : formData?.data?.[field.value] || ""
             }
-            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
-              errors[field.value] ? "border-red-500" : ""
-            }`}
+            className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${errors[field.value] ? "border-red-500" : ""
+              }`}
             onChange={handleChange}
           />
         );
@@ -1196,20 +1193,20 @@ function ActionForm({
 
                 {(formData?.data?.http_headers ?? []).length <
                   MAX_HTTP_HEADERS_PAIRS && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleAddPair(
-                        MAX_HTTP_HEADERS_PAIRS,
-                        isHTTPActive,
-                        "http_headers"
-                      )
-                    }
-                    className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm mr-5 transition-colors duration-200"
-                  >
-                    + Add Key
-                  </button>
-                )}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAddPair(
+                          MAX_HTTP_HEADERS_PAIRS,
+                          isHTTPActive,
+                          "http_headers"
+                        )
+                      }
+                      className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm mr-5 transition-colors duration-200"
+                    >
+                      + Add Key
+                    </button>
+                  )}
               </div>
             )}
           </>
@@ -1289,20 +1286,20 @@ function ActionForm({
 
                     {(formData?.data?.request_data ?? []).length <
                       MAX_REQUEST_DATA_PAIRS && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleAddPair(
-                            MAX_REQUEST_DATA_PAIRS,
-                            isRequestDataActive,
-                            "request_data"
-                          )
-                        }
-                        className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm transition-colors duration-200"
-                      >
-                        + Add Key
-                      </button>
-                    )}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleAddPair(
+                              MAX_REQUEST_DATA_PAIRS,
+                              isRequestDataActive,
+                              "request_data"
+                            )
+                          }
+                          className="text-[#4D55CC] hover:text-[#211C84] w-full text-start text-sm transition-colors duration-200"
+                        >
+                          + Add Key
+                        </button>
+                      )}
                   </>
                 )}
               </div>
@@ -1361,9 +1358,8 @@ function ActionForm({
               }
             }}
             disabled={isDisabled}
-            className={`mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600 ${
-              isDisabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`mt-1 block w-full py-2 px-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#4D55CC] sm:text-sm border border-gray-200 dark:border-gray-600 ${isDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             <option value="JSON">JSON</option>
             <option value="Form">Form</option>
@@ -1401,15 +1397,14 @@ function ActionForm({
                   <form className="space-y-8">
                     <div className="flex items-center gap-4">
                       <div
-                        className={`w-28 h-28 ${
-                          cardFormData?.image
-                            ? "!shadow-md"
-                            : "border-2 border-dashed"
-                        } border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center cursor-pointer relative group hover:border-[#4D55CC] shadow-sm transition-colors duration-200`}
+                        className={`w-28 h-28 ${cardFormData?.image
+                          ? "!shadow-md"
+                          : "border-2 border-dashed"
+                          } border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center cursor-pointer relative group hover:border-[#4D55CC] shadow-sm transition-colors duration-200`}
                       >
                         {cardFormData.imageUrl ? (
                           typeof cardFormData.imageUrl === "string" &&
-                          cardFormData?.imageUrl?.includes("supabase") ? (
+                            cardFormData?.imageUrl?.includes("supabase") ? (
                             <img
                               src={cardFormData?.imageUrl}
                               alt={cardFormData.title}
@@ -1459,14 +1454,13 @@ function ActionForm({
                             onChange={(e) =>
                               setCardFormData((prev) => ({
                                 ...prev,
-                                title: e.target.value.trim(),
+                                title: e.target.value,
                               }))
                             }
-                            className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
-                              !cardFormData.title
-                                ? "border-red-500"
-                                : "border-gray-200 dark:border-gray-600"
-                            } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
+                            className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${!cardFormData.title
+                              ? "border-red-500"
+                              : "border-gray-200 dark:border-gray-600"
+                              } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
                             required
                           />
                         </div>
@@ -1490,14 +1484,13 @@ function ActionForm({
                             onChange={(e) =>
                               setCardFormData((prev) => ({
                                 ...prev,
-                                description: e.target.value.trim(),
+                                description: e.target.value,
                               }))
                             }
-                            className={`w-full max-h-[70px] rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
-                              !cardFormData.description
-                                ? "border-red-500"
-                                : "border-gray-200 dark:border-gray-600"
-                            } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
+                            className={`w-full max-h-[70px] rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${!cardFormData.description
+                              ? "border-red-500"
+                              : "border-gray-200 dark:border-gray-600"
+                              } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
                             rows={2}
                             required
                           />
@@ -1522,11 +1515,10 @@ function ActionForm({
                               action: e.target.value.trim(),
                             }))
                           }
-                          className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
-                            !cardFormData.action
-                              ? "border-red-500"
-                              : "border-gray-200 dark:border-gray-600"
-                          } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
+                          className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${!cardFormData.action
+                            ? "border-red-500"
+                            : "border-gray-200 dark:border-gray-600"
+                            } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
                           required
                         >
                           <option value="">Select Action</option>
@@ -1558,11 +1550,10 @@ function ActionForm({
                                   url: e.target.value.trim(),
                                 }))
                               }
-                              className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${
-                                !cardFormData.url
-                                  ? "border-red-500"
-                                  : "border-gray-200 dark:border-gray-600"
-                              } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
+                              className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm shadow-sm border ${!cardFormData.url
+                                ? "border-red-500"
+                                : "border-gray-200 dark:border-gray-600"
+                                } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
                               required
                             />
                           </div>
@@ -1583,14 +1574,13 @@ function ActionForm({
                               onChange={(e) =>
                                 setCardFormData((prev) => ({
                                   ...prev,
-                                  linkText: e.target.value.trim(),
+                                  linkText: e.target.value,
                                 }))
                               }
-                              className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm  shadow-sm border ${
-                                !cardFormData.linkText
-                                  ? "border-red-500"
-                                  : "border-gray-200 dark:border-gray-600"
-                              } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
+                              className={`w-full rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1.5 text-sm  shadow-sm border ${!cardFormData.linkText
+                                ? "border-red-500"
+                                : "border-gray-200 dark:border-gray-600"
+                                } focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent`}
                               required
                             />
                           </div>
@@ -1613,7 +1603,7 @@ function ActionForm({
                       <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                         {cardFormData.imageUrl ? (
                           typeof cardFormData.imageUrl === "string" &&
-                          cardFormData?.imageUrl?.includes("supabase") ? (
+                            cardFormData?.imageUrl?.includes("supabase") ? (
                             <img
                               src={cardFormData?.imageUrl}
                               alt={cardFormData.title}
@@ -1638,32 +1628,21 @@ function ActionForm({
 
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
-                        {/* Title and Description - Takes remaining space */}
-                        <div
-                          className="flex-grow flex flex-col justify-start"
-                          style={{
-                            minHeight:
-                              cardFormData?.linkText || cardFormData?.url
-                                ? "calc(100% - 32px)"
-                                : "100%",
-                          }}
-                        >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
+                        {/* Title and Description */}
+                        <div className="flex-grow flex flex-col justify-start">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap">
                             {cardFormData.title || "Card Title"}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
-                            {cardFormData.description ||
-                              "Card description will appear here..."}
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
+                            {cardFormData.description || "Card description will appear here..."}
                           </p>
                         </div>
 
-                        {/* Link at bottom - Fixed height */}
+                        {/* Divider and Link - Always inside the card */}
                         {(cardFormData?.linkText || cardFormData?.url) && (
-                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
-                              {cardFormData.linkText
-                                ? cardFormData?.linkText
-                                : cardFormData?.url}
+                          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center h-8">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 truncate max-w-[90%]">
+                              {cardFormData.linkText || cardFormData.url}
                             </span>
                           </div>
                         )}
@@ -1696,17 +1675,16 @@ function ActionForm({
                         (cardFormData.action === "link" &&
                           !cardFormData.linkText)
                       }
-                      className={`px-3 py-1.5 text-sm rounded-md transition-colors duration-200 ${
-                        !cardFormData.image ||
+                      className={`px-3 py-1.5 text-sm rounded-md transition-colors duration-200 ${!cardFormData.image ||
                         !cardFormData.title ||
                         !cardFormData.description ||
                         !cardFormData.action ||
                         (cardFormData.action === "link" && !cardFormData.url) ||
                         (cardFormData.action === "link" &&
                           !cardFormData.linkText)
-                          ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                          : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
-                      }`}
+                        ? "bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                        : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
+                        }`}
                     >
                       Save Card
                     </button>
@@ -1719,11 +1697,10 @@ function ActionForm({
               {items.map((card) => (
                 <div
                   key={card.id}
-                  className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200 flex flex-col ${
-                    activeCardId === card.id
-                      ? "ring-2 ring-[#4D55CC] ring-offset-1"
-                      : ""
-                  }`}
+                  className={`flex-none w-48 h-[240px] max-h-[240px] bg-white dark:bg-gray-800 rounded-lg shadow-md p-2.5 cursor-pointer relative group hover:scale-105 transition-all duration-200 flex flex-col ${activeCardId === card.id
+                    ? "ring-2 ring-[#4D55CC] ring-offset-1"
+                    : ""
+                    }`}
                   onClick={() => handleCardClick(card.id)}
                 >
                   {activeCardId !== card.id && (
@@ -1767,7 +1744,7 @@ function ActionForm({
                       <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                         {card.imageUrl ? (
                           typeof card.imageUrl === "string" &&
-                          card?.imageUrl?.includes("supabase") ? (
+                            card?.imageUrl?.includes("supabase") ? (
                             <img
                               src={card?.imageUrl}
                               alt={card.title}
@@ -1792,31 +1769,26 @@ function ActionForm({
 
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
-                        {/* Title and Description - Takes remaining space */}
-                        <div
-                          className="flex-grow flex flex-col justify-start"
-                          style={{
-                            minHeight: card.linkText
-                              ? "calc(100% - 32px)"
-                              : "100%",
-                          }}
-                        >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
+                        {/* Title and Description */}
+                        <div className="flex-grow flex flex-col justify-start">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap">
                             {card.title}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
                             {card.description}
                           </p>
                         </div>
 
-                        {/* Link at bottom - Fixed height */}
-                        {card.linkText && (
-                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
+                        {/* Fixed bottom space - show link if exists, else empty div */}
+                        <div className="h-8 pt-2 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center">
+                          {card.linkText ? (
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 truncate max-w-[90%]">
                               {card.linkText}
                             </span>
-                          </div>
-                        )}
+                          ) : (
+                            <span className="text-xs text-transparent select-none">placeholder</span> // keeps height
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -1825,7 +1797,7 @@ function ActionForm({
                       <div className="w-full h-32 rounded-lg mb-2 overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                         {card.imageUrl ? (
                           typeof card.imageUrl === "string" &&
-                          card?.imageUrl?.includes("supabase") ? (
+                            card?.imageUrl?.includes("supabase") ? (
                             <img
                               src={card.imageUrl}
                               alt={card.title}
@@ -1850,27 +1822,20 @@ function ActionForm({
 
                       {/* Content Area - Flex grow to fill available space */}
                       <div className="flex flex-col flex-grow">
-                        {/* Title and Description - Takes remaining space */}
-                        <div
-                          className="flex-grow flex flex-col justify-start"
-                          style={{
-                            minHeight: card.linkText
-                              ? "calc(100% - 32px)"
-                              : "100%",
-                          }}
-                        >
-                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
-                            {card.title}
+                        {/* Title and Description */}
+                        <div className="flex-grow flex flex-col justify-start">
+                          <h4 className="font-semibold mb-1 text-gray-800 dark:text-gray-100 text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap">
+                            {card.title }
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2 min-h-[2.5rem] max-h-[3rem]">
+                          <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight overflow-hidden text-ellipsis line-clamp-2">
                             {card.description}
                           </p>
                         </div>
 
-                        {/* Link at bottom - Fixed height */}
-                        {card.linkText && (
-                          <div className="h-8 pt-2 border-t border-gray-100 dark:border-gray-700 text-center flex-shrink-0 flex items-center justify-center">
-                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 block truncate max-w-[90%]">
+                        {/* Divider and Link - Always inside the card */}
+                        {(cardFormData?.linkText || cardFormData?.url) && (
+                          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center h-8">
+                            <span className="text-xs font-medium text-[#4D55CC] hover:text-[#3D45B8] transition-colors duration-200 truncate max-w-[90%]">
                               {card.linkText}
                             </span>
                           </div>
@@ -2005,9 +1970,8 @@ function ActionForm({
               id={field.value}
               placeholder="Enter video URL (YouTube, Vimeo, Loom, or Dailymotion)"
               value={videoUrl}
-              className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${
-                errors[field.value] ? "border-red-500" : ""
-              }`}
+              className={`w-full rounded-md mt-[.5vw] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base overflow-hidden px-[.5vw] shadow-sm py-[.5vw] border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-[#4D55CC] focus:border-transparent ${errors[field.value] ? "border-red-500" : ""
+                }`}
               onChange={handleVideoUrlChange}
               onKeyDown={handleVideoUrlSubmit}
             />
@@ -2141,9 +2105,8 @@ function ActionForm({
 
       <form
         onSubmit={handleSubmit}
-        className={`${
-          showCardForm ? "overflow-hidden" : "overflow-y-auto"
-        } pr-2`}
+        className={`${showCardForm ? "overflow-hidden" : "overflow-y-auto"
+          } pr-2`}
         style={{ height: "calc(90vh - 160px)" }}
       >
         {/* Action Type Section */}
@@ -2199,23 +2162,20 @@ function ActionForm({
           {selectedAction?.fields.slice(2).map((field) => (
             <div
               key={`secondary-${field.value}`}
-              className={`${
-                field.label === "API Method" ? "flex gap-5 items-center" : ""
-              } mt-4`}
+              className={`${field.label === "API Method" ? "flex gap-5 items-center" : ""
+                } mt-4`}
             >
               <div
-                className={`${
-                  field.label === "HTTP Headers" ||
+                className={`${field.label === "HTTP Headers" ||
                   field.label === "Request Data"
-                    ? "flex w-full justify-between items-center mb-3"
-                    : ""
-                }`}
+                  ? "flex w-full justify-between items-center mb-3"
+                  : ""
+                  }`}
               >
                 <label
                   htmlFor={field.label}
-                  className={`${
-                    field.label === "API Method" ? "flex" : "block mt-1"
-                  } text-sm font-medium text-gray-700 dark:text-gray-200`}
+                  className={`${field.label === "API Method" ? "flex" : "block mt-1"
+                    } text-sm font-medium text-gray-700 dark:text-gray-200`}
                 >
                   {field.label}
                   {field.required && (
@@ -2250,11 +2210,10 @@ function ActionForm({
                       className="sr-only peer"
                     />
                     <div
-                      className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC] ${
-                        !API_METHODS[formData?.data?.api_method]?.supportsBody
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
-                      }`}
+                      className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-[#4D55CC] rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4D55CC] ${!API_METHODS[formData?.data?.api_method]?.supportsBody
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                        }`}
                     ></div>
                   </label>
                 )}
@@ -2297,11 +2256,10 @@ function ActionForm({
           onClick={handleSubmit}
           type="submit"
           disabled={initialData && !isFormChanged}
-          className={`${
-            initialData && !isFormChanged
-              ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-              : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
-          } px-6 py-2.5 rounded-lg shadow-sm transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC]`}
+          className={`${initialData && !isFormChanged
+            ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+            : "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm hover:opacity-90 text-white"
+            } px-6 py-2.5 rounded-lg shadow-sm transition-all duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4D55CC]`}
         >
           {initialData ? "Update Action" : "Create New Action"}
         </button>

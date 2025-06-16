@@ -24,13 +24,17 @@ const botSlice = createSlice({
       state.loading = action.payload;
     },
     resetChatBot: (state, action) => ({
+      botName: '',
+      description: '',
+      prompt: '',
+      loading: true,
       workSpaceId: '',
       workspacename: '',
       twiliosid: '',
       twilioauthtoken: '',
       elevenlabskey: '',
       openaikey: '',
-  })
+    })
   },
 });
 
