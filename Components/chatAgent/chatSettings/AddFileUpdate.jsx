@@ -125,6 +125,12 @@ const AddFile = ({ existingFile, setExistingFile, setFileWordCounts, fileWordCou
     let wordCounts = { ...fileWordCounts };
 
     files.forEach((file) => {
+      // Check if file already exists
+      if (validFileNames.includes(file.name)) {
+        console.log(`Skipping duplicate file: ${file.name}`);
+        return; // Skip this file and continue with the next one
+      }
+
       if (file.size > maxSize) {
         setError("File size exceeds the 50MB limit!");
         return;

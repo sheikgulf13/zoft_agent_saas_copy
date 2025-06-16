@@ -60,7 +60,7 @@ const MultiStepForm = () => {
   const nextStep = () => {
     if (
       currentStep === 1 &&
-      (botName === "" || description === "" || prompt === "")
+      (!botName || !description || !prompt)
     ) {
       setErr("Enter the data");
     } else if (currentStep < 3) {

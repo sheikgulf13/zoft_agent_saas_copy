@@ -94,7 +94,7 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   };
 
   const validateAndDispatchFiles = async (files) => {
-    console.log("Validate And Dispatch Function in mai jakar", files); // Correct logging
+    console.log("Validate And Dispatch Function in mai jakar", files);
     const maxSize = 50 * 1024 * 1024; // 50MB limit
     const allowedTypes = [
       "application/msword",
@@ -105,7 +105,34 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
     let validFiles = [];
     let wordCounts = {};
-    console.log("BEFORE WORD COUNT IS", wordCounts); // Correct logging
+    console.log("BEFORE WORD COUNT IS", wordCounts);
+
+    // Check for duplicates within the new files
+    const newFileNames = new Set();
+    const duplicateFiles = [];
+
+    files.forEach(file => {
+      if (newFileNames.has(file.name)) {
+        duplicateFiles.push(file.name);
+      } else {
+        newFileNames.add(file.name);
+      }
+    });
+
+    if (duplicateFiles.length > 0) {
+      setError(`Duplicate files detected: ${duplicateFiles.join(', ')}`);
+      return;
+    }
+
+    // Check for duplicates with existing files
+    const existingDuplicates = files.filter(file => fileNames.includes(file.name));
+
+    console.log("SST",fileNames,files)
+
+    if (existingDuplicates.length > 0) {
+      setError(`Files already exist: ${existingDuplicates.map(f => f.name).join(', ')}`);
+      return;
+    }
 
     const wordCountPromises = files.map((file) => {
       if (file.size > maxSize) {
@@ -148,14 +175,11 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
 
     await Promise.all(wordCountPromises);
 
-    // Ensure word counts are updated before dispatching
-
     console.log("ALL HE VALID FILE ARE", validFiles);
     const newArray = [...fileNames, ...validFiles.map((file) => file.name)];
 
-    // setFileNames(validFiles.map((file) => file.name));
     setFileNames(newArray);
-    console.log("AFTER WORD COUNT IS", wordCounts); // Correct logging
+    console.log("AFTER WORD COUNT IS", wordCounts);
     const newWord = { ...fileWordCounts, ...wordCounts };
 
     setFileWordCounts(newWord);
