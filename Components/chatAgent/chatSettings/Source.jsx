@@ -1,18 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import DeleteIcon from "../../Icons/DeleteIcon";
-import useTheme from "next-theme";
-import AddFile from "./AddFileUpdate";
-import ChatSettingNav from "./ChatSettingNav";
-import { useDispatch, useSelector } from "react-redux";
-import { setFileWordCounts } from "@/store/reducers/fileSliceUpdate";
-import { useRouter } from "next/navigation";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { getApiConfig, getApiHeaders } from "../../../utility/api-config";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { OutlinedButton } from "@/Components/buttons/OutlinedButton";
 import { showSuccessToast } from "@/Components/toast/success-toast";
+import { setFileWordCounts } from "@/store/reducers/fileSliceUpdate";
 import { CookieManager } from "@/utility/cookie-manager";
+import useTheme from "next-theme";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { getApiConfig, getApiHeaders } from "../../../utility/api-config";
+import DeleteIcon from "../../Icons/DeleteIcon";
+import AddFile from "./AddFileUpdate";
+import ChatSettingNav from "./ChatSettingNav";
 
 // Utility function to validate URL
 function isValidURL(url) {
@@ -44,7 +44,7 @@ const Source = () => {
   const [hasChanges, setHasChanges] = useState(false);
   const [fetchedCharCounts, setFetchedCharCounts] = useState({});
   const [charCount, setCharCount] = useState(0);
-  const [totalWordCount, setTotalWordCount] = useState(0)
+  const [totalWordCount, setTotalWordCount] = useState(0);
 
   useEffect(() => {
     console.log("rawwordscounts", rawWordCounts);
@@ -109,7 +109,7 @@ const Source = () => {
 
   const DetectChanges = (urls) => {
     let change = 0;
-    console.log('url log', urls)
+    console.log("url log", urls);
 
     // Compare URLs
     const currentUrls = urls.length && urls?.map((url) => url?.url || url);
@@ -134,7 +134,7 @@ const Source = () => {
         return (
           !newFileCounts[fileName] ||
           newFileCounts[fileName]?.wordCount !==
-          originalFileCounts[fileName]?.wordCount
+            originalFileCounts[fileName]?.wordCount
         );
       });
 
@@ -178,7 +178,7 @@ const Source = () => {
   const handleUpdate = async () => {
     const formData = new FormData();
     const existingFiles = [];
-    const fileCount = {}
+    const fileCount = {};
 
     const rawUrlWordCount = selectedChatAgent?.url_word_count || {};
 
@@ -201,9 +201,10 @@ const Source = () => {
     const urlWordCountDict = Object.fromEntries(
       pastedUrl.map((urlObj) => {
         const url = typeof urlObj === "string" ? urlObj : urlObj.url;
-        const wordCount = typeof urlObj === "string"
-          ? (cleanedUrlWordCount[url] || 0)
-          : urlObj.word_count;
+        const wordCount =
+          typeof urlObj === "string"
+            ? cleanedUrlWordCount[url] || 0
+            : urlObj.word_count;
         return [url, wordCount];
       })
     );
@@ -220,7 +221,6 @@ const Source = () => {
       existingFiles.push(name);
     });
 
-
     file?.forEach((file, index) => {
       formData.append("files", file);
     });
@@ -236,11 +236,7 @@ const Source = () => {
     formData.append("existing_files", JSON.stringify(existingFiles));
     formData.append("url_word_count", JSON.stringify(urlWordCountDict));
 
-
-    formData.append(
-      "file_word_count",
-      JSON.stringify(fileCount)
-    );
+    formData.append("file_word_count", JSON.stringify(fileCount));
     formData.append("raw_text_word_count", rawWordCounts);
     const response = await fetch(`${urlFetch}/public/chat_agent/update_base`, {
       ...getApiConfig(),
@@ -281,11 +277,14 @@ const Source = () => {
 
   const keypressHandler = async (e) => {
     if (e.key === "Enter") {
+      console.log("SST", inputUrl, pastedUrl);
       e.preventDefault();
       if (!inputUrl || inputUrl.trim() === "") {
         setErr("Error: URL is empty");
       } else if (!isValidURL(inputUrl)) {
         setErr("Error: Invalid URL format");
+      } else if (pastedUrl.find((ele) => ele.url === inputUrl)) {
+        setErr("Error: URL Duplicate");
       } else if (pastedUrl.length < 3) {
         const updatedUrl = await fetchWordData(inputUrl);
         console.log("updated url:", updatedUrl);
@@ -398,8 +397,9 @@ const Source = () => {
       className={`flex flex-col justify-start items-center px-8  w-full h-[100vh] overflow-hidden`}
     >
       <div
-        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] text-base border-zinc-300 ${theme === "dark" ? "text-[#9f9f9f]" : " text-black"
-          }`}
+        className={`border-b-[.1vw] flex justify-center relative w-full mt-[2vw] pt-[.6vw] text-base border-zinc-300 ${
+          theme === "dark" ? "text-[#9f9f9f]" : " text-black"
+        }`}
       >
         <div className="absolute left-[2vw] top-[-.6vw]">
           <OutlinedButton
@@ -421,8 +421,9 @@ const Source = () => {
 
       <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-[80%] h-[85%] max-h-[85%]">
         <div
-          className={`flex flex-col justify-start min-h-full max-h-full w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-            }`}
+          className={`flex flex-col justify-start min-h-full max-h-full w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${
+            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+          }`}
         >
           <h1 className="px-10 text-xl font-semibold pb-4 text-[#2D3377]/90">
             Data Source
@@ -440,10 +441,11 @@ const Source = () => {
                     )}
                     <button
                       onClick={() => handleSectionClick(index)}
-                      className={`${index === selectedSection
+                      className={`${
+                        index === selectedSection
                           ? "bg-[#2D3377]/10 text-[#2D3377] font-medium"
                           : "text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
-                        } px-6 py-2.5 my-0.5 rounded-lg transition-all duration-200 w-full text-left text-base`}
+                      } px-6 py-2.5 my-0.5 rounded-lg transition-all duration-200 w-full text-left text-base`}
                     >
                       {link.label}
                     </button>
@@ -468,10 +470,11 @@ const Source = () => {
                     value={inputUrl}
                     type="url"
                     id="url"
-                    className={`text-base border w-full border-zinc-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none transition-all duration-200 ${theme === "dark"
+                    className={`text-base border w-full border-zinc-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none transition-all duration-200 ${
+                      theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
-                      }`}
+                    }`}
                     placeholder="Enter URLs"
                   />
                   <div className="flex flex-col gap-3 text-base mt-6 w-full">
@@ -537,10 +540,11 @@ const Source = () => {
                     onChange={rawTextHandler}
                     value={rawText}
                     id="rawText"
-                    className={`w-full text-base border p-4 border-zinc-300 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none max-h-[70%] overflow-y-scroll transition-all duration-200 ${theme === "dark"
+                    className={`w-full text-base border p-4 border-zinc-300 rounded-lg focus:ring-2 focus:ring-[#2D3377]/20 focus:border-[#2D3377] outline-none max-h-[70%] overflow-y-scroll transition-all duration-200 ${
+                      theme === "dark"
                         ? "bg-[#1F222A] text-white"
                         : "bg-white text-black"
-                      }`}
+                    }`}
                     placeholder="Enter raw text"
                     style={{ height: "auto", minHeight: "15vh" }}
                   ></textarea>
@@ -550,8 +554,9 @@ const Source = () => {
           </form>
         </div>
         <div
-          className={`flex flex-col gap-6 justify-center items-center w-[20%] py-16 px-4 rounded-xl shadow-lg ${theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-            }`}
+          className={`flex flex-col gap-6 justify-center items-center w-[20%] py-16 px-4 rounded-xl shadow-lg ${
+            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+          }`}
         >
           <h5 className="font-semibold text-lg text-[#2D3377]">Sources</h5>
           <div className="w-full space-y-6">
@@ -582,10 +587,11 @@ const Source = () => {
             <ContainedButton
               onClick={handleUpdate}
               disabled={!hasChanges}
-              className={`w-full mt-4 font-medium py-3 px-6 rounded-lg transition-all duration-200 ${hasChanges
+              className={`w-full mt-4 font-medium py-3 px-6 rounded-lg transition-all duration-200 ${
+                hasChanges
                   ? "bg-[#2D3377] hover:bg-[#211A55] text-white cursor-pointer"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
-                }`}
+              }`}
             >
               Retrain Chatbot
             </ContainedButton>
