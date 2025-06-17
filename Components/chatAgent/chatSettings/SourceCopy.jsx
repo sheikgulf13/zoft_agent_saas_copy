@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import DeleteIcon from "../../Icons/DeleteIcon";
-import useTheme from "next-theme";
-import AddFile from "../AddFile";
-import { useDispatch, useSelector } from "react-redux";
+import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import {
+  setFileCount,
   setrawText,
   seturl,
-  setFileCount,
 } from "@/store/reducers/dataSourceSlice";
-import { ContainedButton } from "@/Components/buttons/ContainedButton";
+import useTheme from "next-theme";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import DeleteIcon from "../../Icons/DeleteIcon";
+import AddFile from "../AddFile";
 
 function isValidURL(url) {
   try {
@@ -43,8 +43,8 @@ const Source = () => {
   }, [url, rawText]);
 
   useEffect(() => {
-    console.log('pasted url', pastedUrl)
-  }, [pastedUrl])
+    console.log("pasted url", pastedUrl);
+  }, [pastedUrl]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -55,7 +55,7 @@ const Source = () => {
 
   useEffect(() => {
     dispatch(setFileCount(fileWordCounts));
-    console.log('file word count', fileWordCounts)
+    console.log("file word count", fileWordCounts);
   }, [fileWordCounts]);
 
   const urlHandler = (e) => {
@@ -82,7 +82,7 @@ const Source = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('data fetched', data)
+      console.log("data fetched", data);
       return data;
     } catch (error) {
       console.log(error);
@@ -103,20 +103,21 @@ const Source = () => {
   };
 
   const keypressHandler = async (e) => {
-
     if (e.key === "Enter") {
       e.preventDefault();
       if (!inputUrl || inputUrl.trim() === "") {
         setErr("Error: URL is empty");
       } else if (!isValidURL(inputUrl)) {
         setErr("Error: Invalid URL format");
+      } else if (pastedUrl.includes(inputUrl)) {
+        setErr("Error: URL Duplicate");
       } else if (pastedUrl.length < 3) {
         try {
           const updatedUrl = await fetchWordData(inputUrl);
-          console.log('updated url:', updatedUrl)
+          console.log("updated url:", updatedUrl);
           updatedUrl.url = inputUrl;
           const updatedUrls = [...pastedUrl, updatedUrl];
-          console.log("updated url" +updatedUrl);
+          console.log("updated url" + updatedUrl);
 
           setPastedUrl(updatedUrls);
           dispatch(seturl(updatedUrls)); // Update Redux store with new URL list
@@ -139,10 +140,20 @@ const Source = () => {
   };
 
   const totalWordCount =
-    Object.values(fileWordCounts).reduce((acc, count) => acc + count.wordCount, 0) + pastedUrl.reduce((total, item) => total + item.word_count, 0)+
+    Object.values(fileWordCounts).reduce(
+      (acc, count) => acc + count.wordCount,
+      0
+    ) +
+    pastedUrl.reduce((total, item) => total + item.word_count, 0) +
     rawWordCounts;
 
-  const charCount = rawCharCount+ pastedUrl.reduce((total, item) => total + item.char_count, 0) + Object.values(fileWordCounts).reduce((acc, count) => acc + count.characterCount, 0);
+  const charCount =
+    rawCharCount +
+    pastedUrl.reduce((total, item) => total + item.char_count, 0) +
+    Object.values(fileWordCounts).reduce(
+      (acc, count) => acc + count.characterCount,
+      0
+    );
   const links = [{ label: "Files" }, { label: "URLs" }, { label: "Raw Text" }];
 
   const [selectedSection, setSelectedSection] = useState(0);
@@ -151,18 +162,25 @@ const Source = () => {
     setSelectedSection(section);
   };
 
-  console.log('pasted url', pastedUrl)
+  console.log("pasted url", pastedUrl);
 
   return (
-    <div className={`flex flex-col justify-start items-start w-full h-[100%] max-h-[100%]`}>
+    <div
+      className={`flex flex-col justify-start items-start w-full h-[100%] max-h-[100%]`}
+    >
       <div className="flex items-start justify-start py-8 gap-8 pl-12 pr-12 w-full h-full">
-        <div className={`flex flex-col justify-start min-h-full max-h-full  w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${
-          theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-        }`}>
+        <div
+          className={`flex flex-col justify-start min-h-full max-h-full  w-[80%] overflow-hidden py-8 px-4 rounded-xl shadow-lg ${
+            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+          }`}
+        >
           <h1 className="px-10 text-xl font-semibold pb-4 text-[#2D3377]/90">
             Data Source
           </h1>
-          <form className="flex flex-col gap-6 px-10 h-full overflow-hidden" onSubmit={handleFormSubmit}>
+          <form
+            className="flex flex-col gap-6 px-10 h-full overflow-hidden"
+            onSubmit={handleFormSubmit}
+          >
             <div className="flex justify-between gap-12 h-full overflow-hidden">
               <div className="flex flex-col w-[25%] text-base">
                 {links.map((link, index) => (
@@ -232,8 +250,8 @@ const Source = () => {
                           <span className="text-gray-600 dark:text-gray-400 font-medium">
                             {urlObj?.word_count} words
                           </span>
-                          <button 
-                            onClick={() => removeUrl(index)} 
+                          <button
+                            onClick={() => removeUrl(index)}
                             className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
                           >
                             <DeleteIcon />
@@ -245,7 +263,12 @@ const Source = () => {
               ) : (
                 <div className="w-[80%]">
                   <div className="mb-4 text-base">
-                    <p className="text-gray-600 dark:text-gray-400">Words count: <span className="font-medium text-[#2D3377]">{rawText.split(" ").length - 1}</span></p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Words count:{" "}
+                      <span className="font-medium text-[#2D3377]">
+                        {rawText.split(" ").length - 1}
+                      </span>
+                    </p>
                   </div>
                   <textarea
                     onChange={rawTextHandler}
@@ -264,22 +287,32 @@ const Source = () => {
             </div>
           </form>
         </div>
-        
-        <div className={`flex flex-col gap-6 justify-center items-center w-[20%] py-16 px-4 rounded-xl shadow-lg ${
-          theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
-        }`}>
+
+        <div
+          className={`flex flex-col gap-6 justify-center items-center w-[20%] py-16 px-4 rounded-xl shadow-lg ${
+            theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
+          }`}
+        >
           <h5 className="font-semibold text-lg text-[#2D3377]">Sources</h5>
           <div className="w-full space-y-6">
             <div className="text-center">
-              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">Total words detected</h6>
+              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">
+                Total words detected
+              </h6>
               <p className="text-sm mt-2">
-                <span className="font-bold text-[#2D3377]">{totalWordCount}</span>
+                <span className="font-bold text-[#2D3377]">
+                  {totalWordCount}
+                </span>
                 <span className="text-gray-500"> /10,000 limit</span>
               </p>
             </div>
             <div className="text-center">
-              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">Approx character</h6>
-              <p className="text-sm mt-2 font-medium text-[#2D3377]">{charCount}</p>
+              <h6 className="font-semibold text-base text-gray-600 dark:text-gray-400">
+                Approx character
+              </h6>
+              <p className="text-sm mt-2 font-medium text-[#2D3377]">
+                {charCount}
+              </p>
             </div>
           </div>
         </div>
