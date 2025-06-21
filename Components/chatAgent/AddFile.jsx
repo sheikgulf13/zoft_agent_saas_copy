@@ -5,7 +5,6 @@ import { setUpdatedFile } from "../../store/reducers/fileSlice";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import "pdfjs-dist/build/pdf.worker.mjs";
 import mammoth from "mammoth";
-import { ContainedButton } from "../buttons/ContainedButton";
 
 const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
   const { file } = useSelector((state) => state.file) || [];
@@ -64,11 +63,12 @@ const AddFile = ({ setFileWordCounts, fileWordCounts }) => {
     console.log("Handle File Changes mai jakar", e.target.files); // Correct logging
     const files = Array.from(e.target.files);
 
-    if (files) {
+    if (files.length > 0) {
       validateAndDispatchFiles(files);
-    } else {
-      console.log("No new unique files to add");
     }
+    
+    // Clear the input value to allow re-selection of the same files
+    e.target.value = '';
   };
 
   const handleDrop = (e) => {

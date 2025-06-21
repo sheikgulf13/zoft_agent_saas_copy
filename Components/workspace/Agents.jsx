@@ -111,7 +111,7 @@ const Agents = (props) => {
               />
               <div className=" w-full flex items-center justify-between !z-[10]">
                 <button
-                  onClick={() => router.push("/appsettings")}
+                  onClick={() => router.push("/settings")}
                   className="w-full text-white z-[11] text-sm font-bold text-center hover:opacity-[0.8]"
                 >
                   Upgrade

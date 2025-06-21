@@ -48,6 +48,12 @@ const Register = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  useEffect(() => {
+    if(showLogin){
+      navigate.replace("/login");
+    }
+  }, [showLogin]);
+
   // console.log(fadeIn);
 
   useEffect(() => {
@@ -105,6 +111,9 @@ const Register = () => {
         );
 
         dispatch(setShowLogin(true));
+        dispatch(setUsername(""));
+        dispatch(setEmail(""));
+        dispatch(setPassword(""));
       }
     }
   };

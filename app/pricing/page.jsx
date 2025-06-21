@@ -107,9 +107,9 @@ const getStorageValue = (subscriptionType) => {
 // Function to sort plans in the correct order (Bronze, Silver, Starter)
 const sortPlans = (plans) => {
   const orderMap = {
-    Bronze: 1,
-    Silver: 2,
-    Starter: 3,
+    Starter: 1,
+    Bronze: 2,
+    Silver: 3,
     Gold: 4,
     Enterprise: 5,
   };
@@ -177,6 +177,8 @@ const PricingPage = () => {
       ? plans.map((plan) => formatPlanData(plan, isYearly, durationDays))
       : [];
 
+  console.log(plans)
+
   // Sort plans in the correct order
   const sortedPlans = sortPlans(formattedPlans);
 
@@ -211,17 +213,22 @@ const PricingPage = () => {
 
   // Function to check if a plan is higher than current subscription or yearly upgrade for same tier
   const isUpgradable = (planType, isYearlyPlan) => {
-    // if (!currentPlanType) return true; // No current plan, can subscribe to any
+    if (!currentPlanType) return true; // No current plan, can subscribe to any
+
+    // Never show upgrade button for FREE/Starter tier
+    if (planType === "FREE" || planType === "STARTER") {
+      return false;
+    }
 
     // // Block yearly to monthly transitions
-    // if (isCurrentYearly && !isYearlyPlan) {
-    //   return false;
-    // }
+    if (isCurrentYearly && !isYearlyPlan) {
+      return false;
+    }
 
     // // Allow upgrade from monthly to yearly for the same plan only
-    // if (isYearlyPlan && !isCurrentYearly) {
-    //   return true;
-    // }
+    if (isYearlyPlan && !isCurrentYearly) {
+      return true;
+    }
 
     // Allow upgrade to higher tier only if same billing cycle
     if (planOrder[planType] > planOrder[currentPlanType]) {
@@ -336,11 +343,11 @@ const PricingPage = () => {
             <div key={plan.id || index} className="flex justify-center">
               <div
                 className={`relative w-[280px] max-w-[280px] rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden ${
-                  plan.popular ? "ring-2 ring-primary" : ""
+                  plan.popular ? "ring-2 ring-[rgb(77,85,204)]" : ""
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm text-white px-3 py-1 text-xs rounded-b-lg font-medium">
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[rgb(77,85,204,0.9)] text-white px-3 py-1 text-xs rounded-b-lg font-medium">
                     Most Popular
                   </div>
                 )}
@@ -384,7 +391,7 @@ const PricingPage = () => {
                         //   ? "bg-primary text-white hover:bg-primary-dark"
                         !isUpgradable(plan.name.toUpperCase(), plan.isYearly)
                           ? "invisible"
-                          : "bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white"
+                          : "bg-white text-[rgb(77,85,204)] border-2 border-[rgb(77,85,204)] hover:bg-[rgb(77,85,204)] hover:text-white"
                       }`}
                     >
                       {plan.name.toUpperCase() === currentPlanType &&
@@ -450,7 +457,7 @@ const PricingPage = () => {
                           })
                         }
                         disabled={paymentLoading}
-                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white"
+                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-white text-[rgb(77,85,204)] border-2 border-[rgb(77,85,204)] hover:bg-[rgb(77,85,204)] hover:text-white"
                       >
                         {currentPlanType === "BRONZE" && isYearly
                           ? "Upgrade to yearly"
@@ -476,8 +483,8 @@ const PricingPage = () => {
 
             {/* Silver Plan */}
             <div className="flex justify-center">
-              <div className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden ring-2 ring-primary">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-1 text-xs font-medium">
+              <div className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden ring-2 ring-[rgb(77,85,204)]">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-[rgb(77,85,204,0.9)] text-white px-4 py-1 text-xs font-medium">
                   Most Popular
                 </div>
 
@@ -518,7 +525,7 @@ const PricingPage = () => {
                           })
                         }
                         disabled={paymentLoading}
-                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-primary text-white hover:bg-primary-dark"
+                        className="w-full mb-6 py-2 px-4 rounded-lg text-sm font-medium transition-colors bg-[rgb(77,85,204,0.9)] text-white hover:bg-[rgb(77,85,204)]"
                       >
                         {currentPlanType === "SILVER" && isYearly
                           ? "Upgrade to yearly"

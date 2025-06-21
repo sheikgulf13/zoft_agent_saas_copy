@@ -7,7 +7,6 @@ import {
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import "pdfjs-dist/build/pdf.worker.mjs";
 import mammoth from "mammoth";
-import { ContainedButton } from "@/Components/buttons/ContainedButton";
 
 const AddFile = ({ existingFile, setExistingFile, setFileWordCounts, fileWordCounts }) => {
   const dispatch = useDispatch();
@@ -84,8 +83,9 @@ const AddFile = ({ existingFile, setExistingFile, setFileWordCounts, fileWordCou
     const files = Array.from(e.target.files);
     if (files.length > 0) {
       validateAndDispatchFiles(files);
-      inputFileRef.current.value = null;
     }
+    // Clear the input value to allow re-selection of the same files
+    e.target.value = '';
   };
 
   const handleDrop = (e) => {
@@ -128,6 +128,7 @@ const AddFile = ({ existingFile, setExistingFile, setFileWordCounts, fileWordCou
       // Check if file already exists
       if (validFileNames.includes(file.name)) {
         console.log(`Skipping duplicate file: ${file.name}`);
+        setError(`File already exists: ${file.name}`);
         return; // Skip this file and continue with the next one
       }
 

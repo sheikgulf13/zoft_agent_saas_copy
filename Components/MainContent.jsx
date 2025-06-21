@@ -81,7 +81,7 @@ const MainContent = () => {
           <div className="flex items-center gap-3">
             <button
               className="bg-[#F871A0] hover:bg-[#EC4899] text-white font-semibold px-6 py-2 rounded-md text-base shadow transition"
-              onClick={() => router.push("/appsettings")}
+              onClick={() => router.push("/settings")}
             >
               Upgrade
             </button>
@@ -194,7 +194,7 @@ const MainContent = () => {
               </div>
 
               <button
-                onClick={() => router.push("/appsettings")}
+                onClick={() => router.push("/settings")}
                 className="w-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm text-white px-4 py-2.5 rounded-lg font-medium hover:opacity-[0.8] transition-colors"
               >
                 Manage Subscription

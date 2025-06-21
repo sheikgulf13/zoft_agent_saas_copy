@@ -111,7 +111,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
     {
       Icon: SettingIcon,
       text: "settings",
-      path: "/appsettings",
+      path: "/settings",
       className: "Setting sixth",
       color: "primary",
     },
@@ -232,7 +232,10 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           })}
         </div>
         <div className="w-full pt-4 pb-4 flex flex-col items-center justify-end gap-[.5vw] mt-auto border-t border-b mb-4 border-zinc-300">
-          {navButtons.slice(4, 6).map((button, index) => (
+          {navButtons.slice(4, 6).map((button, index) => {
+            const isActive = button.path === '/integrations' ? pathname === button.path : pathname.includes(button.path);
+            return (
+
             <Link
               href={button.path}
               className="w-full flex justify-center"
@@ -241,10 +244,10 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
               <GradientButton
                 Icon={button.Icon}
                 text={button.text}
-                isActive={activeButton === button.text}
+                isActive={isActive}
                 onClick={() => handleButtonClick(index, button)}
                 className={` w-full text-md ${button.padding}
-                ${activeButton === button.text ? "" : button.color}
+                ${isActive ? "" : button.color}
                 ${activeButton === button.text ? `${button.className}` : ``}
                 ${button.text === "logout" ? "H3" : ""}
                 ${isOpen ? "inline-block" : "hidden"} text-md`}
@@ -274,7 +277,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                 className={` ${isOpen ? 'inline-block' : 'hidden'} w-full Hmd`}>
               </motion.span> */}
             </Link>
-          ))}
+          )})}
         </div>
 
         <div

@@ -19,6 +19,12 @@ const Preview = () => {
   const { phoneAgentId, countryCode } = useSelector(
     (state) => state.phoneAgent
   );
+  
+  // Get workspace state to check Twilio credentials
+  const { twiliosid, twilioauthtoken } = useSelector(
+    (state) => state.workspace
+  );
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
   const [cus_Number, setCus_Number] = useState("");
@@ -26,6 +32,7 @@ const Preview = () => {
   const [cus_Pur, setCus_Pur] = useState("");
   const navigate = useRouter();
   const [toast, setToast] = useState("");
+  const [toastContent, setToastContent] = useState("");
   const callSummaries = [
     {
       contact: "+91 405 555-0128",
@@ -102,11 +109,27 @@ const Preview = () => {
   };
 
   useEffect(() => {
-    setToast("success");
-    setTimeout(() => {
-      setToast("");
-    }, 3000);
-  }, []);
+    // Check if Twilio credentials are not set
+    const isTwilioNotConfigured = !twiliosid || !twilioauthtoken || 
+                                 twiliosid.trim() === '' || 
+                                 twilioauthtoken.trim() === '';
+    
+    if (isTwilioNotConfigured) {
+      setToast("success");
+      setToastContent("Your Twilio credentials are not configured for this workspace. A default number will be used for testing purposes.");
+      setTimeout(() => {
+        setToast("");
+        setToastContent("");
+      }, 10000); // Show for 10 seconds
+    } else {
+      setToast("success");
+      setToastContent("Phone Agent created successfully");
+      setTimeout(() => {
+        setToast("");
+        setToastContent("");
+      }, 3000);
+    }
+  }, [twiliosid, twilioauthtoken]);
 
   const makeCall = async () => {
     const reqURL = `${url}/start-call`;
@@ -138,7 +161,7 @@ const Preview = () => {
       {toast === "success" ? (
         <div className="fixed top-[30px] w-[250px] h-[70px] right-[30px] z-[1000]">
           <SimpleAlert
-            content={"Phone Agent created succesfully"}
+            content={toastContent}
             severity={"success"}
           />
         </div>

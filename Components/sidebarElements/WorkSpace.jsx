@@ -174,15 +174,15 @@ const WorkSpace = () => {
                                 ? "hover:bg-[#2A2E37] hover:text-[#4D55CC]"
                                 : "hover:bg-gray-100 hover:text-[#4D55CC]"
                             } text-center font-semibold`}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              router.push(
+                                `/workspace/settings?workspaceId=${workspace.id}`
+                              );
+                            }}
                           >
                             <IoSettingsSharp
                               size={24}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                router.push(
-                                  `/workspace/settings?workspaceId=${workspace.id}`
-                                );
-                              }}
                               className="text-[#13104A]/95 hover:scale-110 transition-transform duration-200"
                             />
                           </button>
@@ -193,14 +193,15 @@ const WorkSpace = () => {
                               theme === "dark"
                                 ? "hover:bg-[#2A2E37] hover:text-red-400"
                                 : "hover:bg-gray-100 hover:text-red-500"
-                            } text-center font-semibold`}
+                            } text-center font-semibold`} 
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              deleteWorkSpace(event, workspace.id);
+                            }}
                           >
                             <RiDeleteBin6Fill
                               size={24}
                               className="text-red-500 hover:scale-110 transition-transform duration-200"
-                              onClick={(event) =>
-                                deleteWorkSpace(event, workspace.id)
-                              }
                             />
                           </button>
                         </div>

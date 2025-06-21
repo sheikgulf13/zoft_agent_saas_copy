@@ -193,7 +193,7 @@ const DashboardContainer = () => {
                 </span>
               </div>
               <button
-                onClick={() => router.push("/appsettings")}
+                onClick={() => router.push("/settings")}
                 className="bg-white text-blue-800 px-6 py-2 rounded-full z-[10] text-sm font-medium hover:bg-blue-50 transition-colors"
               >
                 View All Plans

@@ -1074,15 +1074,15 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <label className="block text-sm font-medium text-gray-700">
-                          Phone number <span className="text-red-500">*</span>
+                          Phone number
                         </label>
-                        {phoneData.length === 0 && !isLoadingPhones && (
+                        {/* {phoneData.length === 0 && !isLoadingPhones && (
                           <div className="p-2 bg-yellow-50 border border-yellow-200 rounded-md flex-1 ml-2">
                             <p className="text-sm text-yellow-700">
                               {phoneError || "Please add Twilio details"}
                             </p>
                           </div>
-                        )}
+                        )} */}
                         {isLoadingPhones && (
                           <div className="p-2 bg-blue-50 border border-blue-200 rounded-md flex-1 ml-2">
                             <p className="text-sm text-blue-700">
