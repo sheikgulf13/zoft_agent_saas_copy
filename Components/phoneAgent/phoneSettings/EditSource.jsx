@@ -238,7 +238,7 @@ const EditSource = () => {
     //return;
     //}
     setErr("");
-    formData.append("chat_agent_id", selectedPhoneAgent?.id);
+    formData.append("phone_agent_id", selectedPhoneAgent?.id);
     formData.append("URLs", JSON.stringify(urlList));
     formData.append("raw_text", rawText);
     formData.append("existing_files", JSON.stringify(existingFiles));
@@ -250,7 +250,7 @@ const EditSource = () => {
       JSON.stringify(fileCount)
     );
     formData.append("raw_text_word_count", rawWordCounts);
-    const response = await fetch(`${urlFetch}/public/chat_agent/update_base`, {
+    const response = await fetch(`${urlFetch}/public/phone_agent/update_base`, {
       ...getApiConfig(),
       method: "POST",
       headers: new Headers({

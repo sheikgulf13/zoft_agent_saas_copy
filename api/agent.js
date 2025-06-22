@@ -131,7 +131,7 @@ const updatePhoneAgentApi = async ({
   formData.append("phone_number", phoneNumber);
   formData.append("language", language);
 
-  let result = await fetch(`${url}/public/phone_agent/update_base`, {
+  let result = await fetch(`${url}/public/phone_agent/update`, {
     ...getApiConfig(),
     method: "post",
     headers: new Headers({

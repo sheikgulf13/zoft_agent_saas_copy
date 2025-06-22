@@ -37,6 +37,8 @@ const WorkSpace = () => {
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const url = process.env.url;
 
+  console.log(workSpaceList);
+
   useEffect(() => {
     // Check if user has completed onboarding
     const isOnboarded = CookieManager.getCookie('onboarded');
