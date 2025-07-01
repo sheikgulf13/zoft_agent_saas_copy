@@ -113,6 +113,7 @@ const useAutoResize = () => {
 
 const useApiService = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const urlFetch = process.env.url;
   
   const fetchWordData = useCallback(async (url) => {
     if (!url) throw new Error(ERROR_MESSAGES.EMPTY_URL);
@@ -122,7 +123,7 @@ const useApiService = () => {
     const timeoutId = setTimeout(() => controller.abort(), CONSTANTS.API_TIMEOUT);
 
     try {
-      const response = await fetch("https://api.zoft.ai/url/extract/word", {
+      const response = await fetch(`${urlFetch}/url/extract/word`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

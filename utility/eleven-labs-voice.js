@@ -1,397 +1,5 @@
 export const elevenlabsVoice = {
-  "elevenlabs": [
-    {
-      "name": "Aria",
-      "voice_id": "9BWtsMINqrJLrRacOk9x",
-      "category": "premade",
-      "description": "A middle-aged female with an African-American accent. Calm with a hint of rasp.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "husky",
-        "age": "middle_aged",
-        "gender": "female",
-        "language": "en",
-        "use_case": "informative_educational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/9BWtsMINqrJLrRacOk9x/405766b8-1f4e-4d3c-aba1-6f25333823ec.mp3"
-    },
-    {
-      "name": "Sarah",
-      "voice_id": "EXAVITQu4vr4xnSDxMaL",
-      "category": "premade",
-      "description": "Young adult woman with a confident and warm, mature quality and a reassuring, professional tone.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "professional",
-        "age": "young",
-        "gender": "female",
-        "language": "en",
-        "use_case": "entertainment_tv"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/EXAVITQu4vr4xnSDxMaL/01a3e33c-6e99-4ee7-8543-ff2216a32186.mp3"
-    },
-    {
-      "name": "Laura",
-      "voice_id": "FGY2WhTYpPnrIDTdsKH5",
-      "category": "premade",
-      "description": "This young adult female voice delivers sunny enthusiasm with a quirky attitude.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "sassy",
-        "age": "young",
-        "gender": "female",
-        "language": "en",
-        "use_case": "social_media"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/FGY2WhTYpPnrIDTdsKH5/67341759-ad08-41a5-be6e-de12fe448618.mp3"
-    },
-    {
-      "name": "Charlie",
-      "voice_id": "IKne3meq5aSn9XLyUdCD",
-      "category": "premade",
-      "description": "A young Australian male with a confident and energetic voice.",
-      "labels": {
-        "accent": "australian",
-        "descriptive": "hyped",
-        "age": "young",
-        "gender": "male",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/IKne3meq5aSn9XLyUdCD/102de6f2-22ed-43e0-a1f1-111fa75c5481.mp3"
-    },
-    {
-      "name": "George",
-      "voice_id": "JBFqnCBsd6RMkjVDRZzb",
-      "category": "premade",
-      "description": "Warm resonance that instantly captivates listeners.",
-      "labels": {
-        "accent": "british",
-        "descriptive": "mature",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "narrative_story"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/JBFqnCBsd6RMkjVDRZzb/e6206d1a-0721-4787-aafb-06a6e705cac5.mp3"
-    },
-    {
-      "name": "Callum",
-      "voice_id": "N2lVS1w4EtoT3dr4eOWO",
-      "category": "premade",
-      "description": "Deceptively gravelly, yet unsettling edge.",
-      "labels": {
-        "accent": "",
-        "age": "middle_aged",
-        "language": "en",
-        "gender": "male",
-        "use_case": "characters"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/N2lVS1w4EtoT3dr4eOWO/ac833bd8-ffda-4938-9ebc-b0f99ca25481.mp3"
-    },
-    {
-      "name": "River",
-      "voice_id": "SAz9YHcvj6GT2YYXdXww",
-      "category": "premade",
-      "description": "A relaxed, neutral voice ready for narrations or conversational projects.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "calm",
-        "age": "middle_aged",
-        "gender": "neutral",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/SAz9YHcvj6GT2YYXdXww/e6c95f0b-2227-491a-b3d7-2249240decb7.mp3"
-    },
-    {
-      "name": "Liam",
-      "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
-      "category": "premade",
-      "description": "A young adult with energy and warmth - suitable for reels and shorts.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "confident",
-        "age": "young",
-        "gender": "male",
-        "language": "en",
-        "use_case": "social_media"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/TX3LPaxmHKxFdv7VOQHJ/63148076-6363-42db-aea8-31424308b92c.mp3"
-    },
-    {
-      "name": "Charlotte",
-      "voice_id": "XB0fDUnXU5powFXDhCwa",
-      "category": "premade",
-      "description": "Sensual and raspy, she's ready to voice your temptress in video games.",
-      "labels": {
-        "accent": "swedish",
-        "descriptive": "relaxed",
-        "age": "young",
-        "gender": "female",
-        "language": "en",
-        "use_case": "characters_animation"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/XB0fDUnXU5powFXDhCwa/942356dc-f10d-4d89-bda5-4f8505ee038b.mp3"
-    },
-    {
-      "name": "Alice",
-      "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
-      "category": "premade",
-      "description": "Clear and engaging, friendly woman with a British accent suitable for e-learning.",
-      "labels": {
-        "accent": "british",
-        "descriptive": "professional",
-        "age": "middle_aged",
-        "gender": "female",
-        "language": "en",
-        "use_case": "advertisement"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/Xb7hH8MSUJpSbSDYk0k2/d10f7534-11f6-41fe-a012-2de1e482d336.mp3"
-    },
-    {
-      "name": "Matilda",
-      "voice_id": "XrExE9yKIg1WjnnlVkGX",
-      "category": "premade",
-      "description": "A professional woman with a pleasing alto pitch. Suitable for many use cases.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "upbeat",
-        "age": "middle_aged",
-        "gender": "female",
-        "language": "en",
-        "use_case": "informative_educational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/XrExE9yKIg1WjnnlVkGX/b930e18d-6b4d-466e-bab2-0ae97c6d8535.mp3"
-    },
-    {
-      "name": "Will",
-      "voice_id": "bIHbv24MWmeRgasZH58o",
-      "category": "premade",
-      "description": "",
-      "labels": {
-        "accent": "",
-        "description": "friendly",
-        "age": "young",
-        "gender": "male",
-        "language": "en",
-        "use_case": "social media"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/bIHbv24MWmeRgasZH58o/8caf8f3d-ad29-4980-af41-53f20c72d7a4.mp3"
-    },
-    {
-      "name": "Jessica",
-      "voice_id": "cgSgspJ2msm6clMCkdW9",
-      "category": "premade",
-      "description": "Young and popular, this playful American female voice is perfect for trendy content.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "cute",
-        "age": "young",
-        "gender": "female",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/cgSgspJ2msm6clMCkdW9/56a97bf8-b69b-448f-846c-c3a11683d45a.mp3"
-    },
-    {
-      "name": "Eric",
-      "voice_id": "cjVigY5qzO86Huf0OWal",
-      "category": "premade",
-      "description": "A smooth tenor pitch from a man in his 40s - perfect for agentic use cases.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "classy",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/cjVigY5qzO86Huf0OWal/d098fda0-6456-4030-b3d8-63aa048c9070.mp3"
-    },
-    {
-      "name": "Chris",
-      "voice_id": "iP95p4xoKVk53GoZ742B",
-      "category": "premade",
-      "description": "Natural and real, this down-to-earth voice is great across many use-cases.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "casual",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/iP95p4xoKVk53GoZ742B/3f4bde72-cc48-40dd-829f-57fbf906f4d7.mp3"
-    },
-    {
-      "name": "Brian",
-      "voice_id": "nPczCjzI2devNBz1zQrb",
-      "category": "premade",
-      "description": "Middle-aged man with a resonant and comforting tone. Great for narrations and advertisements.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "classy",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "social_media"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/nPczCjzI2devNBz1zQrb/2dd3e72c-4fd3-42f1-93ea-abc5d4e5aa1d.mp3"
-    },
-    {
-      "name": "Daniel",
-      "voice_id": "onwK4e9ZLuTAKqWW03F9",
-      "category": "premade",
-      "description": "A strong voice perfect for delivering a professional broadcast or news story.",
-      "labels": {
-        "accent": "british",
-        "descriptive": "formal",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "informative_educational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/onwK4e9ZLuTAKqWW03F9/7eee0236-1a72-4b86-b303-5dcadc007ba9.mp3"
-    },
-    {
-      "name": "Lily",
-      "voice_id": "pFZP5JQG7iQjIQuC4Bku",
-      "category": "premade",
-      "description": "Velvety British female voice delivers news and narrations with warmth and clarity.",
-      "labels": {
-        "accent": "british",
-        "description": "warm",
-        "descriptive": "confident",
-        "gender": "female",
-        "age": "middle_aged",
-        "use_case": "narration",
-        "language":"en"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/pFZP5JQG7iQjIQuC4Bku/89b68b35-b3dd-4348-a84a-a3c13a3c2b30.mp3"
-    },
-    {
-      "name": "Bill",
-      "voice_id": "pqHfZKP75CvOlQylNhV4",
-      "category": "premade",
-      "description": "Friendly and comforting voice ready to narrate your stories.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "crisp",
-        "age": "old",
-        "gender": "male",
-        "language": "en",
-        "use_case": "advertisement"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/pqHfZKP75CvOlQylNhV4/d782b3ff-84ba-4029-848c-acf01285524d.mp3"
-    },
-    {
-      "name": "Ellie - Tender young woman",
-      "voice_id": "5iMOTeCPcU8UnITn3ks1",
-      "category": "generated",
-      "description": "Young American woman with a tender voice. Great for podcast.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "gentle",
-        "age": "young",
-        "gender": "female",
-        "use_case": "conversational",
-        "language": "en"
-
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/SS5MYXzvHdV8MiTqrLH9WgxXAM62/voices/wJotvZOSSl08PFYC81Xe/9e0d84fb-ea8a-4494-b2f1-b757775ecd5c.mp3"
-    },
-    {
-      "name": "Adam Stone - late night radio",
-      "voice_id": "NFG5qt843uXKj4pFvR7C",
-      "category": "professional",
-      "description": "A middle aged 'Brit' with a velvety laid back, late night talk show host timbre.",
-      "labels": {
-        "accent": "british",
-        "descriptive": "meditative",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "en",
-        "use_case": "narrative_story"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/NFG5qt843uXKj4pFvR7C/BgPFcmyMBm88O9O05Myn.mp3"
-    },
-    {
-      "name": "Miranda",
-      "voice_id": "PoHUWWWMHFrA8z7Q88pu",
-      "category": "professional",
-      "description": "A sweet and bubbly young woman's voice. Perfect for bright and fun commercials or projects.",
-      "labels": {
-        "language": "en",
-        "descriptive": "cute",
-        "accent": "american",
-        "gender": "female",
-        "age": "young",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/ZXqeDajThsaYR96DSywtY94M8Dy1/voices/PoHUWWWMHFrA8z7Q88pu/403a094a-c4e4-431f-b96a-7c63ae76508d.mp3"
-    },
-    {
-      "name": "Marissa from ElevenLabs",
-      "voice_id": "StXdHzik5guDrDk6fg3m",
-      "category": "professional",
-      "description": "Young American female with a calm & pleasant tone. Great for Audiobook reading.",
-      "labels": {
-        "language": "en",
-        "descriptive": "pleasant",
-        "accent": "american",
-        "gender": "female",
-        "age": "young",
-        "use_case": "narrative_story"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/StXdHzik5guDrDk6fg3m/80u7JYs5JjclWi9UYMrt.mp3"
-    },
-    {
-      "name": "Mark - Natural Conversations",
-      "voice_id": "UgBBYS2sOqTuMpoF3BR0",
-      "category": "professional",
-      "description": "A casual, young-adult speaking in a natural manner. Perfect for Conversational AI.",
-      "labels": {
-        "accent": "american",
-        "descriptive": "casual",
-        "age": "young",
-        "gender": "male",
-        "language": "en",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/y7Wmp2r8nCeGkLiXiwMOVWktro13/voices/UgBBYS2sOqTuMpoF3BR0/0Oc7jiXwWN9kRTXfQsmw.mp3"
-    },
-    {
-      "name": "Meera - Conversational Tamil Voice",
-      "voice_id": "gCr8TeSJgJaeaIoV4RWH",
-      "category": "professional",
-      "description": "Meena is a pen name of a Tamil professional who has spent years in the finance industry. You will observe the calmness and great explanation pace in her voice. A perfect use case for corporate work and for conversational work.",
-      "labels": {
-        "accent": "standard",
-        "descriptive": "confident",
-        "age": "middle_aged",
-        "gender": "female",
-        "language": "ta",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/TLzQBQZ61wQrytFwliQpe4LeshE3/voices/gCr8TeSJgJaeaIoV4RWH/D4hJI4s5RhGBmMQj71QW.mp3"
-    },
-    {
-      "name": "Ashwin - Relatable Tamil Voice",
-      "voice_id": "yt40uMsmnhVftG8ngHsz",
-      "category": "professional",
-      "description": "Ashwin is the pen name of an energetic and versatile voiceover artist skilled in both Tamil and English. His voice adapts to a range of tones, from narrative styles to more animated expressions. Perfect for social media content, audiobooks, and more.",
-      "labels": {
-        "accent": "standard",
-        "descriptive": "upbeat",
-        "age": "middle_aged",
-        "gender": "male",
-        "language": "ta",
-        "use_case": "conversational"
-      },
-      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/TLzQBQZ61wQrytFwliQpe4LeshE3/voices/yt40uMsmnhVftG8ngHsz/Xg3BaFyc2FA4Uo0Qbly8.mp3"
-    }
-  ],
+  
   "ultravox": [
     {
       "voiceId": "053152c3-913f-4ff8-84b6-69626ac273f0",
@@ -1491,3 +1099,400 @@ export const language_mapping_accent = {
   "Greek": ["standard"],
   "Vietnamese": ["standard"]
 };
+
+
+{/*
+  "elevenlabs": [
+    {
+      "name": "Aria",
+      "voice_id": "9BWtsMINqrJLrRacOk9x",
+      "category": "premade",
+      "description": "A middle-aged female with an African-American accent. Calm with a hint of rasp.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "husky",
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "en",
+        "use_case": "informative_educational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/9BWtsMINqrJLrRacOk9x/405766b8-1f4e-4d3c-aba1-6f25333823ec.mp3"
+    },
+    {
+      "name": "Sarah",
+      "voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "category": "premade",
+      "description": "Young adult woman with a confident and warm, mature quality and a reassuring, professional tone.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "professional",
+        "age": "young",
+        "gender": "female",
+        "language": "en",
+        "use_case": "entertainment_tv"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/EXAVITQu4vr4xnSDxMaL/01a3e33c-6e99-4ee7-8543-ff2216a32186.mp3"
+    },
+    {
+      "name": "Laura",
+      "voice_id": "FGY2WhTYpPnrIDTdsKH5",
+      "category": "premade",
+      "description": "This young adult female voice delivers sunny enthusiasm with a quirky attitude.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "sassy",
+        "age": "young",
+        "gender": "female",
+        "language": "en",
+        "use_case": "social_media"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/FGY2WhTYpPnrIDTdsKH5/67341759-ad08-41a5-be6e-de12fe448618.mp3"
+    },
+    {
+      "name": "Charlie",
+      "voice_id": "IKne3meq5aSn9XLyUdCD",
+      "category": "premade",
+      "description": "A young Australian male with a confident and energetic voice.",
+      "labels": {
+        "accent": "australian",
+        "descriptive": "hyped",
+        "age": "young",
+        "gender": "male",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/IKne3meq5aSn9XLyUdCD/102de6f2-22ed-43e0-a1f1-111fa75c5481.mp3"
+    },
+    {
+      "name": "George",
+      "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+      "category": "premade",
+      "description": "Warm resonance that instantly captivates listeners.",
+      "labels": {
+        "accent": "british",
+        "descriptive": "mature",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/JBFqnCBsd6RMkjVDRZzb/e6206d1a-0721-4787-aafb-06a6e705cac5.mp3"
+    },
+    {
+      "name": "Callum",
+      "voice_id": "N2lVS1w4EtoT3dr4eOWO",
+      "category": "premade",
+      "description": "Deceptively gravelly, yet unsettling edge.",
+      "labels": {
+        "accent": "",
+        "age": "middle_aged",
+        "language": "en",
+        "gender": "male",
+        "use_case": "characters"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/N2lVS1w4EtoT3dr4eOWO/ac833bd8-ffda-4938-9ebc-b0f99ca25481.mp3"
+    },
+    {
+      "name": "River",
+      "voice_id": "SAz9YHcvj6GT2YYXdXww",
+      "category": "premade",
+      "description": "A relaxed, neutral voice ready for narrations or conversational projects.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "calm",
+        "age": "middle_aged",
+        "gender": "neutral",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/SAz9YHcvj6GT2YYXdXww/e6c95f0b-2227-491a-b3d7-2249240decb7.mp3"
+    },
+    {
+      "name": "Liam",
+      "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+      "category": "premade",
+      "description": "A young adult with energy and warmth - suitable for reels and shorts.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "confident",
+        "age": "young",
+        "gender": "male",
+        "language": "en",
+        "use_case": "social_media"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/TX3LPaxmHKxFdv7VOQHJ/63148076-6363-42db-aea8-31424308b92c.mp3"
+    },
+    {
+      "name": "Charlotte",
+      "voice_id": "XB0fDUnXU5powFXDhCwa",
+      "category": "premade",
+      "description": "Sensual and raspy, she's ready to voice your temptress in video games.",
+      "labels": {
+        "accent": "swedish",
+        "descriptive": "relaxed",
+        "age": "young",
+        "gender": "female",
+        "language": "en",
+        "use_case": "characters_animation"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/XB0fDUnXU5powFXDhCwa/942356dc-f10d-4d89-bda5-4f8505ee038b.mp3"
+    },
+    {
+      "name": "Alice",
+      "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+      "category": "premade",
+      "description": "Clear and engaging, friendly woman with a British accent suitable for e-learning.",
+      "labels": {
+        "accent": "british",
+        "descriptive": "professional",
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "en",
+        "use_case": "advertisement"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/Xb7hH8MSUJpSbSDYk0k2/d10f7534-11f6-41fe-a012-2de1e482d336.mp3"
+    },
+    {
+      "name": "Matilda",
+      "voice_id": "XrExE9yKIg1WjnnlVkGX",
+      "category": "premade",
+      "description": "A professional woman with a pleasing alto pitch. Suitable for many use cases.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "upbeat",
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "en",
+        "use_case": "informative_educational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/XrExE9yKIg1WjnnlVkGX/b930e18d-6b4d-466e-bab2-0ae97c6d8535.mp3"
+    },
+    {
+      "name": "Will",
+      "voice_id": "bIHbv24MWmeRgasZH58o",
+      "category": "premade",
+      "description": "",
+      "labels": {
+        "accent": "",
+        "description": "friendly",
+        "age": "young",
+        "gender": "male",
+        "language": "en",
+        "use_case": "social media"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/bIHbv24MWmeRgasZH58o/8caf8f3d-ad29-4980-af41-53f20c72d7a4.mp3"
+    },
+    {
+      "name": "Jessica",
+      "voice_id": "cgSgspJ2msm6clMCkdW9",
+      "category": "premade",
+      "description": "Young and popular, this playful American female voice is perfect for trendy content.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "cute",
+        "age": "young",
+        "gender": "female",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/cgSgspJ2msm6clMCkdW9/56a97bf8-b69b-448f-846c-c3a11683d45a.mp3"
+    },
+    {
+      "name": "Eric",
+      "voice_id": "cjVigY5qzO86Huf0OWal",
+      "category": "premade",
+      "description": "A smooth tenor pitch from a man in his 40s - perfect for agentic use cases.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "classy",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/cjVigY5qzO86Huf0OWal/d098fda0-6456-4030-b3d8-63aa048c9070.mp3"
+    },
+    {
+      "name": "Chris",
+      "voice_id": "iP95p4xoKVk53GoZ742B",
+      "category": "premade",
+      "description": "Natural and real, this down-to-earth voice is great across many use-cases.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "casual",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/iP95p4xoKVk53GoZ742B/3f4bde72-cc48-40dd-829f-57fbf906f4d7.mp3"
+    },
+    {
+      "name": "Brian",
+      "voice_id": "nPczCjzI2devNBz1zQrb",
+      "category": "premade",
+      "description": "Middle-aged man with a resonant and comforting tone. Great for narrations and advertisements.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "classy",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "social_media"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/nPczCjzI2devNBz1zQrb/2dd3e72c-4fd3-42f1-93ea-abc5d4e5aa1d.mp3"
+    },
+    {
+      "name": "Daniel",
+      "voice_id": "onwK4e9ZLuTAKqWW03F9",
+      "category": "premade",
+      "description": "A strong voice perfect for delivering a professional broadcast or news story.",
+      "labels": {
+        "accent": "british",
+        "descriptive": "formal",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "informative_educational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/onwK4e9ZLuTAKqWW03F9/7eee0236-1a72-4b86-b303-5dcadc007ba9.mp3"
+    },
+    {
+      "name": "Lily",
+      "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+      "category": "premade",
+      "description": "Velvety British female voice delivers news and narrations with warmth and clarity.",
+      "labels": {
+        "accent": "british",
+        "description": "warm",
+        "descriptive": "confident",
+        "gender": "female",
+        "age": "middle_aged",
+        "use_case": "narration",
+        "language":"en"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/pFZP5JQG7iQjIQuC4Bku/89b68b35-b3dd-4348-a84a-a3c13a3c2b30.mp3"
+    },
+    {
+      "name": "Bill",
+      "voice_id": "pqHfZKP75CvOlQylNhV4",
+      "category": "premade",
+      "description": "Friendly and comforting voice ready to narrate your stories.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "crisp",
+        "age": "old",
+        "gender": "male",
+        "language": "en",
+        "use_case": "advertisement"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/premade/voices/pqHfZKP75CvOlQylNhV4/d782b3ff-84ba-4029-848c-acf01285524d.mp3"
+    },
+    {
+      "name": "Ellie - Tender young woman",
+      "voice_id": "5iMOTeCPcU8UnITn3ks1",
+      "category": "generated",
+      "description": "Young American woman with a tender voice. Great for podcast.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "gentle",
+        "age": "young",
+        "gender": "female",
+        "use_case": "conversational",
+        "language": "en"
+
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/SS5MYXzvHdV8MiTqrLH9WgxXAM62/voices/wJotvZOSSl08PFYC81Xe/9e0d84fb-ea8a-4494-b2f1-b757775ecd5c.mp3"
+    },
+    {
+      "name": "Adam Stone - late night radio",
+      "voice_id": "NFG5qt843uXKj4pFvR7C",
+      "category": "professional",
+      "description": "A middle aged 'Brit' with a velvety laid back, late night talk show host timbre.",
+      "labels": {
+        "accent": "british",
+        "descriptive": "meditative",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/NFG5qt843uXKj4pFvR7C/BgPFcmyMBm88O9O05Myn.mp3"
+    },
+    {
+      "name": "Miranda",
+      "voice_id": "PoHUWWWMHFrA8z7Q88pu",
+      "category": "professional",
+      "description": "A sweet and bubbly young woman's voice. Perfect for bright and fun commercials or projects.",
+      "labels": {
+        "language": "en",
+        "descriptive": "cute",
+        "accent": "american",
+        "gender": "female",
+        "age": "young",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/ZXqeDajThsaYR96DSywtY94M8Dy1/voices/PoHUWWWMHFrA8z7Q88pu/403a094a-c4e4-431f-b96a-7c63ae76508d.mp3"
+    },
+    {
+      "name": "Marissa from ElevenLabs",
+      "voice_id": "StXdHzik5guDrDk6fg3m",
+      "category": "professional",
+      "description": "Young American female with a calm & pleasant tone. Great for Audiobook reading.",
+      "labels": {
+        "language": "en",
+        "descriptive": "pleasant",
+        "accent": "american",
+        "gender": "female",
+        "age": "young",
+        "use_case": "narrative_story"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/custom/voices/StXdHzik5guDrDk6fg3m/80u7JYs5JjclWi9UYMrt.mp3"
+    },
+    {
+      "name": "Mark - Natural Conversations",
+      "voice_id": "UgBBYS2sOqTuMpoF3BR0",
+      "category": "professional",
+      "description": "A casual, young-adult speaking in a natural manner. Perfect for Conversational AI.",
+      "labels": {
+        "accent": "american",
+        "descriptive": "casual",
+        "age": "young",
+        "gender": "male",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/y7Wmp2r8nCeGkLiXiwMOVWktro13/voices/UgBBYS2sOqTuMpoF3BR0/0Oc7jiXwWN9kRTXfQsmw.mp3"
+    },
+    {
+      "name": "Meera - Conversational Tamil Voice",
+      "voice_id": "gCr8TeSJgJaeaIoV4RWH",
+      "category": "professional",
+      "description": "Meena is a pen name of a Tamil professional who has spent years in the finance industry. You will observe the calmness and great explanation pace in her voice. A perfect use case for corporate work and for conversational work.",
+      "labels": {
+        "accent": "standard",
+        "descriptive": "confident",
+        "age": "middle_aged",
+        "gender": "female",
+        "language": "ta",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/TLzQBQZ61wQrytFwliQpe4LeshE3/voices/gCr8TeSJgJaeaIoV4RWH/D4hJI4s5RhGBmMQj71QW.mp3"
+    },
+    {
+      "name": "Ashwin - Relatable Tamil Voice",
+      "voice_id": "yt40uMsmnhVftG8ngHsz",
+      "category": "professional",
+      "description": "Ashwin is the pen name of an energetic and versatile voiceover artist skilled in both Tamil and English. His voice adapts to a range of tones, from narrative styles to more animated expressions. Perfect for social media content, audiobooks, and more.",
+      "labels": {
+        "accent": "standard",
+        "descriptive": "upbeat",
+        "age": "middle_aged",
+        "gender": "male",
+        "language": "ta",
+        "use_case": "conversational"
+      },
+      "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/user/TLzQBQZ61wQrytFwliQpe4LeshE3/voices/yt40uMsmnhVftG8ngHsz/Xg3BaFyc2FA4Uo0Qbly8.mp3"
+    }
+  ],
+  */}

@@ -104,7 +104,7 @@ const FIELD_DEFINITIONS = {
   sendVideo: {
     label: "Video",
     value: "url",
-    required: false,
+    required: true,
   },
 };
 
@@ -1974,7 +1974,9 @@ function ActionForm({
                 }`}
               onChange={handleVideoUrlChange}
               onKeyDown={handleVideoUrlSubmit}
+              required
             />
+            {/* Only show the error message once, below the input */}
             {errors[field.value] && (
               <p className="text-red-500 text-xs mt-1">{errors[field.value]}</p>
             )}
@@ -2143,7 +2145,8 @@ function ActionForm({
                 {field.required && <span className="text-red-500 ml-1">*</span>}
               </label>
               {renderField(field)}
-              {errors[field.value] && (
+              {/* Only render generic error if not Video field, since Video error is rendered inside renderField */}
+              {field.label !== "Video" && errors[field.value] && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors[field.value]}
                 </p>
@@ -2220,7 +2223,8 @@ function ActionForm({
               </div>
 
               {renderField(field)}
-              {errors[field.value] && (
+              {/* Only render generic error if not Video field, since Video error is rendered inside renderField */}
+              {field.label !== "Video" && errors[field.value] && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors[field.value]}
                 </p>

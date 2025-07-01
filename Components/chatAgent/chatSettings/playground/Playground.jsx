@@ -422,20 +422,12 @@ const Playground = () => {
                     </div>
                   </div>
 
-                  <div className="relative w-full h-[32px] flex justify-center items-center py-4 mt-3 bg-white overflow-hidden rounded-lg">
-                    <SmudgyBackground
-                      colorHex={selectedColor ? selectedColor : "#2D3377"}
-                      noiseDensity={10}
-                      layerCount={20}
-                      baseOpacity={0.15}
-                      opacityStep={0.05}
-                      fogOpacity={0.2}
-                      zIndex={1}
-                    />
+                  <div className="relative w-full h-[32px] flex justify-center items-center py-4 mt-3 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#13104A]/95 via-[#2D3377]/90 via-[#18103A]/85 via-[#211A55]/80 to-[#13104A]/95 backdrop-blur-sm text-white hover:opacity-[0.8] overflow-hidden rounded-lg">
+               
                     <button
                       onClick={handleColorUpdate}
                       disabled={isUpdating}
-                      className={`z-[50] text-xs font-medium transition-all duration-200 ${
+                      className={`z-[50] text-xs font-medium transition-all duration-200  ${
                         isUpdating
                           ? " text-gray-500 cursor-not-allowed"
                           : " text-white active:scale-95"

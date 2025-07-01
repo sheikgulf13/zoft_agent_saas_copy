@@ -105,12 +105,8 @@ const updatePhoneAgentApi = async ({
       id &&
         name &&
         purpose &&
-        companyName &&
-        companyBusiness &&
-        companyServices &&
         voiceId &&
         countryCode &&
-        phoneNumber &&
         language
     )
   ) {

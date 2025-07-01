@@ -27,6 +27,7 @@ const Source = () => {
   const [pastedUrl, setPastedUrl] = useState([]);
   const [inputUrl, setInputUrl] = useState("");
   const [err, setErr] = useState("");
+  const urlFetch = process.env.url;
   const [fileWordCounts, setFileWordCounts] = useState({});
   const [rawWordCounts, setRawWordCounts] = useState(0);
   const [rawCharCount, setRawCharCount] = useState(0);
@@ -68,7 +69,7 @@ const Source = () => {
   };
   const fetchWordData = async (url) => {
     try {
-      const response = await fetch("https://api.zoft.ai/url/extract/word", {
+      const response = await fetch(`${urlFetch}/url/extract/word`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

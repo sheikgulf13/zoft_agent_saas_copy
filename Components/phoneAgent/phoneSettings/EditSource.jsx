@@ -161,8 +161,9 @@ const EditSource = () => {
   };
 
   const fetchWordData = async (url) => {
+    const urlFetch = process.env.url;
     try {
-      const response = await fetch("https://api.zoft.ai/url/extract/word", {
+      const response = await fetch(`${urlFetch}/url/extract/word`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -587,7 +588,7 @@ const EditSource = () => {
                   : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-50 pointer-events-none"
               }`}
             >
-              Retrain Chatbot
+              Retrain Agent
             </ContainedButton>
           </div>
         </div>

@@ -233,7 +233,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
         </div>
         <div className="w-full pt-4 pb-4 flex flex-col items-center justify-end gap-[.5vw] mt-auto border-t border-b mb-4 border-zinc-300">
           {navButtons.slice(4, 6).map((button, index) => {
-            const isActive = button.path === '/integrations' ? pathname === button.path : pathname.includes(button.path);
+            const isActive = button.path === '/integrations' ? pathname === button.path : button.path === '/settings' ? pathname === button.path : pathname.includes(button.path);
             return (
 
             <Link

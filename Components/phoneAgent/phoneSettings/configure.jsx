@@ -53,7 +53,7 @@ const Configure = () => {
 
     if (selectedPhoneAgent?.voice_id) {
       const filteredVoiceUrl =
-        elevenlabsVoice?.elevenlabs.find(
+        elevenlabsVoice?.elevenlabs?.find(
           (item) => item?.voice_id === selectedPhoneAgent?.voice_id
         ) ||
         elevenlabsVoice?.ultravox.find(
@@ -91,13 +91,13 @@ const Configure = () => {
     const filteredVoiceNames = () => {
       if (!elevenlabsVoice || !language_mapping_accent) return [];
 
-      const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
+      {/*const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
         const genderMatch = !gender || item.labels?.gender === gender;
         const languageMatch =
           !language ||
           language_mapping_accent[language]?.includes(item.labels?.accent);
         return genderMatch && languageMatch;
-      });
+      });*/}
 
       const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
         const genderMatch = !gender || item?.gender === gender;
@@ -109,7 +109,7 @@ const Configure = () => {
         return genderMatch && languageMatch;
       });
 
-      return [...elevenLabsVoices, ...ultravoxVoices];
+      return [...ultravoxVoices];
     };
 
     setFilteredVoiceNames(filteredVoiceNames);
@@ -117,7 +117,7 @@ const Configure = () => {
 
   const handleVoiceChange = (e) => {
     const filteredVoiceUrl =
-      elevenlabsVoice.elevenlabs.find((item) => item.voice_id === e.target.value) ||
+      elevenlabsVoice?.elevenlabs?.find((item) => item.voice_id === e.target.value) ||
       elevenlabsVoice.ultravox.find((item) => item.voiceId === e.target.value);
 
     if (filteredVoiceUrl) {
@@ -486,7 +486,7 @@ const Configure = () => {
                       htmlFor="companyName"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Company Name <span className="text-red-500">*</span>
+                      Company Name 
                     </label>
                     <input
                       id="companyName"
@@ -507,7 +507,7 @@ const Configure = () => {
                       htmlFor="companyBusiness"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Company Business <span className="text-red-500">*</span>
+                      Company Business 
                     </label>
                     <textarea
                       id="companyBusiness"
@@ -532,7 +532,7 @@ const Configure = () => {
                       htmlFor="companyProducts"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Company Products <span className="text-red-500">*</span>
+                      Company Products
                     </label>
                     <textarea
                       id="companyProducts"

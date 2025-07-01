@@ -104,7 +104,7 @@ const Ai = () => {
       dispatch(
         updateSelectedChatAgent({
           ...selectedChatAgent,
-          bot_name: name,
+          bot_name: botName,
           description: des,
           prompts: promt,
         })

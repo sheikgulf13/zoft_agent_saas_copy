@@ -338,15 +338,18 @@ const Deploy = () => {
           )}
           <div className="w-full absolute bottom-0 h-[9.5vh] py-[10px]">
             <div className="w-full h-full flex justify-center items-center gap-[2vw] px-[3vw]">
-              <ContainedButton
-                onClick={() => {
-                  navigate.push(
-                    `/workspace/agents?workspaceId=${selectedWorkSpace}`
-                  );
-                }}
-              >
-                Finish
-              </ContainedButton>
+              {!loading && (
+                <ContainedButton
+                  onClick={() => {
+                    navigate.push(
+                      `/workspace/agents?workspaceId=${selectedWorkSpace}`
+                    );
+                  }}
+
+                >
+                  Finish
+                </ContainedButton>
+              )}
             </div>
           </div>
         </div>

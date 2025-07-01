@@ -608,13 +608,13 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
   const filteredVoiceNames = useMemo(() => {
     if (!elevenlabsVoice || !language_mapping_accent) return [];
 
-    const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
+    {/*}const elevenLabsVoices = elevenlabsVoice.elevenlabs.filter((item) => {
       const genderMatch = !gender || item.labels?.gender === gender;
       const languageMatch =
         !language ||
         language_mapping_accent[language]?.includes(item.labels?.accent);
       return genderMatch && languageMatch;
-    });
+    });*/}
 
     const ultravoxVoices = elevenlabsVoice.ultravox.filter((item) => {
       const genderMatch = !gender || item?.gender === gender;
@@ -624,7 +624,7 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
       return genderMatch && languageMatch;
     });
 
-    return [...elevenLabsVoices, ...ultravoxVoices];
+    return [...ultravoxVoices];
   }, [gender, language]);
 
   // Language options for SearchableSelect
@@ -746,8 +746,8 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
     }
 
     const selectedVoice =
-      elevenlabsVoice.elevenlabs.find((item) => item.voice_id === voice) ||
-      elevenlabsVoice.ultravox.find((item) => item.voiceId === voice) || elevenlabsVoice.elevenlabs.find((item) => item.voice_id === voice.voiceId) ||
+      elevenlabsVoice?.elevenlabs?.find((item) => item.voice_id === voice) ||
+      elevenlabsVoice.ultravox.find((item) => item.voiceId === voice) || elevenlabsVoice?.elevenlabs?.find((item) => item.voice_id === voice.voiceId) ||
       elevenlabsVoice.ultravox.find((item) => item.voiceId === voice.voiceId);
     setVoiceUrl(selectedVoice?.preview_url || selectedVoice?.previewUrl || "");
   }, [voice]);
@@ -854,7 +854,7 @@ const PhoneAgent = ({ className = "", onStepChange = null }) => {
 
   // Render voice option with audio preview
   const renderVoiceOption = useCallback((voice) => {
-    const isElevenLabs = elevenlabsVoice.elevenlabs.some(
+    const isElevenLabs = elevenlabsVoice?.elevenlabs?.some(
       (item) => item.voice_id === voice.voiceId
     );
     console.log('voice id check', voice)
