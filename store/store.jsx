@@ -20,6 +20,7 @@ import workSpaceList from "./reducers/workSpaceListSlice";
 import selectedData from "./reducers/selectedDataSlice";
 import workSpaceAgentList from "./reducers/workSpaceAgentListSlice";
 import pricingReducer from "./reducers/pricingReducer";
+import campaignsReducer from "./reducers/campaignsSlice";
 
 const persistConfig = {
   key: 'root',
@@ -45,7 +46,8 @@ const rootReducer = combineReducers({
   workSpaceList: workSpaceList,
   selectedData: selectedData,
   workSpaceAgentList: workSpaceAgentList,
-  pricing: pricingReducer
+  pricing: pricingReducer,
+  campaigns: campaignsReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -24,7 +24,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #2D3377;
+  background: #cccccc;
   opacity: 0.3;
   border-radius: 4px;
 }
@@ -33,6 +33,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #2D3377;
   opacity: 0.5;
+}
+
+
+::-webkit-scrollbar:horizontal {
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: #cccccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #2D3377;
 }
 
 .heading{

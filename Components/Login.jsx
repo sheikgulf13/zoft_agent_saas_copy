@@ -280,7 +280,7 @@ const Login = () => {
               <h1 className="text-xl font-semibold text-gray-800">
                 Welcome back!
               </h1>
-              <button
+              {/*<button
                 className="w-full capitalize font-medium flex items-center justify-center gap-3 px-4 py-2 rounded-xl text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm"
                 onClick={handleGoogleSignIn}
               >
@@ -295,7 +295,7 @@ const Login = () => {
                 <div className="flex-1 h-[1px] bg-gray-200"></div>
                 <span className="text-sm text-gray-500">or</span>
                 <div className="flex-1 h-[1px] bg-gray-200"></div>
-              </div>
+              </div>*/}
             </div>
 
             <div className="w-full">

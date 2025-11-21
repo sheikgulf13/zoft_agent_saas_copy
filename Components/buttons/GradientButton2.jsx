@@ -5,7 +5,7 @@ const GradientButton2 = ({ Icon, text, isActive, onClick, className }) => {
   return (
     <button 
       type='button'
-      className={` capitalize flex items-center gap-[.7vw] px-[0.933vw] text-[.9vw] text-start cursor-pointer  font-light rounded-[0.417vw] ${className}`}
+      className={` capitalize flex items-center gap-[.7vw] px-[0.933vw] text-[.75vw] text-start cursor-pointer  font-light rounded-[0.417vw] ${className}`}
       onClick={onClick}
     >
       {text}

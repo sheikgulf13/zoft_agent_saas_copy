@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { CookieManager } from "../../../utility/cookie-manager"
+import { getApiHeaders, getApiConfig } from "@/utility/api-config";
+import { setCountryCode } from "@/store/actions/phoneAgentActions";
 
 const Content = () => {
   const searchParams = useSearchParams();
@@ -21,6 +23,7 @@ const Content = () => {
   const { countryCode } = useSelector((state) => state.phoneAgent);
   const [cus_Number, setCus_Number] = useState("");
   const [cus_Name, setCus_Name] = useState("");
+  const [cus_Email, setCus_Email] = useState("");
   const [cus_Pur, setCus_Pur] = useState("");
 
   const { selectedPhoneAgent, selectedWorkSpace } = useSelector((state) => state.selectedData);
@@ -64,17 +67,20 @@ const Content = () => {
     const reqURL = `${phone_url}/outgoing-call`;
     const formData = new FormData();
    const data1={
+    "customer_phone_number": `${countryCode}${cus_Number}`,
     "phone_agent_id": phoneAgentID,
-    "customer_name":cus_Name,
-    "customer_phone_number": countryCode + cus_Number,
-    "custmer_business_details":cus_Pur,
-    "customer_email":"",
+    // "phone_agent_id":"06f9b34b-77f9-4b4e-9d8f-f86e6d96dda5",
+    "customer_name": cus_Name,
+    "customer_email": cus_Email,
+    "customer_business_details": cus_Pur
     }
     const response = await fetch(reqURL, {
+      ...getApiConfig(),
       mode: "cors",
       method: "POST",
       headers: new Headers({
         "ngrok-skip-browser-warning": "true",
+        ...getApiHeaders(),
       }),
       body: JSON.stringify(data1),
     });
@@ -113,9 +119,15 @@ const Content = () => {
 
           <div className="flex flex-col w-full space-y-4">
             <div className="flex flex-col space-y-2">
-              <label className="text-sm font-medium text-gray-700">Name</label>
+              <label className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-200" : "text-gray-700"
+              }`}>
+                Name
+              </label>
               <input
-                className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
+                className={`w-full text-base border ${
+                  theme === "dark" ? "border-gray-600" : "border-gray-300"
+                } rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
                 type="text"
                 placeholder="Enter your name"
                 onChange={(e) => setCus_Name(e.target.value)}
@@ -156,11 +168,33 @@ const Content = () => {
             </div>
 
             <div className="flex flex-col space-y-2">
-              <label className="text-sm font-medium text-gray-700">Purpose</label>
+              <label className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-200" : "text-gray-700"
+              }`}>
+                Email
+              </label>
               <input
-                className="w-full text-base border border-gray-300 rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all"
+                className={`w-full text-base border ${
+                  theme === "dark" ? "border-gray-600" : "border-gray-300"
+                } rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
+                type="email"
+                placeholder="Enter your email"
+                onChange={(e) => setCus_Email(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col space-y-2">
+              <label className={`text-sm font-medium ${
+                theme === "dark" ? "text-gray-200" : "text-gray-700"
+              }`}>
+                Business details
+              </label>
+              <input
+                className={`w-full text-base border ${
+                  theme === "dark" ? "border-gray-600" : "border-gray-300"
+                } rounded-lg px-4 py-2.5 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#2D3377] focus:border-transparent transition-all`}
                 type="text"
-                placeholder="Enter your purpose"
+                placeholder="Enter your business details"
                 onChange={(e) => setCus_Pur(e.target.value)}
               />
             </div>

@@ -3,23 +3,19 @@ import React, { useState, useEffect } from "react";
 import GradientButton from "./buttons/GradientButton";
 import GradientButton2 from "./buttons/GradientButton2";
 import Link from "next/link";
-import PieIcon from "./Icons/LordIcon";
-import MessageIcon from "./Icons/MessageIcon";
-import EmailIcon from "./Icons/EmailIcon";
-import SettingIcon from "./Icons/SettingIcon";
-import TeamIcon from "./Icons/TeamIcon";
 import { useSelector } from "react-redux";
 import useTheme from "next-theme";
 import { motion } from "framer-motion";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiPieChart, FiMessageSquare, FiUsers, FiSettings } from "react-icons/fi";
 import { IoMoonOutline, IoSunny } from "react-icons/io5";
+import { HiSpeakerphone } from "react-icons/hi2";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 import { usePathname } from "next/navigation";
 import { CookieManager } from "../utility/cookie-manager";
 
 const variants = {
-  open: { width: "240px", width: "15%", transition: { duration: 0.5 } },
+  open: { width: "15vw", width: "15%", transition: { duration: 0.5 } },
   closed: { width: "5%", transition: { duration: 0.5 } }
 };
 
@@ -72,14 +68,14 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
 
   const navButtons = [
     {
-      Icon: PieIcon,
+      Icon: FiPieChart,
       text: "dashboard",
       path: "/dashboard",
       className: "Pie first",
       color: "primary",
     },
     {
-      Icon: MessageIcon,
+      Icon: FiMessageSquare,
       text: "workspace",
       path: "/workspace",
       className: "Message second",
@@ -102,14 +98,21 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
     //   color: "primary",
     // },
     {
-      Icon: TeamIcon,
+      Icon: FiUsers,
       text: "team",
       path: "/team",
       className: "Team fifth",
       color: "primary",
     },
     {
-      Icon: SettingIcon,
+      Icon: HiSpeakerphone,
+      text: "campaigns",
+      path: "/campaigns",
+      className: "Campaign seventh",
+      color: "primary",
+    },
+    {
+      Icon: FiSettings,
       text: "settings",
       path: "/settings",
       className: "Setting sixth",
@@ -148,7 +151,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       id="sidebar"
     >
       <div
-        className={`w-[90%] flex items-center justify-between pb-[2vh] ${
+        className={`w-[90%] flex items-center justify-between ${
           isOpen ? "flex mt-[.5vw] pr-[.5vw]" : "flex-col -pr-[.8vw]"
         } `}
       >
@@ -157,35 +160,35 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
             isOpen ? "ml-[0vw]" : "-ml-[3.5vw mt-[1vw]"
           }`}
         >
-          <div className="p-2 rounded-xl">
+          <div className="p-[.4vw] rounded-[.6vw]">
             <img
               src={`${theme === "dark" ? "/images/ZOFT_LOGO2_Dark.png" : "/images/ZOFT_LOGO2.png"}`}
               alt="Logo"
-              className="w-[60px] h-[60px]"
+              className="w-[3.5vw] h-[3.5vw]"
             />
           </div>
           {isOpen && (
-            <h1 className="text-2xl mt-[.5vh] text-center font-bold bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#211C84]/95 via-[#4D55CC]/90 via-[#2A1B5D]/85 via-[#3B2B8E]/80 to-[#211C84]/95 backdrop-blur-sm text-transparent bg-clip-text">
+            <h1 className="text-lg mt-[.5vh] text-center font-bold bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#211C84]/95 via-[#4D55CC]/90 via-[#2A1B5D]/85 via-[#3B2B8E]/80 to-[#211C84]/95 backdrop-blur-sm text-transparent bg-clip-text">
               Zoft
             </h1>
           )}
         </div>
 
         <div
-          className={`w-[40px] relative h-[40px] mt-[.5vh] bg-[#f2f0ef] px-[0.2vw] py-[0.5vw] rounded-md flex justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105`}
+          className={`w-[2.2vw] relative h-[2.2vw] mt-[.5vh] bg-[#f2f0ef] px-[0.2vw] py-[0.4vw] rounded-md flex justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105`}
           onClick={() => setisOpen((isOpen) => !isOpen)}
         >
           {isOpen ? (
-            <FaAngleDoubleLeft size="1.1vw" className="text-[#4D55CC]" />
+            <FaAngleDoubleLeft size="0.9vw" className="text-[#4D55CC]" />
           ) : (
-            <FaAngleDoubleRight size="1.1vw" className="text-[#4D55CC]" />
+            <FaAngleDoubleRight size="0.9vw" className="text-[#4D55CC]" />
           )}
         </div>
       </div>
 
       <div className="flex flex-col items-center h-full relative border-t pt-[2vh] border-zinc-300 w-[90%]">
         <div className="w-full h-1/2 flex flex-col items-center gap-[.6vw] relative">
-          {navButtons.slice(0, 4).map((button, index) => {
+          {navButtons.slice(0, 5).map((button, index) => {
             const isActive = button.path === '/integrations' ? pathname === button.path : pathname.includes(button.path);
 
             return (
@@ -199,11 +202,12 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                   text={button.text}
                   isActive={isActive}
                   onClick={() => handleButtonClick(index, button)}
-                  className={`w-full text-md ${button.padding}
+                  className={`w-full text-sm ${button.padding}
                 ${isActive ? "" : button.color}
                 ${button.width}
                 ${isActive ? `${button.className}` : ``}
                 ${isOpen ? "inline-block" : "hidden"} `}
+                  iconClassName={button.className}
                 />
                 <div>
                   <GradientButton
@@ -214,11 +218,20 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                   ${isActive ? `${button.className}` : ``}
                   ${isOpen ? "hidden" : "inline-block"} `}
                   >
-                    <button.Icon
-                      className={`flex flex-col ${
-                        isOpen ? "inline-block" : "hidden"
-                      } w-8`}
-                    />
+                    {typeof button.Icon === 'function' ? (
+                      <button.Icon
+                        size="1vw"
+                        isActive={isActive}
+                        className={button.className}
+                        style={{width: "1.2vw", height: "1.2vw"}}
+                      />
+                    ) : (
+                      <button.Icon
+                        className={`flex flex-col ${
+                          isOpen ? "inline-block" : "hidden"
+                        } w-[1vw] h-[1vw]`}
+                      />
+                    )}
                   </GradientButton>
                 </div>
                 {/* <motion.span
@@ -232,7 +245,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           })}
         </div>
         <div className="w-full pt-4 pb-4 flex flex-col items-center justify-end gap-[.5vw] mt-auto border-t border-b mb-4 border-zinc-300">
-          {navButtons.slice(4, 6).map((button, index) => {
+          {navButtons.slice(5, 7).map((button, index) => {
             const isActive = button.path === '/integrations' ? pathname === button.path : button.path === '/settings' ? pathname === button.path : pathname.includes(button.path);
             return (
 
@@ -246,11 +259,12 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                 text={button.text}
                 isActive={isActive}
                 onClick={() => handleButtonClick(index, button)}
-                className={` w-full text-md ${button.padding}
+                className={` w-full text-sm ${button.padding}
                 ${isActive ? "" : button.color}
                 ${activeButton === button.text ? `${button.className}` : ``}
                 ${button.text === "logout" ? "H3" : ""}
-                ${isOpen ? "inline-block" : "hidden"} text-md`}
+                ${isOpen ? "inline-block" : "hidden"} text-sm`}
+                iconClassName={button.className}
               />
               <div>
                 <GradientButton
@@ -264,11 +278,20 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
                       activeButton === button.text ? `${button.className}` : ``
                     }`}
                 >
-                  <button.Icon
-                    className={`mr-2 flex flex-col ${
-                      isOpen ? "inline-block" : "hidden"
-                    }`}
-                  />
+                  {typeof button.Icon === 'function' ? (
+                    <button.Icon
+                      size="1vw"
+                      isActive={activeButton === button.text}
+                      className={button.className}
+                      style={{width: "1.2vw", height: "1.2vw"}}
+                    />
+                  ) : (
+                    <button.Icon
+                      className={`mr-2 flex flex-col ${
+                        isOpen ? "inline-block" : "hidden"
+                      } w-[1vw] h-[1vw]`}
+                    />
+                  )}
                 </GradientButton>
               </div>
               {/* <motion.span
@@ -280,22 +303,22 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
           )})}
         </div>
 
-        <div
+        {/*<div
           className={`sidebar flex justify-center items-center ${theme === 'dark' ? 'bg-[#333333]' : 'bg-[#f2f0ef]'} hover:bg-[#4D55CC]/10 rounded-md relative mb-4 shadow-md ${
-            isOpen ? "w-[75%] h-[50px]" : "w-[75%]"
+            isOpen ? "w-[75%] h-[2.8vw]" : "w-[75%]"
           }`}
         >
           <GradientButton2
             Icon={theme === "dark" ? IoMoonOutline : IoSunny}
             text={isOpen ? (theme === "dark" ? "dark" : "light") : ""}
             className={`toggle-mode primary w-[5.3vw] sidebar-button rounded-[0.417vw] py-[.46vw] px-[.3vw] text-[#4D55CC] hover:scale-105 transition-all duration-300 ${
-              isOpen ? "text-md" : "flex justify-center items-center w-[5vw] Hmd"
+              isOpen ? "text-sm" : "flex justify-center items-center w-[5vw] Hmd"
             }`}
             onClick={() =>
               theme === "dark" ? setTheme("light") : setTheme("dark")
             }
           />
-        </div>
+        </div>*/}
       </div>
     </motion.div>
   );

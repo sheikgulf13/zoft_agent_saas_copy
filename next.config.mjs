@@ -6,7 +6,7 @@ const nextConfig = {
     chat_url: "https://chat.zoft.ai",
     //chat_url:'https://aa9a-106-219-179-151.ngrok-free.app',
     boturl: "https://chat-embed.zoft.ai/",
-    phone_url: "https://voice.zoft.ai",
+    phone_url: "https://c3cc84b0a53d.ngrok-free.app",
   },
 };
 
