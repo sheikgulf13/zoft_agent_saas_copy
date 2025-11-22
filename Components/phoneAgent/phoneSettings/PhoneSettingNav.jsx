@@ -52,19 +52,21 @@ const Content = () => {
     <>
       <div className={`gap-[1vw] w-full justify-center relative`}>
         <div  className="absolute left-[2vw] top-[-.6vw]">
-          <OutlinedButton
+         
+        </div>
+        <div className="flex mt-1 items-center justify-center">
+        <OutlinedButton
             onClick={() =>
               router.push(`/workspace/agents?workspaceId=${workspaceId}`)
             }
             borderColor={
-              "border-2 border-[#8b8b8b] text-[#8b8b8b] hover:border-[#333333] hover:text-[#333333]"
+              "text-[#8b8b8b]  hover:text-[#333333] bg-gray-200 rounded-[.6vw] hover:bg-gray-200 cursor-pointer absolute left-5 bottom-2"
             }
           >
             <FaArrowLeftLong className="text-sm" />
-            <span className="text-sm">Back to workspace</span>
+            {/*
+            <span className="text-sm">Back to workspace</span>*/}
           </OutlinedButton>
-        </div>
-        <div className="flex mt-4 justify-center">
           {links.map((link, index) => (
             <>
               <Link

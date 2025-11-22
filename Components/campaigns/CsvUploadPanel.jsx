@@ -287,8 +287,12 @@ const CsvUploadPanel = ({
             ))}
           </div>
         )}
+    
         {validationErrors.phoneMapping && (
           <p className="text-[0.75vw] text-red-500">{validationErrors.phoneMapping}</p>
+        )}
+        {validationErrors.nameMapping && (
+          <p className="text-[0.75vw] text-red-500">{validationErrors.nameMapping}</p>
         )}
       </div>
 

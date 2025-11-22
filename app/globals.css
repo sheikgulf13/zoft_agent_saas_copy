@@ -796,3 +796,32 @@ display: none;
   height: 5px;
   border-radius: 0 0 4px 4px;
 }
+
+/* Animated Gradient Background - Squishy Dancing Gradient */
+@keyframes gradient-dance {
+  0%, 100% {
+    transform: translateY(0) scaleY(1) scaleX(1);
+  }
+  15% {
+    transform: translateY(-8px) scaleY(1.05) scaleX(0.98);
+  }
+  30% {
+    transform: translateY(5px) scaleY(0.95) scaleX(1.02);
+  }
+  45% {
+    transform: translateY(-5px) scaleY(1.03) scaleX(0.99);
+  }
+  60% {
+    transform: translateY(8px) scaleY(0.97) scaleX(1.01);
+  }
+  75% {
+    transform: translateY(-3px) scaleY(1.02) scaleX(0.98);
+  }
+  90% {
+    transform: translateY(4px) scaleY(0.99) scaleX(1.01);
+  }
+}
+
+.animate-gradient-dance {
+  animation: gradient-dance 8s ease-in-out infinite;
+}

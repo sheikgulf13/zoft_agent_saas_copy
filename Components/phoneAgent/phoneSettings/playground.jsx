@@ -10,6 +10,7 @@ import { ContainedButton } from "@/Components/buttons/ContainedButton";
 import { CookieManager } from "../../../utility/cookie-manager"
 import { getApiHeaders, getApiConfig } from "@/utility/api-config";
 import { setCountryCode } from "@/store/actions/phoneAgentActions";
+import AnimatedGradientBackground from "./AnimatedGradientBackground";
 
 const Content = () => {
   const searchParams = useSearchParams();
@@ -97,7 +98,7 @@ const Content = () => {
 
   return (
     <div
-      className={`flex flex-col justify-start items-start px-8  w-full h-[100vh]`}
+      className={`flex flex-col justify-start items-start px-8  w-full h-[100vh] `}
     >
       <div
         className={`border-b-[1px] mt-8 mb-8 flex justify-center relative w-full text-base border-zinc-300 ${
@@ -108,7 +109,8 @@ const Content = () => {
       </div>
 
       <div className="flex w-full h-full relative">
-        <div className={`absolute flex flex-col top-8 right-8 ${
+        <AnimatedGradientBackground />
+        <div className={`absolute flex flex-col top-8 right-8 z-10 ${
           theme === "dark" ? "bg-[#1A1C22] text-white" : "bg-white text-black"
         } p-6 rounded-xl shadow-lg gap-4`}>
           <div className={`${

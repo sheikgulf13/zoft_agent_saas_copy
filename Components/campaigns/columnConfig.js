@@ -1,5 +1,5 @@
 export const COLUMN_FIELD_CONFIG = {
-  name: { label: "Name" },
+  name: { label: "Name", required: true },
   phone: { label: "Phone number", required: true },
   email: { label: "Email" },
   info: { label: "Additional info" },

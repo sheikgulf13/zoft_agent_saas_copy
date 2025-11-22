@@ -455,7 +455,7 @@ const CampaignForm = ({ onCsvParsed }) => {
     if (!csvFile || workerStatus !== "success" || csvMeta.rows.length === 0) {
       return false;
     }
-    if (!columnMappings.phone) {
+    if (!columnMappings.phone || !columnMappings.name) {
       return false;
     }
     if (formValues.startType === "schedule") {
@@ -470,6 +470,7 @@ const CampaignForm = ({ onCsvParsed }) => {
     }
     return true;
   }, [
+    columnMappings.name,
     columnMappings.phone,
     csvFile,
     csvMeta.rows.length,
@@ -503,6 +504,9 @@ const CampaignForm = ({ onCsvParsed }) => {
     } else if (workerStatus !== "success") {
       errors.phoneMapping = "Validating phone numbers...";
     }
+    if (!columnMappings.name) {
+      errors.nameMapping = "required.";
+    } 
     if (formValues.startType === "schedule") {
       if (!formValues.startDate) {
         errors.startDate = "required.";
@@ -526,6 +530,7 @@ const CampaignForm = ({ onCsvParsed }) => {
     }
     return errors;
   }, [
+    columnMappings.name,
     columnMappings.phone,
     csvFile,
     csvMeta.rows.length,
@@ -735,6 +740,7 @@ const CampaignForm = ({ onCsvParsed }) => {
           validationErrors={{
             csv: validationErrors.csv,
             phoneMapping: validationErrors.phoneMapping,
+            nameMapping: validationErrors.nameMapping,
           }}
           processingState={{
             status: workerStatus,

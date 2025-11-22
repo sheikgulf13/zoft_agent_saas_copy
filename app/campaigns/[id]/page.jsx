@@ -4,9 +4,9 @@ import React from "react";
 import CampaignDetails from "@/Components/campaigns/CampaignDetails";
 
 const CampaignDetailsPage = ({ params }) => {
-  const campaignName = decodeURIComponent(params.name);
+  const campaignId = params.id;
 
-  return <CampaignDetails campaignName={campaignName} />;
+  return <CampaignDetails campaignId={campaignId} />;
 };
 
 export default CampaignDetailsPage;

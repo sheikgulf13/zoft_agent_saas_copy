@@ -29,12 +29,19 @@ const parseJson = async (response) => {
 
 export const fetchCampaigns = async () => {
   try {
-    const response = await fetch(buildUrl("/campaigns"), {
+    const workspaceBase = process.env.url;
+    const url = `${workspaceBase}/public/campaign/list`;
+    const response = await fetch(url, {
+      ...getApiConfig(),
       method: "GET",
       cache: "no-store",
+      headers: new Headers({
+        ...getApiHeaders(),
+      }),
     });
     return await parseJson(response);
   } catch (error) {
+    console.error("fetchCampaigns error:", error);
     throw new Error(GENERIC_ERROR);
   }
 };

@@ -112,17 +112,12 @@ const CampaignsList = ({
                         Status
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Agent
-                      </th>
-                      <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Contacts
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Date
                       </th>
-                      <th className="text-right py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Actions
-                      </th>
+                   
                     </tr>
                   </thead>
                   <tbody>
@@ -205,25 +200,20 @@ const CampaignsList = ({
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Status
                       </th>
-                      <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Agent
-                      </th>
+                     
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Contacts
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Date
                       </th>
-                      <th className="text-right py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Actions
-                      </th>
+                     
                     </tr>
                   </thead>
                   <tbody>
                     {campaigns.map((campaign) => {
                       const status = campaign.status?.toLowerCase?.() ?? "draft";
                       const isScheduled = status === "scheduled";
-                      const campaignNameSlug = encodeURIComponent(campaign.name);
                       return (
                         <tr
                           key={campaign.id}
@@ -247,9 +237,7 @@ const CampaignsList = ({
                               {status}
                             </span>
                           </td>
-                          <td className="py-[1.2vw] px-[1.2vw] text-[0.9vw] text-gray-500">
-                            {campaign.voiceName ?? "—"}
-                          </td>
+                        
                           <td className="py-[1.2vw] px-[1.2vw] text-[0.9vw] text-gray-500">
                             {campaign.totalContacts ?? 0}
                           </td>
@@ -262,7 +250,7 @@ const CampaignsList = ({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                router.push(`/campaigns/${campaignNameSlug}`);
+                                router.push(`/campaigns/${campaign.id}`);
                               }}
                               className={clsx(
                                 "ml-auto flex items-center justify-center w-[2vw] h-[2vw] rounded-[0.4vw] transition-colors",

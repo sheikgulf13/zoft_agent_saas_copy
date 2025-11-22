@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { normalizeAustralianNumber } from "@/utility/phoneNumber";
+import { normalizePhoneNumber } from "@/utility/phoneNumber";
 
 const ctx = self;
 
@@ -82,7 +82,7 @@ const processFile = ({ file, phoneColumn, jobId }) => {
         }
         totalRows += 1;
         const rawNumber = row?.[phoneColumn] ?? "";
-        const validation = normalizeAustralianNumber(rawNumber);
+        const validation = normalizePhoneNumber(rawNumber);
         if (debugLogCount < 150) {
           try {
             console.log(

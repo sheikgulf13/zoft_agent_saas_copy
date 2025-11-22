@@ -5,7 +5,7 @@ import useTheme from "next-theme";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
-const CampaignDetails = ({ campaignName }) => {
+const CampaignDetails = ({ campaignId }) => {
   const router = useRouter();
   const { theme } = useTheme();
 
