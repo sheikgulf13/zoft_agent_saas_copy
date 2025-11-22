@@ -8,6 +8,7 @@ import useTheme from "next-theme";
 import { motion } from "framer-motion";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { FiLogOut, FiPieChart, FiMessageSquare, FiUsers, FiSettings } from "react-icons/fi";
+import { HiSpeakerphone } from "react-icons/hi";
 import { IoMoonOutline, IoSunny } from "react-icons/io5";
 import { HiSpeakerPhone } from "react-icons/hi2";
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
@@ -105,7 +106,7 @@ const Sidebar = ({ isSidebarCollapsed, toggleSidebar }) => {
       color: "primary",
     },
     {
-      Icon: HiSpeakerPhone,
+      Icon: HiSpeakerphone,
       text: "campaigns",
       path: "/campaigns",
       className: "Campaign seventh",
