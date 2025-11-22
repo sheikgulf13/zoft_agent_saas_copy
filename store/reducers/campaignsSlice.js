@@ -6,7 +6,7 @@ import {
   fetchVoices as fetchVoicesApi,
   createCampaign as createCampaignApi,
   launchCampaign as launchCampaignApi,
-} from "@/api/campaigns";
+} from "@/services/campaigns";
 
 const initialState = {
   list: [],

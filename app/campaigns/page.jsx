@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import CampaignsList from "@/Components/campaigns/CampaignsList";
-import { fetchCampaigns } from "@/api/campaigns/index.js";
+import { fetchCampaigns } from "@/services/campaigns/index";
 
 const CampaignsPage = () => {
   const [campaigns, setCampaigns] = useState([]);
