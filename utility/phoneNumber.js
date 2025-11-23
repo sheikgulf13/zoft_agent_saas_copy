@@ -6,9 +6,9 @@ const SPECIAL_SERVICE_PREFIXES = ["1300", "1800", "1900", "13"];
 
 // Validation mode flags (set these booleans as needed)
 // Only one should be true at a time. If multiple are true, ELSE wins last.
-export let IS_AUSTRALIAN = true;
+export let IS_AUSTRALIAN = false;
 export let IS_INDIAN = false; // set true to enable Indian validation
-export let IS_ELSE = false;   // when true, accept any numbers without strict validation
+export let IS_ELSE = true;   // when true, accept any numbers without strict validation
 
 export const AU_PHONE_ERROR = {
   EMPTY: "EMPTY",

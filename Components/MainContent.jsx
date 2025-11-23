@@ -69,7 +69,7 @@ const MainContent = () => {
       className={`h-screen items-center justify-center flex flex-col p- flex-1 ${theme === "dark" ? "bg-[#1F222A] text-white" : "bg-white"
         }`}
     >
-      {subscriptionDetails?.type === "FREE" && showTopBar && (
+      {/*subscriptionDetails?.type === "FREE" && showTopBar && (
         <div className="w-full flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] shadow-lg mb-6 relative">
           <span className="text-white text-lg font-medium flex items-center gap-2">
             <svg className="w-6 h-6 mr-2" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@ const MainContent = () => {
             </button>
           </div>
         </div>
-      )}
+      )*/}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">

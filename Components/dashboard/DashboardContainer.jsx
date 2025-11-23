@@ -169,7 +169,7 @@ const DashboardContainer = () => {
         theme === "dark" ? "bg-[#1F222A] text-white" : "bg-[#FFFFFF] text-black"
       }`}
     >
-      {subscriptionDetails?.type === "FREE" && (
+      {/*subscriptionDetails?.type === "FREE" && (
         <div className="w-full flex items-center justify-center mb-5">
           <div className="relative min-w-full max-w-full overflow-hidden bg-white rounded-xl text-white min-h-[150px] max-h-[150px] py-8 px-4">
             <SmudgyBackground
@@ -201,7 +201,7 @@ const DashboardContainer = () => {
             </div>
           </div>
         </div>
-      )}
+      )*/}
 
       <h3 className="text-2xl font-bold text-[#2D3377]">Dashboard</h3>
 

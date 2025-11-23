@@ -32,10 +32,10 @@ const Content = () => {
       href: `/workspace/agents/phone/phonesetting/source?workspaceId=${workspaceId}`,
       label: "Source",
     },
-    {
-      href: `/workspace/agents/phone/phonesetting/connect?workspaceId=${workspaceId}`,
-      label: "Connect",
-    },
+    //{
+      //href: `/workspace/agents/phone/phonesetting/connect?workspaceId=${workspaceId}`,
+      //label: "Connect",
+    //},
     {
       href: `/workspace/agents/phone/phonesetting/action?workspaceId=${workspaceId}`,
       label: "Actions",
@@ -51,9 +51,7 @@ const Content = () => {
   return (
     <>
       <div className={`gap-[1vw] w-full justify-center relative`}>
-        <div  className="absolute left-[2vw] top-[-.6vw]">
-         
-        </div>
+   
         <div className="flex mt-1 items-center justify-center">
         <OutlinedButton
             onClick={() =>
@@ -67,6 +65,7 @@ const Content = () => {
             {/*
             <span className="text-sm">Back to workspace</span>*/}
           </OutlinedButton>
+
           {links.map((link, index) => (
             <>
               <Link

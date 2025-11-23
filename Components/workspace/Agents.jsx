@@ -11,7 +11,7 @@ import SmudgyBackground from "../SmudgyBackground";
 const Agents = (props) => {
   const { isLoading } = props;
   const router = useRouter();
-  const [selectedAgent, setSelectedAgent] = useState("chat");
+  const [selectedAgent, setSelectedAgent] = useState("phone");
   const { workSpaceAgentList } = useSelector(
     (state) => state.workSpaceAgentList
   );
@@ -47,8 +47,8 @@ const Agents = (props) => {
       <div className="mb-6 mx-20 flex justify-between items-center">
         <div className="inline-flex rounded-lg p-2 ">
           {/* Chat Button Group */}
-          <div className="relative inline-block">
-            {/* White Button */}
+          {/*<div className="relative inline-block">
+            {/* White Button /}
             <div className="relative z-10">
               <button
                 className={`px-4 py-2 rounded-md transition-all duration-300  ${
@@ -62,13 +62,13 @@ const Agents = (props) => {
               </button>
             </div>
 
-            {/* Gradient Border Underneath */}
+            {/* Gradient Border Underneath /}
             {selectedAgent === "chat" && (
               <div className="absolute top-full left-0 w-full h-2 rounded-b-md z-0 mt-[-4px]">
                 <div className="w-full h-full rounded-b-md bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#211C84]/95 via-[#4D55CC]/90 via-[#2A1B5D]/85 via-[#3B2B8E]/80 to-[#211C84]/95" />
               </div>
             )}
-          </div>
+          </div>*/}
 
           {/* Phone Button Group */}
           <div className="relative inline-block">

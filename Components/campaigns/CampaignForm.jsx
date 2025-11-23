@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useTheme from "next-theme";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
 import useCampaigns from "@/hooks/useCampaigns";
@@ -140,6 +141,7 @@ const EMPTY_CSV_STATE = {
 
 const CampaignForm = ({ onCsvParsed }) => {
   const { theme } = useTheme();
+  const router = useRouter();
   const { launch, launchStatus } = useCampaigns();
   const [agents, setAgents] = useState([]);
   const [agentsStatus, setAgentsStatus] = useState("idle");
@@ -619,6 +621,7 @@ const CampaignForm = ({ onCsvParsed }) => {
           ? `Campaign "${response.name}" queued for launch.`
           : "Campaign launch initiated."
       );
+      router.push("/campaigns");
     } catch (error) {
       setFeedbackTone("error");
       setFeedback(error?.message ?? "Unable to launch campaign.");
