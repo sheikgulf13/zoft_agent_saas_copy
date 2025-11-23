@@ -1,6 +1,6 @@
 import Papa from "papaparse";
 
-const DEFAULT_SAMPLE_SIZE = 25;
+const DEFAULT_SAMPLE_SIZE = 10000;
 
 const normalizeHeaders = (headers = []) =>
   headers.map((header) => (typeof header === "string" ? header.trim() : header ?? ""));

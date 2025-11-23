@@ -391,7 +391,7 @@ const CsvUploadPanel = ({
                   <div className="max-h-[10vw] overflow-y-auto border rounded-[0.6vw]">
                     <table className="w-full text-[0.75vw]">
                       <thead>
-                        <tr className="text-left bg-gray-100">
+                        <tr className="text-left bg-gray-100 text-black">
                           <th className="px-[0.6vw] py-[0.4vw]">Row</th>
                           <th className="px-[0.6vw] py-[0.4vw]">Value</th>
                           <th className="px-[0.6vw] py-[0.4vw]">Reason</th>
@@ -400,8 +400,8 @@ const CsvUploadPanel = ({
                       <tbody>
                         {invalidSamples.map((row) => (
                           <tr key={`${row.rowIndex}-${row.reason}`} className="border-t">
-                            <td className="px-[0.6vw] py-[0.4vw] font-mono">{row.rowIndex}</td>
-                            <td className="px-[0.6vw] py-[0.4vw]">{row.value || "—"}</td>
+                            <td className="px-[0.6vw] py-[0.4vw] font-mono text-black">{row.rowIndex}</td>
+                            <td className="px-[0.6vw] py-[0.4vw] text-black">{row.value || "—"}</td>
                             <td className="px-[0.6vw] py-[0.4vw] text-red-500">{row.reason}</td>
                           </tr>
                         ))}

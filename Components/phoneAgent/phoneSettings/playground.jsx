@@ -11,6 +11,7 @@ import { CookieManager } from "../../../utility/cookie-manager"
 import { getApiHeaders, getApiConfig } from "@/utility/api-config";
 import { setCountryCode } from "@/store/actions/phoneAgentActions";
 import AnimatedGradientBackground from "./AnimatedGradientBackground";
+import { countryCodes } from "./constants/countrycodes";
 
 const Content = () => {
   const searchParams = useSearchParams();
@@ -154,9 +155,10 @@ const Content = () => {
                   name="countryCode"
                   id="countryCode"
                 >
-                  <option value="+91">+91</option>
-                  <option value="+92">+92</option>
-                  <option value="+93">+93</option>
+                  {countryCodes?.map((country) => (
+                    <option key={country.code} value={country.code}>{country.code}</option>  
+                  ))}
+               
                 </select>
                 <input
                   className={`flex-1 text-base border ${

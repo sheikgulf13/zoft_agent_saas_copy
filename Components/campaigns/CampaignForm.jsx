@@ -145,12 +145,13 @@ const CampaignForm = ({ onCsvParsed }) => {
   const [agentsStatus, setAgentsStatus] = useState("idle");
   const [agentsError, setAgentsError] = useState(null);
   const agentsRequestRef = useRef(null);
+
   const agentsEndpoint = useMemo(() => {
     const baseUrl = process.env.url;
     if (!baseUrl) {
       return null;
     }
-    return `${baseUrl.replace(/\/$/, "")}/public/workspace/get_agents`;
+    return `${baseUrl.replace(/\/$/, "")}/public/workspace/get_phone_agents`;
   }, []);
 
   const isLaunching = launchStatus === "loading";
@@ -225,8 +226,8 @@ const CampaignForm = ({ onCsvParsed }) => {
     try {
       const response = await fetch(agentsEndpoint, {
         ...getApiConfig(),
-        method: "POST",
-        body: formdata,
+        method: "GET",
+    
         headers: new Headers({
           ...getApiHeaders(),
         }),
@@ -287,6 +288,7 @@ const CampaignForm = ({ onCsvParsed }) => {
       return mutated ? next : prev;
     });
   }, [csvMeta.headers, hasCsvHeaders]);
+
   useEffect(() => {
     if (!onCsvParsed) {
       return;
@@ -297,8 +299,8 @@ const CampaignForm = ({ onCsvParsed }) => {
     }
     const previewRows =
       csvMeta.rows.length > 0
-        ? csvMeta.rows.slice(0, 25)
-        : csvMeta.previewRows.slice(0, 25);
+        ? csvMeta.rows
+        : csvMeta.previewRows;
     onCsvParsed({
       headers: csvMeta.headers,
       rows: previewRows,
@@ -344,7 +346,7 @@ const CampaignForm = ({ onCsvParsed }) => {
       setFeedback(null);
       setPreviewingCsv(true);
       try {
-        const preview = await previewCsvFile(file, { sampleSize: 50 });
+        const preview = await previewCsvFile(file, { sampleSize: 1000 });
         setCsvFile(file);
         setFileName(file.name);
         setCsvMeta({

@@ -1,7 +1,7 @@
 import { getApiConfig, getApiHeaders } from "@/utility/api-config";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_CAMPAIGNS_API_BASE_URL ?? "http://localhost:3000";
+  process.env.url ?? "http://localhost:3000";
 
 const buildUrl = (path) =>
   `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
