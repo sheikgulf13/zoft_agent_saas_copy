@@ -112,7 +112,7 @@ const CampaignsList = ({
                         Status
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Contacts
+                        Counts
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Date
@@ -202,7 +202,7 @@ const CampaignsList = ({
                       </th>
                      
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
-                        Contacts
+                        Count
                       </th>
                       <th className="text-left py-[1vw] px-[1.2vw] text-[0.9vw] font-semibold">
                         Date
@@ -239,11 +239,11 @@ const CampaignsList = ({
                           </td>
                         
                           <td className="py-[1.2vw] px-[1.2vw] text-[0.9vw] text-gray-500">
-                            {campaign.totalContacts ?? 0}
+                            {campaign?.calls_counter_scheduled}
                           </td>
                           <td className="py-[1.2vw] px-[1.2vw] text-[0.9vw] text-gray-500">
-                            {isScheduled ? "Starts: " : "Updated: "}
-                            {formatDate(campaign.scheduledFor)}
+                            {/*isScheduled ? "Starts: " : "Updated: "*/}
+                            {formatDate(campaign.created_at)}
                           </td>
                           <td className="py-[1.2vw] px-[1.2vw]">
                             <button

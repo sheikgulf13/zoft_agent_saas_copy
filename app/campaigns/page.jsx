@@ -46,8 +46,18 @@ const CampaignsPage = () => {
         name: campaign.campaign_name || campaign.name || "Unnamed Campaign",
         status: campaign.status || campaign.campaign_status || "draft",
         voiceName: campaign.agent_name || campaign.voice_name || campaign.voiceName || "—",
-        totalContacts: campaign.total_contacts || campaign.contacts_count || campaign.totalContacts || 0,
-        scheduledFor: campaign.scheduled_at || campaign.scheduled_for || campaign.scheduledFor || null,
+  
+        calls_counter_scheduled:
+          campaign.calls_counter_scheduled ||
+          campaign.callsCounterScheduled ||
+          campaign.calls_counter ||
+          0,
+        created_at:
+          campaign.created_at ||
+          campaign.createdAt ||
+          campaign.updated_at ||
+          campaign.updatedAt ||
+          null,
       }));
       
       console.log("Transformed campaigns:", transformedCampaigns);
