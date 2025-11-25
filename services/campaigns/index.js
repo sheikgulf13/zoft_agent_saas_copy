@@ -46,6 +46,27 @@ export const fetchCampaigns = async () => {
   }
 };
 
+export const fetchCampaignDetails = async (campaignId) => {
+  try {
+    const workspaceBase = process.env.url;
+    const url = `${workspaceBase}/public/campaign/details`;
+    const response = await fetch(url, {
+      ...getApiConfig(),
+      method: "POST",
+      cache: "no-store",
+      headers: new Headers({
+        ...getApiHeaders(),
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ campaign_id: campaignId }),
+    });
+    return await parseJson(response);
+  } catch (error) {
+    console.error("fetchCampaigns error:", error);
+    throw new Error(GENERIC_ERROR);
+  }
+};
+
 export const fetchVoices = async () => {
   try {
     const response = await fetch(buildUrl("/voices"), {
@@ -121,6 +142,7 @@ export const launchCampaign = async ({
 
 export default {
   fetchCampaigns,
+  fetchCampaignDetails,
   fetchVoices,
   createCampaign,
   launchCampaign,
